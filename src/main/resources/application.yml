@@ -4,34 +4,29 @@ spring:
     url: jdbc:oracle:thin:@15.164.101.174:8091
     username: board
     password: minmax
-  tomcat:
-    connection-properties: useUnicode=true;characterEncoding=UTF-8
-
-mvc:
-  pathmatch:
-    matching-strategy: ANT_PATH_MATCHER
-
-cors:
-  mappings:
-    "[/**]":
-      allowed-origins: "*"
-      allowed-methods: "GET, POST, PUT, DELETE, OPTIONS"
-      allowed-headers: "*"
+    tomcat:
+      connection-properties: useUnicode=true;characterEncoding=UTF-8
+  mvc:
+    pathmatch:
+      matching-strategy: ANT_PATH_MATCHER
+  cors:
+    mappings: null
+    '[/**]':
+      allowed-origins: '*'
+      allowed-methods: GET, POST, PUT, DELETE, OPTIONS
+      allowed-headers: '*'
       allow-credentials: true
       max-age: 3600
-
 mybatis:
   mapper-locations: mapper/*.xml
   type-aliases-package: com.example
   configuration:
     map-underscore-to-camel-case: true
-
 server:
   port: 8091
   servlet:
     context-path: /project
     session:
       timeout: 3600
-
 logging:
   config: classpath:log4j/log4j2.xml
