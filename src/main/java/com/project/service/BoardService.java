@@ -46,7 +46,7 @@ public class BoardService {
 		BoardSearchDTO boardSearchDTO = paging(cat, curPage, perPage);
 		boardSearchDTO.setTarget(target);
 		boardSearchDTO.setKeyword(keyword);
-		
+
 		switch (target) {
 
 		case "creator":
