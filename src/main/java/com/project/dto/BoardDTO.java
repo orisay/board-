@@ -5,7 +5,7 @@ import java.util.Date;
 public class BoardDTO {
 
     private Integer boardNum;
-    private Integer catNum;
+    private String cat;
     private String creator;
     private String ttl;
     private String cn;
@@ -18,8 +18,8 @@ public class BoardDTO {
     public Integer getBoardNum() {
 		return boardNum;
 	}
-	public Integer getCatNum() {
-		return catNum;
+	public String getCat() {
+		return cat;
 	}
 	public String getCreator() {
 		return creator;
@@ -48,8 +48,8 @@ public class BoardDTO {
 	public void setBoardNum(Integer boardNum) {
 		this.boardNum = boardNum;
 	}
-	public void setCatNum(Integer catNum) {
-		this.catNum = catNum;
+	public void setCat(String cat) {
+		this.cat = cat;
 	}
 	public void setCreator(String creator) {
 		this.creator = creator;
@@ -81,8 +81,8 @@ public class BoardDTO {
 		StringBuilder builder = new StringBuilder();
 		builder.append("BoardDTO [boardNum=");
 		builder.append(boardNum);
-		builder.append(", catNum=");
-		builder.append(catNum);
+		builder.append(", cat=");
+		builder.append(cat);
 		builder.append(", creator=");
 		builder.append(creator);
 		builder.append(", ttl=");

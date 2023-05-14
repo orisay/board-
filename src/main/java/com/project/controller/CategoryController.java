@@ -1,5 +1,10 @@
 package com.project.controller;
 
-public class CategoryController {
+import org.springframework.web.bind.annotation.RestController;
 
+import com.project.service.CategoryService;
+
+@RestController
+public class CategoryController {
+	CategoryService categoryService;
 }

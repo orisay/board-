@@ -1,5 +1,10 @@
 package com.project.controller;
 
-public class ReplyController {
+import org.springframework.web.bind.annotation.RestController;
 
+import com.project.service.ReplyService;
+
+@RestController
+public class ReplyController {
+	ReplyService replyService;
 }

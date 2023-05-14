@@ -1,5 +1,10 @@
 package com.project.controller;
 
-public class MbController {
+import org.springframework.web.bind.annotation.RestController;
 
+import com.project.service.MbService;
+
+@RestController
+public class MbController {
+	MbService mbService;
 }
