@@ -5,21 +5,13 @@ import java.util.Date;
 public class ReplyDTO {
 
     private Integer rplNum;
-
     private Integer boardNum;
-
     private String id;
-
     private String rplCn;
-
     private Date crtTm;
-
     private Date upTm;
-
     private String pw;
-
-    private String parentRpl;
-
+    private Integer parentRpl;
     private Integer depth;
 
 	public Integer getRplNum() {
@@ -50,7 +42,7 @@ public class ReplyDTO {
 		return pw;
 	}
 
-	public String getParentRpl() {
+	public Integer getParentRpl() {
 		return parentRpl;
 	}
 
@@ -86,7 +78,7 @@ public class ReplyDTO {
 		this.pw = pw;
 	}
 
-	public void setParentRpl(String parentRpl) {
+	public void setParentRpl(Integer parentRpl) {
 		this.parentRpl = parentRpl;
 	}
 
@@ -118,5 +110,6 @@ public class ReplyDTO {
 		builder.append("]");
 		return builder.toString();
 	}
+
 
 }

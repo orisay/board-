@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.project.dto.BoardDTO;
+import com.project.dto.BoardDetailDTO;
 import com.project.dto.mainDTO;
 import com.project.service.BoardService;
 
@@ -22,14 +23,6 @@ import io.swagger.annotations.ApiOperation;
 public class BoardController {
 	BoardService boardService;
 
-	// 기본 메인화면 = 1 카테고리 별 최신글 순 조인 필수 새로운 dto
-	// 메인 = 카테고리 이름,카테고리별 게시글,최신글 업데이트 시간
-	// 카테고리 누르고 보여질 게시판 화면 = 1 초기 dto
-	// 게시글 등록, 수정, 삭제 = 3 초기 dto
-	// 페이징 처리 서비스에서, 검색 기능
-	// 게시글(메소드에서 매번 추가 게시글 조회 수 증가 서비스 로직에서, 댓글 달린 수(여기서 안해도 괜찮고)) = 1
-	// 관리자 메뉴?
-
 	@GetMapping("/")
 	@ApiOperation("main")
 	public ResponseEntity<List<mainDTO>> main() {
@@ -37,48 +30,60 @@ public class BoardController {
 		return ResponseEntity.ok(mainList);
 	}
 
-	@GetMapping("/board/{cat}/{perPage}/{curPage}")
-	@ApiOperation("board")
-	public ResponseEntity<List<BoardDTO>> board(@PathVariable("cat")String cat,
-			@PathVariable(name = "curPage", required = false)Integer curPage,
-			@PathVariable(name = "purPage", required = false)Integer perPage){
-		List<BoardDTO> boardList = boardService.boardList(cat, curPage, perPage);
+	@GetMapping("/board/{catDomain}/{perPage}/{curPage}")
+	@ApiOperation("boardList")
+	public ResponseEntity<List<BoardDTO>> boardList(@PathVariable("catDomain") String catDomain,
+			@PathVariable(name = "curPage", required = false) Integer curPage,
+			@PathVariable(name = "purPage", required = false) Integer perPage) {
+		List<BoardDTO> boardList = boardService.boardList(catDomain, curPage, perPage);
 		return ResponseEntity.ok(boardList);
 	}
 
-	@PostMapping("/board/{cat}/write")
+	@PostMapping("/board/{catDomain}/write")
 	@ApiOperation("boardWrite")
-	public ResponseEntity<BoardDTO> boardInsert(@PathVariable("cat")String cat,
-			@RequestBody BoardDTO boardDTO){
-		boardDTO.setCat(cat);
+	public ResponseEntity<BoardDTO> boardInsert(@PathVariable("catDomain") String catDomain,
+			@RequestBody BoardDTO boardDTO) {
+		boardDTO.setCatDomain(catDomain);
 		boardService.boardInsert(boardDTO);
 		return ResponseEntity.ok(null);
+		// to do
 	}
 
-	@PutMapping("/board/{cat}/write/{boardNum}")
+	@PutMapping("/board/{catDomain}/write/{boardNum}")
 	@ApiOperation("boardUpdate")
-	public ResponseEntity<BoardDTO> boardUpdate(@PathVariable("cat")String cat,
-			@RequestBody BoardDTO boardDTO){
-		boardDTO.setCat(cat);
+	public ResponseEntity<BoardDTO> boardUpdate(@PathVariable("catDomain") String catDomain,
+			@PathVariable("boardNum") Integer boardNum, @RequestBody BoardDTO boardDTO) {
+		boardDTO.setCatDomain(catDomain);
 		boardService.boardUpdate(boardDTO);
 		return ResponseEntity.ok(null);
+		// to do
 	}
 
 	@DeleteMapping("/board/del/{boardNum}")
 	@ApiOperation("boardDelete")
-	public ResponseEntity<Integer> boardDelete(@PathVariable("boardNum")Integer boardNum){
-	boardService.boardDelete(boardNum);
-	return ResponseEntity.ok(null);
+	public ResponseEntity<Integer> boardDelete(@PathVariable("boardNum") Integer boardNum) {
+		boardService.boardDelete(boardNum);
+		return ResponseEntity.ok(boardNum);
 	}
 
-	@GetMapping("/board/{cat}/{perPage}/{curPage}/search/")
+	@GetMapping("/board/{catDomain}/{perPage}/{curPage}/search/")
 	@ApiOperation("boardSearch")
-	public ResponseEntity<List<BoardDTO>> search(@PathVariable("cat") String cat,
-			@PathVariable("perPage")Integer perPage, @PathVariable("curPage")Integer curPage,
-			@RequestParam("target")String target, @RequestParam("keyword") String keyword){
-		List<BoardDTO> boardSearch = boardService.boardSearch(cat, perPage, curPage, target, keyword);
+	public ResponseEntity<List<BoardDTO>> search(@PathVariable("cat") String catDomian,
+			@PathVariable("perPage") Integer perPage, @PathVariable("curPage") Integer curPage,
+			@RequestParam("target") String target, @RequestParam("keyword") String keyword) {
+		List<BoardDTO> boardSearch = boardService.boardSearch(catDomian, perPage, curPage, target, keyword);
 		return ResponseEntity.ok(boardSearch);
 	}
 
+	@GetMapping("/board/{catDomain}/boardNum/{boardNum}/{curPage}")
+	@ApiOperation("boardDetail")
+	public ResponseEntity<BoardDetailDTO> boardDetail(@PathVariable("catDomain") String catDomain,
+			@PathVariable("boardNum") Integer boardNum, @PathVariable("curPage") Integer curPage) {
+		BoardDetailDTO boardDetailDTO = new BoardDetailDTO();
+		boardDetailDTO.setCatDomain(catDomain);
+		boardDetailDTO.setBoardNum(boardNum);
+		BoardDetailDTO board = boardService.board(boardDetailDTO, curPage);
+		return ResponseEntity.ok(board);
+	}
 
 }

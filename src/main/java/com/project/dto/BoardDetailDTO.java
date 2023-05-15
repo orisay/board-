@@ -1,21 +1,23 @@
 package com.project.dto;
 
 import java.util.Date;
+import java.util.List;
 
-public class BoardDTO {
+public class BoardDetailDTO {
 
-    private Integer boardNum;
-    private String catDomain;
-    private String creator;
-    private String ttl;
-    private String cn;
-    private Integer view;
-    private Integer rplCnt;
-    private Date crtTm;
-    private Date upTm;
-    private String upNm;
+	private Integer boardNum;
+	private String catDomain;
+	private String creator;
+	private String ttl;
+	private String cn;
+	private Integer view;
+	private Integer rplCnt;
+	private Date crtTm;
+	private Date upTm;
+	private String upNm;
+	private List<ReplyDTO>list;
 
-    public Integer getBoardNum() {
+	public Integer getBoardNum() {
 		return boardNum;
 	}
 	public String getCatDomain() {
@@ -44,6 +46,9 @@ public class BoardDTO {
 	}
 	public String getUpNm() {
 		return upNm;
+	}
+	public List<ReplyDTO> getList() {
+		return list;
 	}
 	public void setBoardNum(Integer boardNum) {
 		this.boardNum = boardNum;
@@ -75,11 +80,14 @@ public class BoardDTO {
 	public void setUpNm(String upNm) {
 		this.upNm = upNm;
 	}
+	public void setList(List<ReplyDTO> list) {
+		this.list = list;
+	}
 
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
-		builder.append("BoardDTO [boardNum=");
+		builder.append("BoardDetail [boardNum=");
 		builder.append(boardNum);
 		builder.append(", catDomain=");
 		builder.append(catDomain);
@@ -99,6 +107,8 @@ public class BoardDTO {
 		builder.append(upTm);
 		builder.append(", upNm=");
 		builder.append(upNm);
+		builder.append(", list=");
+		builder.append(list);
 		builder.append("]");
 		return builder.toString();
 	}
