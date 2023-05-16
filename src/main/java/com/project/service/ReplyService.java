@@ -12,27 +12,26 @@ public class ReplyService {
 	@Autowired
 	ReplyDAO replyDAO;
 
-
-	public Integer replyInsert(ReplyDTO replyDTO, Integer rplNum) {
-		if (rplNum!=null) {
+	public Integer replyInsert(Integer boardNum, ReplyDTO replyDTO, Integer rplNum) {
+		if (rplNum != null) {
 			replyDTO.setParentRpl(rplNum);
 		}
-		Integer replyInsert = replyDAO.boardCountPlus(ConstantConfig.rplPlus);
-		replyDAO.replyInsert(replyDTO);
+		replyDTO.setBoardNum(boardNum);
+		replyDAO.boardCountPlus(ConstantConfig.rplPlus);
+		Integer replyInsert = replyDAO.replyInsert(replyDTO);
 		return replyInsert;
 	}
 
-	public Integer replyUpdate(ReplyDTO replyDTO) {
-		// TODO Auto-generated method stub
-		return null;
+	public Integer replyUpdate(Integer rplNum, ReplyDTO replyDTO) {
+		replyDTO.setRplNum(rplNum);
+		Integer replyUpdate = replyDAO.replyUpdate(replyDTO);
+		return replyUpdate;
 	}
 
 	public void replyDelete(Integer rplNum) {
-		// TODO Auto-generated method stub
+		replyDAO.boardCountMinus();
+		replyDAO.replyDelete(rplNum);
 
 	}
-
-
-
 
 }

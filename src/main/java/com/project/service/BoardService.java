@@ -5,8 +5,6 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.xml.bind.ParseConversionEvent;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,13 +25,18 @@ import com.project.dto.mainDTO;
 public class BoardService {
 	@Autowired
 	BoardDAO boardDAO;
+	@Autowired
+	SessionConfig sessionConfig;
+
 	private static final Logger logger = LogManager.getLogger(BoardService.class);
 
+	//main입니다.
 	@Transactional
 	public List<mainDTO> mainList() {
 		return boardDAO.mainList();
 	}
 
+	//게시판 화면
 	@Transactional
 	public List<BoardDTO> boardList(String cat, Integer curPage, Integer perPage) {
 		if (curPage == null) {
@@ -47,6 +50,7 @@ public class BoardService {
 		return boardList;
 	}
 
+	//게시글 검색 기능
 	@Transactional
 	public List<BoardDTO> boardSearch(String cat, Integer perPage, Integer curPage, String target, String keyword) {
 		if (curPage == null) {
@@ -86,24 +90,28 @@ public class BoardService {
 
 	}
 
+	//게시글 등록
 	@Transactional
 	public void boardInsert(BoardDTO boardDTO) {
 		Integer insertCount = boardDAO.boardInsert(boardDTO);
 		logger.info("boardInsert" + insertCount);
 	}
 
+	//게시글 수정
 	@Transactional
 	public void boardUpdate(BoardDTO boardDTO) {
 		Integer updateCount = boardDAO.boardUpdate(boardDTO);
 		logger.info("boardUpdate" + updateCount);
 	}
 
+	//게시글 삭제
 	@Transactional
 	public void boardDelete(Integer boardNum) {
 		Integer deleteCount = boardDAO.boardDelete(boardNum);
 		logger.info("boardDelete" + deleteCount);
 	}
 
+	//게시글 상세보기
 	@Transactional
 	public BoardDetailDTO board(BoardDetailDTO boardDetailDTO, Integer curPage) {
 		viewUpdate(boardDetailDTO);
@@ -115,6 +123,7 @@ public class BoardService {
 		return board;
 	}
 
+	//게시글 조회 수 증가 (시간 제한)
 	@Transactional
 	private void viewUpdate(BoardDetailDTO boardDetailDTO) {
 		LocalDateTime lastClickTime = SessionConfig.getLastClick();
@@ -127,7 +136,7 @@ public class BoardService {
 
 	}
 
-	@Transactional
+	//게시글, 댓글 페이징 처리
 	private BoardSearchDTO paging(String cat, Integer curPage, Integer perPage) {
 		PageDTO pageDTO = new PageDTO();
 		pageDTO.setCurPage(curPage);
@@ -143,5 +152,6 @@ public class BoardService {
 		boardSearchDTO.setCat(cat);
 		return boardSearchDTO;
 	}
+
 
 }

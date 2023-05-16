@@ -6,6 +6,12 @@ public interface ReplyDAO {
 
 	Integer boardCountPlus(Integer rplplus);
 
-	void replyInsert(ReplyDTO replyDTO);
+	Integer replyInsert(ReplyDTO replyDTO);
+
+	Integer replyUpdate(ReplyDTO replyDTO);
+
+	Integer boardCountMinus();
+
+	Integer replyDelete(Integer rplNum);
 
 }
