@@ -14,4 +14,6 @@ public interface ReplyDAO {
 
 	Integer replyDelete(Integer rplNum);
 
+	void replyBackUp(ReplyDTO replyDTO);
+
 }

@@ -10,7 +10,10 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.project.config.MyResponseEntity;
+import com.project.config.SessionConfig;
 import com.project.dto.MbDTO;
+import com.project.dto.MyResponseEntityDTO;
 import com.project.service.MbService;
 
 import io.swagger.annotations.ApiOperation;
@@ -21,43 +24,44 @@ public class MbController {
 	MbService mbService;
 
 	@PostMapping("/mb/insert")
-	@ApiOperation("mbInsert")
-	public ResponseEntity<MbDTO> mbInsert(@RequestBody MbDTO mbDTO) {
-		Integer mbInsert = mbService.mbInsert(mbDTO);
-		return null;
+	@ApiOperation("insertMb")
+	public MyResponseEntity<String> insertMb(@RequestBody MbDTO mbDTO) {
+		String insertMb = mbService.insertMb(mbDTO);
+		return new MyResponseEntity<>(new MyResponseEntityDTO<>("회원 가입 여부",insertMb));
 	}
 
 	@GetMapping("/mb/{id}")
 	@ApiOperation("idSearch")
-	public ResponseEntity<String> idSearch(@PathVariable("id") String id) {
-		Integer idSearch = mbService.idSearch(id);
-		return null;
+	public MyResponseEntity<String> getId(@PathVariable("id") String id) {
+		String searchId = mbService.getId(id);
+		return new MyResponseEntity<>(new MyResponseEntityDTO<>("아이디 중복 확인", searchId));
 	}
 
 	@PostMapping("/login")
 	@ApiOperation("login")
-	public ResponseEntity<MbDTO> login(@RequestBody MbDTO mbDTO) {
-		MbDTO login = mbService.login(mbDTO);
-		return null;
+	public MyResponseEntity<String> getLogin(@RequestBody MbDTO mbDTO) {
+		String checkLogin = mbService.getLogin(mbDTO);
+		return new MyResponseEntity<>(new MyResponseEntityDTO<>("로그인 여부", checkLogin));
 	}
 
 	@DeleteMapping("/check/logout")
 	@ApiOperation("logout")
-	public ResponseEntity<Void>logout(){
-		return null;
+	public MyResponseEntity<Void> getLogout() {
+		 mbService.getLogout();
+		return new MyResponseEntity<>(new MyResponseEntityDTO<>("로그 아웃"));
 	}
 
 	@GetMapping("/check/myPage")
 	@ApiOperation("myPage")
-	public ResponseEntity<MbDTO>myPage(){
-		MbDTO mbDTO = mbService.myPage();
-		return null;
+	public MyResponseEntity<MbDTO> getMyPage() {
+		MbDTO mbDTO = mbService.getMyPage();
+		return new MyResponseEntity<>(new MyResponseEntityDTO<>("마이 페이지", mbDTO));
 	}
 
 	@PutMapping("/check/update")
-	@ApiOperation("myPageUpdate")
-	public ResponseEntity<Void>myPageUpDate(@RequestBody MbDTO mbDTO){
-		Integer myPageUpDate = mbService.myPageUpDate(mbDTO);
-		return null;
+	@ApiOperation("updateMyPage")
+	public MyResponseEntity<String> updateMyPage(@RequestBody MbDTO mbDTO) {
+		String updateMyPage = mbService.updateMyPage(mbDTO);
+		return new MyResponseEntity<>(new MyResponseEntityDTO<>("마이 페이지 수정 성공", updateMyPage));
 	}
 }

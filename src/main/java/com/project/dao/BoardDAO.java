@@ -13,7 +13,7 @@ import com.project.dto.mainDTO;
 @Mapper
 public interface BoardDAO {
 
-	List<mainDTO> mainList();
+	List<mainDTO> getMainList();
 
 	Integer categoryBoardCount(String cat);
 
@@ -36,5 +36,9 @@ public interface BoardDAO {
 	BoardDetailDTO board(BoardDetailDTO boardDetailDTO);
 
 	List<ReplyDTO> replyList(BoardSearchDTO boardSearchDTO);
+
+	void boardBackUp(BoardDTO boardDTO);
+
+
 
 }

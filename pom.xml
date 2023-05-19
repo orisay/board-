@@ -63,13 +63,21 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-log4j2</artifactId>
 		</dependency>
-		<!-- 구글 라이브러리 Guava -->
+		<!-- 구글 라이브러리 Guava 클릭 전 후 시간 확실히 알 수 있다. -->
 		<dependency>
 			<groupId>com.google.guava</groupId>
 			<artifactId>guava</artifactId>
 			<version>31.1-jre</version>
 		</dependency>
+		<!-- 배열 내에서 정확한 값 찾을 수 있다. -->
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-lang3</artifactId>
+			<version>3.12.0</version>
+		</dependency>
 	</dependencies>
+
+
 
 	<build>
 		<plugins>
