@@ -122,7 +122,7 @@ public class BoardService {
 		return board;
 	}
 
-	//게시글 조회 수 증가 (시간 제한)
+	//게시글 조회 수 증가 (시간 제한 걸어서 초당 제한)
 	@Transactional
 	private void viewUpdate(BoardDetailDTO boardDetailDTO) {
 		LocalDateTime lastClickTime = SessionConfig.getLastClick();

@@ -41,49 +41,68 @@ public class MbService {
 		return mesg;
 	}
 
+	//아이디 중복 검사
 	@Transactional
-	public String getId(String id) {
-		Integer checkId = mbDAO.getId(id);
+	public String checkId(String id) {
+		Integer insertId = mbDAO.getId(id);
 		String checkIdMesg = "";
-		if (checkId == 1) {
-			checkIdMesg = "이미 사용한 ID 입니다.";
-		} else if (checkId == 0) {
-			checkIdMesg = "사용 가능한 ID 입니다.";
+		if (insertId == 1) {
+			checkIdMesg = "이미 사용한 ID 입니다." + id;
+		} else if (insertId == 0) {
+			checkIdMesg = "사용 가능한 ID 입니다." + id;
 		} else {
-			logger.info("MbService getId fail insertValue : " + id + "resultValue : " + checkId);
+			logger.info("MbService getId fail insertValue : " + id + "resultValue : " + insertId);
 		}
 		return checkIdMesg;
 	}
 
+	//로그인
 	@Transactional
 	public String getLogin(MbDTO mbDTO) {
-		Integer checkLogin = mbDAO.getLogin(mbDTO);
+		Integer resultLogin = mbDAO.getLogin(mbDTO);
 		String checkLoginMesg = "";
-		if (checkLogin == 1) {
-			checkLoginMesg = "로그인 성공";
-		} else if (checkLogin == 0) {
-			checkLoginMesg = "로그인 실패";
+		if (resultLogin == 1) {
+			checkLoginMesg = "로그인 성공." + mbDTO.getId();
+		} else if (resultLogin == 0) {
+			checkLoginMesg = "로그인 실패.";
 		} else {
-			logger.info("MbService getLogin fail insertValue : " + mbDTO + " id : " + mbDTO.getId()
-			+ "pw : " + mbDTO.getPw());
+			logger.info("MbService getLogin fail insertValue : " + mbDTO + " id : " + mbDTO.getId() + "pw : "
+					+ mbDTO.getPw());
 		}
 		return checkLoginMesg;
 	}
 
+	//로그아웃
 	public void getLogout() {
 		SessionConfig.getSession().invalidate();
 	}
 
+	//마이 페이지
 	@Transactional
 	public MbDTO getMyPage() {
-		// TODO Auto-generated method stub
-		return null;
+		String mbId = SessionConfig.getMbDTO().getId();
+		MbDTO mbDTO = new MbDTO();
+		if (mbId != null) {
+			mbDTO = mbDAO.getMyPage(mbId);
+		} else {
+			logger.info("MbService getMyPage faile mbId vaule null");
+		}
+		return mbDTO;
 	}
 
+	//마이 페이지 수정
 	@Transactional
 	public String updateMyPage(MbDTO mbDTO) {
-		// TODO Auto-generated method stub
-		return null;
+		Integer updateMyPage = mbDAO.updateMyPage(mbDTO);
+		String updateMyPageMesg = "";
+		if (updateMyPage == 1) {
+			updateMyPageMesg = "마이 페이지 수정 성공";
+		} else if (updateMyPage == 0) {
+			updateMyPageMesg = "마이 페이지 수정 실패";
+		} else {
+			logger.info("MbService updateMyPage fail insert value :" + mbDTO + "resultValue :" + updateMyPage);
+		}
+		return updateMyPageMesg;
 	}
 
 }

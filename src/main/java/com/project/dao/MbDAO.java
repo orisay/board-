@@ -10,4 +10,8 @@ public interface MbDAO {
 
 	Integer getLogin(MbDTO mbDTO);
 
+	MbDTO getMyPage(String mbId);
+
+	Integer updateMyPage(MbDTO mbDTO);
+
 }
