@@ -38,47 +38,47 @@ public class BoardController {
 	// 게시판
 	@GetMapping("/board/{catDomain}/{perPage}/{curPage}")
 	@ApiOperation("boardList")
-	public MyResponseEntity<List<BoardDTO>> boardList(@PathVariable("catDomain") String catDomain,
+	public MyResponseEntity<List<BoardDTO>> getBoardList(@PathVariable("catDomain") String catDomain,
 			@PathVariable(name = "curPage", required = false) Integer curPage,
 			@PathVariable(name = "purPage", required = false) Integer perPage) {
-		List<BoardDTO> boardList = boardService.boardList(catDomain, curPage, perPage);
+		List<BoardDTO> boardList = boardService.getBoardList(catDomain, curPage, perPage);
 		return new MyResponseEntity<>(new MyResponseEntityDTO<>("게시판 화면", boardList));
 	}
 
 	// 게시글 작성
 	@PostMapping("/board/{catDomain}/write")
-	@ApiOperation("boardWrite")
-	public MyResponseEntity<Void> boardInsert(@PathVariable("catDomain") String catDomain,
+	@ApiOperation("insertBoard")
+	public MyResponseEntity<Void> insertBoard(@PathVariable("catDomain") String catDomain,
 			@RequestBody BoardDTO boardDTO) {
-		boardService.boardInsert(catDomain, boardDTO);
+		boardService.insertBoard(catDomain, boardDTO);
 		return new MyResponseEntity<>(new MyResponseEntityDTO<>("게시글 삭제 성공"));
 	}
 
 	// 게시글 수정
 	@PutMapping("/board/{catDomain}/write/{boardNum}")
-	@ApiOperation("boardUpdate")
-	public MyResponseEntity<Void> boardUpdate(@PathVariable("catDomain") String catDomain,
+	@ApiOperation("updateBoard")
+	public MyResponseEntity<Void> updateBoard(@PathVariable("catDomain") String catDomain,
 			@PathVariable("boardNum") Integer boardNum, @RequestBody BoardDTO boardDTO) {
-		boardService.boardUpdate(catDomain, boardDTO);
+		boardService.updateBoard(catDomain, boardDTO);
 		return new MyResponseEntity<>(new MyResponseEntityDTO<>("게시글 수정 성공"));
 	}
 
 	// 게시글 삭제
 	@DeleteMapping("/board/del/{boardNum}")
-	@ApiOperation("boardDelete")
-	public MyResponseEntity<Void> boardDelete(@PathVariable("boardNum") Integer boardNum,
+	@ApiOperation("deleteBoard")
+	public MyResponseEntity<Void> deleteBoard(@PathVariable("boardNum") Integer boardNum,
 			@RequestBody BoardDTO boardDTO) {
-		boardService.boardDelete(boardNum, boardDTO);
+		boardService.deleteBoard(boardNum, boardDTO);
 		return new MyResponseEntity<>(new MyResponseEntityDTO<>("게시글 삭제 성공"));
 	}
 
 	// 게시글 검색
 	@GetMapping("/board/{catDomain}/search/{perPage}/{curPage}")
-	@ApiOperation("boardSearch")
-	public MyResponseEntity<List<BoardDTO>> search(@PathVariable("cat") String catDomian,
+	@ApiOperation("searchBoard")
+	public MyResponseEntity<List<BoardDTO>> searchBoard(@PathVariable("cat") String catDomian,
 			@PathVariable("perPage") Integer perPage, @PathVariable("curPage") Integer curPage,
 			@RequestParam("target") String target, @RequestParam("keyword") String keyword) {
-		List<BoardDTO> boardSearch = boardService.boardSearch(catDomian, perPage, curPage, target, keyword);
+		List<BoardDTO> boardSearch = boardService.searchBoard(catDomian, perPage, curPage, target, keyword);
 		return new MyResponseEntity<>(new MyResponseEntityDTO<>("게시글 검색 성공", boardSearch));
 	}
 
@@ -87,7 +87,7 @@ public class BoardController {
 	@ApiOperation("boardDetail")
 	public MyResponseEntity<BoardDetailDTO> boardDetail(@PathVariable("catDomain") String catDomain,
 			@PathVariable("boardNum") Integer boardNum, @PathVariable("curPage") Integer curPage) {
-		BoardDetailDTO board = boardService.board(catDomain, boardNum, curPage);
+		BoardDetailDTO board = boardService.boardDetail(catDomain, boardNum, curPage);
 		return new MyResponseEntity<>(new MyResponseEntityDTO<>("게시글 상세 내용", board));
 	}
 

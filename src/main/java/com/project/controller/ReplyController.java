@@ -1,7 +1,6 @@
 package com.project.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -20,27 +19,27 @@ public class ReplyController {
 	@Autowired
 	ReplyService replyService;
 
-	@PostMapping("/board/reply/{boardNum}")
-	@ApiOperation("replyInsert")
-	public MyResponseEntity<Void> replyInsert(@PathVariable("boardNum") Integer boardNum,
+	@PostMapping("/reply/{boardNum}")
+	@ApiOperation("insertReply")
+	public MyResponseEntity<Void> insertReply(@PathVariable("boardNum") Integer boardNum,
 			@RequestBody ReplyDTO replyDTO, @PathVariable(name = "rplNum", required = false) Integer rplNum) {
-		replyService.replyInsert(boardNum, replyDTO, rplNum);
+		replyService.insertReply(boardNum, replyDTO, rplNum);
 		return new MyResponseEntity<>(new MyResponseEntityDTO<>("댓글 작성 성공"));
 	}
 
-	@PutMapping("/board/reply/update/{rplNum}")
-	@ApiOperation("replyUpdate")
-	public MyResponseEntity<Void> replyUpdate(@PathVariable("rplNum") Integer rplNum,
+	@PutMapping("/reply/update/{rplNum}")
+	@ApiOperation("updateReply")
+	public MyResponseEntity<Void> updateReply(@PathVariable("rplNum") Integer rplNum,
 			@RequestBody ReplyDTO replyDTO) {
-		replyService.replyUpdate(rplNum, replyDTO);
+		replyService.updateReply(rplNum, replyDTO);
 		return new MyResponseEntity<>(new MyResponseEntityDTO<>("댓글 수정 성공"));
 	}
 
-	@PutMapping("/board/reply/delete/{rplNum}")
-	@ApiOperation("replyDelete")
-	public MyResponseEntity<Void> replyDelete(@PathVariable("rplNum") Integer rplNum,
+	@PutMapping("/reply/delete/{rplNum}")
+	@ApiOperation("deleteReply")
+	public MyResponseEntity<Void> deleteReply(@PathVariable("rplNum") Integer rplNum,
 			@RequestBody ReplyDTO replyDTO) {
-		replyService.replyDelete(rplNum, replyDTO);
+		replyService.deleteReply(rplNum, replyDTO);
 		return new MyResponseEntity<>(new MyResponseEntityDTO<>("댓글 삭제 성공"));
 	}
 }

@@ -27,8 +27,6 @@ public class BoardService {
 	//TO DO 마무리 예외처리 할 것
 	@Autowired
 	BoardDAO boardDAO;
-	@Autowired
-	SessionConfig sessionConfig;
 
 	private static final Logger logger = LogManager.getLogger(BoardService.class);
 
@@ -42,15 +40,15 @@ public class BoardService {
 
 	//게시판 화면
 	@Transactional
-	public List<BoardDTO> boardList(String catDomain, Integer curPage, Integer perPage) {
+	public List<BoardDTO> getBoardList(String catDomain, Integer curPage, Integer perPage) {
 		BoardSearchDTO boardSearchDTO = paging(catDomain, curPage, perPage);
-		List<BoardDTO> boardList = boardDAO.boardList(boardSearchDTO);
+		List<BoardDTO> boardList = boardDAO.getBoardList(boardSearchDTO);
 		return boardList;
 	}
 
-	//게시글 검색 기능
+	//게시글 조건별 검색 기능
 	@Transactional
-	public List<BoardDTO> boardSearch(String catDomain, Integer perPage, Integer curPage, String target, String keyword) {
+	public List<BoardDTO> searchBoard(String catDomain, Integer perPage, Integer curPage, String target, String keyword) {
 		BoardSearchDTO boardSearchDTO = paging(catDomain, curPage, perPage);
 		boardSearchDTO.setTarget(target);
 		boardSearchDTO.setKeyword(keyword);
@@ -58,22 +56,22 @@ public class BoardService {
 		switch (target) {
 
 		case "creator":
-			return boardDAO.boardBasicSearch(boardSearchDTO);
+			return boardDAO.searchBoardBasic(boardSearchDTO);
 
 		case "ttl":
-			return boardDAO.boardBasicSearch(boardSearchDTO);
+			return boardDAO.searchBoardBasic(boardSearchDTO);
 
 		case "cn":
-			return boardDAO.boardBasicSearch(boardSearchDTO);
+			return boardDAO.searchBoardBasic(boardSearchDTO);
 
 		case "rplCn":
-			return boardDAO.boardBasicSearch(boardSearchDTO);
+			return boardDAO.searchBoardBasic(boardSearchDTO);
 
 		case "ttl+cn":
-			return boardDAO.boardComplexSearch(boardSearchDTO);
+			return boardDAO.searchBoardComplex(boardSearchDTO);
 
 		case "all":
-			return boardDAO.boardAllSearch(boardSearchDTO);
+			return boardDAO.searchBoardAll(boardSearchDTO);
 
 		default:
 			logger.warn("boardSearch default case target" + target, " &keyword" + keyword);
@@ -84,37 +82,39 @@ public class BoardService {
 
 	//게시글 등록
 	@Transactional
-	public void boardInsert(String catDomain, BoardDTO boardDTO) {
+	public void insertBoard(String catDomain, BoardDTO boardDTO) {
 		boardDTO.setCatDomain(catDomain);
-		Integer insertCount = boardDAO.boardInsert(boardDTO);
+		Integer insertCount = boardDAO.insertBoard(boardDTO);
+		boardDAO.totalCountPlusCat(catDomain); //cat 테이블 게시글 증가
 		logger.info("boardInsert" + insertCount);
 	}
 
 	//게시글 수정
 	@Transactional
-	public void boardUpdate(String catDomain, BoardDTO boardDTO) {
+	public void updateBoard(String catDomain, BoardDTO boardDTO) {
 		boardDTO.setCatDomain(catDomain);
-		Integer updateCount = boardDAO.boardUpdate(boardDTO);
+		Integer updateCount = boardDAO.updateBoard(boardDTO);
 		logger.info("boardUpdate" + updateCount);
 	}
 
 	//게시글 삭제
 	@Transactional
-	public void boardDelete(Integer boardNum, BoardDTO boardDTO) {
-		Integer deleteCount = boardDAO.boardDelete(boardNum);
+	public void deleteBoard(Integer boardNum, BoardDTO boardDTO) {
+		Integer deleteCount = boardDAO.deleteBoard(boardNum);
 		System.out.println("boardDelete"+boardDTO);
-		boardDAO.boardBackUp(boardDTO);
+		boardDAO.totalCountMinusCat(boardDTO);
+		boardDAO.backUpBoard(boardDTO);
 		logger.info("boardDelete" + deleteCount);
 	}
 
 	//게시글 상세보기
 	@Transactional
-	public BoardDetailDTO board(String catDomain, Integer boardNum, Integer curPage) {
+	public BoardDetailDTO boardDetail(String catDomain, Integer boardNum, Integer curPage) {
 		BoardDetailDTO boardDetailDTO = new BoardDetailDTO();
 		boardDetailDTO.setCatDomain(catDomain);
 		boardDetailDTO.setBoardNum(boardNum);
 		viewUpdate(boardDetailDTO);
-		BoardDetailDTO board = boardDAO.board(boardDetailDTO);
+		BoardDetailDTO board = boardDAO.boardDetail(boardDetailDTO);
 		String selectNum = Integer.toString(boardNum);
 		BoardSearchDTO boardSearchDTO = paging(selectNum, curPage, ConstantConfig.perPage);
 		List<ReplyDTO> replyList = boardDAO.replyList(boardSearchDTO);
@@ -128,7 +128,7 @@ public class BoardService {
 		LocalDateTime lastClickTime = SessionConfig.getLastClick();
 		Boolean check = Duration.between(lastClickTime, LocalDateTime.now()).getSeconds() >= 1;
 		if (lastClickTime == null || check) {
-			boardDAO.viewUpdate(boardDetailDTO);
+			boardDAO.updateView(boardDetailDTO);
 		} else {
 			logger.info("Too many clicked id" + SessionConfig.getMbDTO().getId());
 		}

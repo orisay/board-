@@ -4,7 +4,7 @@ import java.util.Date;
 
 public class CategoryDTO {
 
-	private Integer catNum;
+	private String catDomain;
     private String cat;
     private Integer boardCnt;
     private Integer rplCnt;
@@ -14,8 +14,8 @@ public class CategoryDTO {
     private Date upTm;
     private String upNm;
 
-    public Integer getCatNum() {
-		return catNum;
+    public String getCatDomain() {
+		return catDomain;
 	}
 	public String getCat() {
 		return cat;
@@ -41,8 +41,8 @@ public class CategoryDTO {
 	public String getUpNm() {
 		return upNm;
 	}
-	public void setCatNum(Integer catNum) {
-		this.catNum = catNum;
+	public void setCatDomain(String catDomain) {
+		this.catDomain = catDomain;
 	}
 	public void setCat(String cat) {
 		this.cat = cat;
@@ -72,8 +72,8 @@ public class CategoryDTO {
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
-		builder.append("CategoryDTO [catNum=");
-		builder.append(catNum);
+		builder.append("CategoryDTO [catDomain=");
+		builder.append(catDomain);
 		builder.append(", cat=");
 		builder.append(cat);
 		builder.append(", boardCnt=");

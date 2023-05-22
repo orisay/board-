@@ -17,27 +17,31 @@ public interface BoardDAO {
 
 	Integer categoryBoardCount(String cat);
 
-	List<BoardDTO> boardList(BoardSearchDTO boardSearchDTO);
+	List<BoardDTO> getBoardList(BoardSearchDTO boardSearchDTO);
 
-	Integer boardInsert(BoardDTO boardDTO);
+	Integer insertBoard(BoardDTO boardDTO);
 
-	Integer boardUpdate(BoardDTO boardDTO);
+	Integer updateBoard(BoardDTO boardDTO);
 
-	Integer boardDelete(Integer boardNum);
+	Integer deleteBoard(Integer boardNum);
 
-	List<BoardDTO> boardBasicSearch(BoardSearchDTO boardSearchDTO);
+	List<BoardDTO> searchBoardBasic(BoardSearchDTO boardSearchDTO);
 
-	List<BoardDTO> boardComplexSearch(BoardSearchDTO boardSearchDTO);
+	List<BoardDTO> searchBoardComplex(BoardSearchDTO boardSearchDTO);
 
-	List<BoardDTO> boardAllSearch(BoardSearchDTO boardSearchDTO);
+	List<BoardDTO> searchBoardAll(BoardSearchDTO boardSearchDTO);
 
-	void viewUpdate(BoardDetailDTO boardDetailDTO);
+	void updateView(BoardDetailDTO boardDetailDTO);
 
-	BoardDetailDTO board(BoardDetailDTO boardDetailDTO);
+	BoardDetailDTO boardDetail(BoardDetailDTO boardDetailDTO);
 
 	List<ReplyDTO> replyList(BoardSearchDTO boardSearchDTO);
 
-	void boardBackUp(BoardDTO boardDTO);
+	void backUpBoard(BoardDTO boardDTO);
+
+	void totalCountPlusCat(String catDomain);
+
+	void totalCountMinusCat(BoardDTO boardDTO);
 
 
 

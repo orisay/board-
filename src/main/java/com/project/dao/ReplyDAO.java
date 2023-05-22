@@ -1,19 +1,22 @@
 package com.project.dao;
 
-import com.project.dto.ReplyDTO;
+import org.apache.ibatis.annotations.Mapper;
 
+import com.project.dto.ReplyDTO;
+@Mapper
 public interface ReplyDAO {
 
-	Integer boardCountPlus(Integer rplplus);
+	Integer countPlusBoard(Integer rplplus);
 
-	Integer replyInsert(ReplyDTO replyDTO);
+	Integer insertReply(ReplyDTO replyDTO);
 
-	Integer replyUpdate(ReplyDTO replyDTO);
+	Integer updateReply(ReplyDTO replyDTO);
 
-	Integer boardCountMinus();
+	Integer countMinusBoard();
 
-	Integer replyDelete(Integer rplNum);
+	void backUpReply(ReplyDTO replyDTO);
 
-	void replyBackUp(ReplyDTO replyDTO);
+	Integer deleteReply(Integer rplNum);
+
 
 }
