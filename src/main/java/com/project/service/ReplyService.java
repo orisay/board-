@@ -23,9 +23,9 @@ public class ReplyService {
 
 	// 댓글 작성
 	@Transactional
-	public Integer insertReply(Integer boardNum, ReplyDTO replyDTO, Integer rplNum) throws UnknownException {
+	public Integer insertReply(Integer boardNum, ReplyDTO replyDTO, Integer rplNum) {
 		String id = acessRight();
-		//부모 댓글 여부 확인
+		// 부모 댓글 여부 확인
 		if (rplNum != null) {
 			replyDTO.setParentRpl(rplNum);
 		}
@@ -33,10 +33,9 @@ public class ReplyService {
 		if (boardNum != null && replyDTO != null) {
 			replyDTO.setId(id);
 			replyDTO.setBoardNum(boardNum);
-		} else if (boardNum == null || replyDTO == null) {
+		} else {
 			logger.warn("insertReply access user : {} , null values boardNum : {}, replyDTO : {}"
 					, id, boardNum, replyDTO);
-			throw new UnknownException("인자 값 중에 null 존재");
 		}
 
 		replyDAO.countPlusBoard(ConstantConfig.rplPlus);
@@ -46,7 +45,7 @@ public class ReplyService {
 
 	// 댓글 수정
 	@Transactional
-	public Integer updateReply(Integer rplNum, ReplyDTO replyDTO) throws UnknownException {
+	public Integer updateReply(Integer rplNum, ReplyDTO replyDTO) {
 		String id = acessRight();
 
 		if (rplNum != null && replyDTO != null) {
@@ -54,8 +53,7 @@ public class ReplyService {
 			replyDTO.setId(id);
 		} else {
 			logger.warn("updateReply access user : {} , null values boardNum : {}, replyDTO : {}"
-					, id, rplNum,replyDTO);
-			throw new UnknownException("인자 값 중에 null 존재");
+					, id, rplNum, replyDTO);
 		}
 		Integer replyUpdate = replyDAO.updateReply(replyDTO);
 		return replyUpdate;
@@ -63,7 +61,7 @@ public class ReplyService {
 
 	// 댓글 삭제
 	@Transactional
-	public Integer deleteReply(Integer rplNum, ReplyDTO replyDTO) throws UnknownException {
+	public Integer deleteReply(Integer rplNum, ReplyDTO replyDTO) {
 		String id = acessRight();
 
 		if (rplNum != null && replyDTO != null) {
@@ -73,14 +71,13 @@ public class ReplyService {
 		} else {
 			logger.warn("deleteReply access user : {} , null values boardNum : {}, replyDTO : {}"
 					, id, rplNum, replyDTO);
-			throw new UnknownException("인자 값 중에 null 존재");
 		}
 		Integer replyDelete = replyDAO.deleteReply(rplNum);
 		return replyDelete;
 	}
 
 	// guest인지 회원인지 확인
-	private String acessRight() throws UnknownException {
+	private String acessRight() {
 		String gusetId = IPConfig.getIp(SessionConfig.getSession());
 		String memberId = SessionConfig.getMbDTO().getId();
 		String mesg = "";

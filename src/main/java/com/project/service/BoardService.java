@@ -74,7 +74,7 @@ public class BoardService {
 			return boardDAO.searchBoardAll(boardSearchDTO);
 
 		default:
-			logger.warn("boardSearch default case target" + target, " &keyword" + keyword);
+			logger.fatal("boardSearch default case target" + target, " &keyword" + keyword);
 			return new ArrayList<BoardDTO>();
 		}
 
