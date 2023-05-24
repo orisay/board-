@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.project.config.ConstantConfig;
 import com.project.config.IPConfig;
 import com.project.config.SessionConfig;
+import com.project.config.ConstantConfig.UserRole;
 import com.project.dao.MbDAO;
 import com.project.dto.MbDTO;
 import com.project.exception.UnknownException;
@@ -26,17 +27,16 @@ public class MbService {
 	@Transactional
 	public String insertMb(MbDTO mbDTO) {
 		String gusetIP = IPConfig.getIp(SessionConfig.getSession());
-		String nullCheck = "";
-		String mbId = "";
-		String mesg = "";
-
-		if (mbDTO != null) {
-			nullCheck = mbDTO.getId();
-		} else {
+		String nullCheck = null;
+		String mbId = null;
+		String mesg = null;
+		if (mbDTO == null) {
 			logger.warn("insertMb  access IP : {} insert vaule null", gusetIP);
-			throw new IllegalArgumentException();
+			throw new IllegalArgumentException("MbService insertMb insert null value");
+		} else {
+			String nullCheckBasic = mbDTO.getId();
+			nullCheck = nullCheckBasic.trim();
 		}
-
 		if (!ArrayUtils.contains(ConstantConfig.nullList, nullCheck)) {
 			mbId = mbDAO.insertMb(mbDTO);
 		}
@@ -46,7 +46,7 @@ public class MbService {
 		} else if (mbId == null || mbId.isEmpty()) {
 			mesg = "회원 가입 실패";
 		} else {
-			logger.fatal("insertMb access IP : {} unkonwn status", gusetIP);
+			logger.error("insertMb access IP : {} unknown status", gusetIP);
 			throw new UnknownException("MbService insertMb에서 비정상적인 값이 발생 했습니다.");
 		}
 		return mesg;
@@ -55,22 +55,23 @@ public class MbService {
 	// 아이디 중복 검사
 	@Transactional
 	public String checkId(String id) {
-		Integer insertId = 0;
-		String checkIdMesg = "";
 		String gusetIP = IPConfig.getIp(SessionConfig.getSession());
+		Integer insertId = null;
+		String checkIdMesg = null;
 
-		if (id != null) {
-			insertId = mbDAO.getId(id);
-		} else {
-			logger.warn("checkId access ID : {} null value id", gusetIP);
+		if (id == null) {
+			logger.warn("checkId access ID : {} null value", gusetIP);
+			throw new IllegalArgumentException("MbService checkId insert null value");
 		}
+
+		insertId = mbDAO.getId(id);
 
 		if (insertId == 1) {
 			checkIdMesg = "이미 사용한 ID 입니다." + id;
 		} else if (insertId == 0) {
 			checkIdMesg = "사용 가능한 ID 입니다." + id;
 		} else {
-			logger.fatal("checkId access IP : {} unkonwn status", gusetIP);
+			logger.error("checkId access IP : {} unknown status", gusetIP);
 			throw new UnknownException("MbService checkId에서 비정상적인 값이 발생 했습니다.");
 		}
 		return checkIdMesg;
@@ -79,9 +80,16 @@ public class MbService {
 	// 로그인
 	@Transactional
 	public String getLogin(MbDTO mbDTO) {
-		Integer resultLogin = mbDAO.getLogin(mbDTO);
-		String checkLoginMesg = "";
 		String gusetIP = IPConfig.getIp(SessionConfig.getSession());
+		Integer resultLogin = null;
+		String checkLoginMesg = null;
+
+		if (mbDTO == null) {
+			logger.warn("checkId access ID : {} null value", gusetIP);
+			throw new IllegalArgumentException("MbService getLogin insert null value");
+		}
+
+		resultLogin = mbDAO.getLogin(mbDTO);
 
 		if (resultLogin == 1) {
 			checkLoginMesg = "로그인 성공." + mbDTO.getId();
@@ -104,12 +112,14 @@ public class MbService {
 	@Transactional
 	public MbDTO getMyPage() {
 		String mbId = SessionConfig.getMbDTO().getId();
+		String gusetIP = IPConfig.getIp(SessionConfig.getSession());
 		MbDTO mbDTO = new MbDTO();
-		if (mbId != null) {
-			mbDTO = mbDAO.getMyPage(mbId);
-		} else {
-			logger.warn("getMyPage access ID : {} null value", mbId);
+
+		if (mbId == null) {
+			logger.warn("getMyPage access ID : {} have not session IP : {}", mbId, gusetIP);
+			throw new IllegalArgumentException("MbService getMyPage hava not session");
 		}
+		mbDTO = mbDAO.getMyPage(mbId);
 		return mbDTO;
 	}
 
@@ -117,20 +127,22 @@ public class MbService {
 	@Transactional
 	public String updateMyPage(MbDTO mbDTO) {
 		String memberId = SessionConfig.getMbDTO().getId();
-		Integer updateMyPage = 0;
+		Integer updateMyPage = null;
+		String updateMyPageMesg = null;
 
-		if (mbDTO != null) {
-			updateMyPage = mbDAO.updateMyPage(mbDTO);
-		} else {
-			logger.warn("updateMyPage access ID : {} null vaule");
+		if (mbDTO == null) {
+			logger.warn("updateMyPage access ID : {} null vaule", memberId, mbDTO);
+			throw new IllegalArgumentException("MbService updateMyPage null value" + mbDTO);
 		}
-		String updateMyPageMesg = "";
+
+		updateMyPage = mbDAO.updateMyPage(mbDTO);
+
 		if (updateMyPage == 1) {
 			updateMyPageMesg = "마이 페이지 수정 성공";
 		} else if (updateMyPage == 0) {
 			updateMyPageMesg = "마이 페이지 수정 실패";
 		} else {
-			logger.fatal("updateMyPage access ID : {} unkonwn status", memberId);
+			logger.fatal("updateMyPage access ID : {} unknown status", memberId);
 			throw new UnknownException("MbService updateMyPage에서 비정상적인 값이 발생 했습니다.");
 		}
 		return updateMyPageMesg;

@@ -12,7 +12,7 @@ public class GlobalUnknownExceptionHandler {
 
 	@ExceptionHandler(UnknownException.class)
 	public MyResponseEntity<String> handleUnknownException(UnknownException e) {
-		return new MyResponseEntity<>(new MyResponseEntityDTO<>("warn error" + e.getMessage()));
+		return new MyResponseEntity<>(new MyResponseEntityDTO<>("error" + e.getMessage()));
 
 	}
 }

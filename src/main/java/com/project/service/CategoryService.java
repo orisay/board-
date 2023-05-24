@@ -9,6 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.project.config.ConstantConfig.UserRole;
+import com.project.config.IPConfig;
 import com.project.config.SessionConfig;
 import com.project.dao.CategoryDAO;
 import com.project.dto.CategoryDTO;
@@ -25,16 +27,21 @@ public class CategoryService {
 	// 카테고리 메인화면
 	@Transactional
 	public List<CategoryDTO> controllerCategory() {
+		String guestIP = IPConfig.getIp(SessionConfig.getSession());
 		String checkId = SessionConfig.getMbDTO().getId();
 		String checkRole = SessionConfig.getMbDTO().getRole();
+		String checkAdmin = UserRole.ADMIN.name();
 		List<CategoryDTO> controllerCategory = Collections.emptyList();
 
-		if (checkRole != null && "admin".equals(checkRole)) {
+		if (checkId == null || checkRole == null) {
+			logger.warn("controllerCategory  access IP : {} have not right user", guestIP);
+			throw new IllegalArgumentException("CategoryService controllerCategory have not right user");
+		}
+
+		if (!checkAdmin.equals(checkRole)) {
 			controllerCategory = categoryDAO.controllerCategory(checkRole);
-		} else if (!"admin".equals(checkRole)) {
-			logger.warn("controllerCategory  access ID : {} have not right user", checkId);
 		} else {
-			logger.fatal("controllerCategory  access ID : {} unkonwn status", checkId);
+			logger.error("controllerCategory  access ID : {} unknown status", checkId);
 			throw new UnknownException("CategoryService controllerCategory에서 에상치 못한 상태가 발생했습니다..");
 		}
 		return controllerCategory;
@@ -46,8 +53,16 @@ public class CategoryService {
 	public String insertCategory(CategoryDTO categoryDTO) {
 		String checkId = SessionConfig.getMbDTO().getId();
 		String checkRole = SessionConfig.getMbDTO().getRole();
-		String mesg = "";
-		if (checkRole != null &&"admin".equals(checkRole)) {
+		String checkAdmin = UserRole.ADMIN.name();
+		String mesg = null;
+
+		if (categoryDTO == null) {
+			logger.warn("insertCategory access ID : {} insert null value : {}", checkId, categoryDTO);
+			throw new IllegalArgumentException(
+					"CategoryService insertCategory insert null value categoryDTO : " + categoryDTO);
+		}
+
+		if (checkRole != null && checkAdmin.equals(checkRole)) {
 			categoryDTO.setCrtNm(checkId);
 			categoryDTO.setMng(checkId);
 			categoryDAO.insertCategory(categoryDTO);
@@ -64,8 +79,17 @@ public class CategoryService {
 	public String updateMng(String catDomain, String id) {
 		String checkId = SessionConfig.getMbDTO().getId();
 		String checkRole = SessionConfig.getMbDTO().getRole();
-		String mesg = "";
-		if (catDomain != null && id != null && "admin".equals(checkRole)) {
+		String checkAdmin = UserRole.ADMIN.name();
+		String mesg = null;
+
+		if (catDomain == null || id == null) {
+			logger.warn("updateMng access ID : {} insert null value catDomain : {}, id : {}"
+					, checkId, catDomain, id);
+			throw new IllegalArgumentException(
+					"CategoryService updateMng insert null value catDomain : " + catDomain + " id : " + id);
+		}
+
+		if (catDomain != null && id != null && checkAdmin.equals(checkRole)) {
 			CategoryDTO categoryDTO = new CategoryDTO();
 			categoryDTO.setCatDomain(catDomain);
 			categoryDTO.setUpNm(checkId);
@@ -75,11 +99,8 @@ public class CategoryService {
 		} else if (!"admin".equals(checkRole)) {
 			mesg = "권한 없는 사용자 입니다.";
 			logger.warn("updateMng access ID : {} have not right user", checkId);
-		} else if (catDomain == null || id == null) {
-			logger.warn("updateMng access ID : {} insert null value catDomain : {}, id : {}"
-					, checkId, catDomain, id);
 		} else {
-			logger.fatal("updateMng access ID : {} unkonwn status", checkId);
+			logger.error("updateMng access ID : {} unknown status", checkId);
 			throw new UnknownException("CategoryService updateMng에서 예상치 못한 상태가 발생했습니다.");
 		}
 		return mesg;
@@ -90,8 +111,18 @@ public class CategoryService {
 	public String updateCat(String catDomain, String cat) {
 		String checkId = SessionConfig.getMbDTO().getId();
 		String checkRole = SessionConfig.getMbDTO().getRole();
-		String mesg = "";
-		if (catDomain != null && cat != null && "admin".equals(checkRole)) {
+		String checkAdmin = UserRole.ADMIN.name();
+		String mesg = null;
+
+
+		if (catDomain == null || cat == null) {
+			logger.warn("updateCat access ID : {} insert null value catDomain : {}, cat : {}"
+					, checkId, catDomain, cat);
+			throw new IllegalArgumentException(
+					"CategoryService updateCat insert null value catDomain : " + catDomain + " cat : " + cat);
+		}
+
+		if (catDomain != null && cat != null && checkAdmin.equals(checkRole)) {
 			CategoryDTO categoryDTO = new CategoryDTO();
 			categoryDTO.setCatDomain(catDomain);
 			categoryDTO.setCat(cat);
@@ -101,11 +132,8 @@ public class CategoryService {
 		} else if (!"admin".equals(checkRole)) {
 			mesg = "권한 없는 사용자 입니다.";
 			logger.warn("updateCat access ID : {} have not right user", checkId);
-		} else if (catDomain == null || cat == null) {
-			logger.warn("updateCat access ID : {} insert null value catDomain : {}, cat : {}"
-					, checkId, catDomain, cat);
 		} else {
-			logger.fatal("updateCat access ID : {} unkonwn status", checkId);
+			logger.error("updateCat access ID : {} unknown status", checkId);
 			throw new UnknownException("CategoryService updateCat 예상치 못한 상태가 발생했습니다.");
 		}
 		return mesg;
@@ -117,19 +145,23 @@ public class CategoryService {
 	public String deleteCat(String catDomain) {
 		String checkId = SessionConfig.getMbDTO().getId();
 		String checkRole = SessionConfig.getMbDTO().getRole();
-		String mesg = "";
-		if (catDomain != null &&"admin".equals(checkRole)) {
+		String checkAdmin = UserRole.ADMIN.name();
+		String mesg = null;
+
+		if (catDomain == null) {
+			logger.warn("updateCat access ID : {} insert  null value catDomain : {}"
+					, checkId, catDomain);
+			throw new IllegalArgumentException(
+					"CategoryService deleteCat " + "insert null value catDomain : " + catDomain);
+		}
+		if (catDomain != null && checkAdmin.equals(checkRole)) {
 			categoryDAO.deleteCat(catDomain);
 			mesg = catDomain + "삭제 되었습니다.";
 		} else if (!"admin".equals(checkRole)) {
 			mesg = "권한 없는 사용자 입니다.";
-			logger.warn("Method : updateCat access ID : {} have not right user", checkId);
-		} else if (catDomain == null) {
-			logger.warn("Method : updateCat access ID : {} insert  null value catDomain : {}"
-					, checkId, catDomain);
-			mesg = "catDomain을 알 수 없습니다.";
+			logger.warn("updateCat access ID : {} have not right user", checkId);
 		} else {
-			logger.fatal("updateCat access ID : {} unkonwn status", checkId);
+			logger.error("updateCat access ID : {} unknown status", checkId);
 			throw new UnknownException("CategoryService deleteCat 예상치 못한 상태가 발생했습니다.");
 		}
 		return mesg;

@@ -48,28 +48,28 @@ public class BoardController {
 	// 게시글 작성
 	@PostMapping("/board/{catDomain}/write")
 	@ApiOperation("insertBoard")
-	public MyResponseEntity<Void> insertBoard(@PathVariable("catDomain") String catDomain,
+	public MyResponseEntity<String> insertBoard(@PathVariable("catDomain") String catDomain,
 			@RequestBody BoardDTO boardDTO) {
-		boardService.insertBoard(catDomain, boardDTO);
-		return new MyResponseEntity<>(new MyResponseEntityDTO<>("게시글 삭제 성공"));
+		String resultMesg = boardService.insertBoard(catDomain, boardDTO);
+		return new MyResponseEntity<>(new MyResponseEntityDTO<>("게시글 작성 여부", resultMesg));
 	}
 
 	// 게시글 수정
 	@PutMapping("/board/{catDomain}/write/{boardNum}")
 	@ApiOperation("updateBoard")
-	public MyResponseEntity<Void> updateBoard(@PathVariable("catDomain") String catDomain,
+	public MyResponseEntity<String> updateBoard(@PathVariable("catDomain") String catDomain,
 			@PathVariable("boardNum") Integer boardNum, @RequestBody BoardDTO boardDTO) {
-		boardService.updateBoard(catDomain, boardDTO);
-		return new MyResponseEntity<>(new MyResponseEntityDTO<>("게시글 수정 성공"));
+		String resultMesg = boardService.updateBoard(catDomain, boardDTO);
+		return new MyResponseEntity<>(new MyResponseEntityDTO<>("게시글 수정 여부", resultMesg));
 	}
 
 	// 게시글 삭제
 	@DeleteMapping("/board/del/{boardNum}")
 	@ApiOperation("deleteBoard")
-	public MyResponseEntity<Void> deleteBoard(@PathVariable("boardNum") Integer boardNum,
+	public MyResponseEntity<String> deleteBoard(@PathVariable("boardNum") Integer boardNum,
 			@RequestBody BoardDTO boardDTO) {
-		boardService.deleteBoard(boardNum, boardDTO);
-		return new MyResponseEntity<>(new MyResponseEntityDTO<>("게시글 삭제 성공"));
+		String resultMesg = boardService.deleteBoard(boardNum, boardDTO);
+		return new MyResponseEntity<>(new MyResponseEntityDTO<>("게시글 삭제 성공", resultMesg));
 	}
 
 	// 게시글 검색

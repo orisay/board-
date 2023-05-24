@@ -15,6 +15,11 @@ public final class ConstantConfig {
 	public static final String[] nullList = { "null", "Null", "NULL", "nuLL", "nulL", "nUll", "NUll", "NulL", "nULl",
 			"NuLL", "nUlL", "NuLl", "NUlL", "nULl", "NULl" };
 
-	public static final String[] roleList = { "basic","subManager","manager","admin"};
+	public enum UserRole {
+		BASIC
+		,SUB_MANAGER
+		,MANAGER
+		,ADMIN
+	}
 
 }
