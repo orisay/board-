@@ -7,9 +7,10 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.project.config.MyResponseEntity;
+import com.project.common.MyResponseEntity;
 import com.project.dto.MbDTO;
 import com.project.dto.MyResponseEntityDTO;
 import com.project.service.MbService;
@@ -17,13 +18,14 @@ import com.project.service.MbService;
 import io.swagger.annotations.ApiOperation;
 
 @RestController
+@RequestMapping("/mb")
 public class MbController {
 
 	@Autowired
 	MbService mbService;
 
 	//회원 가입
-	@PostMapping("/mb/insert")
+	@PostMapping("/insert")
 	@ApiOperation("insertMb")
 	public MyResponseEntity<String> insertMb(@RequestBody MbDTO mbDTO) {
 		String insertMb = mbService.insertMb(mbDTO);
@@ -31,7 +33,7 @@ public class MbController {
 	}
 
 	//아이디 중복 검사
-	@GetMapping("/mb/{id}")
+	@GetMapping("/insert/{id}")
 	@ApiOperation("checkId")
 	public MyResponseEntity<String> checkId(@PathVariable("id") String id) {
 		String checkId = mbService.checkId(id);

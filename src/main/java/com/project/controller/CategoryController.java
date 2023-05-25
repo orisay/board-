@@ -9,9 +9,10 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.project.config.MyResponseEntity;
+import com.project.common.MyResponseEntity;
 import com.project.dto.CategoryDTO;
 import com.project.dto.MyResponseEntityDTO;
 import com.project.service.CategoryService;
@@ -19,6 +20,7 @@ import com.project.service.CategoryService;
 import io.swagger.annotations.ApiOperation;
 
 @RestController
+@RequestMapping("/cat")
 public class CategoryController {
 
 	@Autowired
@@ -28,7 +30,7 @@ public class CategoryController {
 	// cat 화면 표?가 좋을듯
 
 	// 메인
-	@GetMapping("/cat/controller")
+	@GetMapping("/controller")
 	@ApiOperation("controllerCategory")
 	public MyResponseEntity<List<CategoryDTO>> controllerCategory() {
 		List<CategoryDTO> controllerCategory = categoryService.controllerCategory();
@@ -36,7 +38,7 @@ public class CategoryController {
 	}
 
 	// 카테고리 추가
-	@PostMapping("/cat/controller/insert")
+	@PostMapping("/insert")
 	@ApiOperation("insertCategory")
 	public MyResponseEntity<String> insertCategory(@RequestBody CategoryDTO categoryDTO) {
 		String insertCheck = categoryService.insertCategory(categoryDTO);
@@ -44,7 +46,7 @@ public class CategoryController {
 	}
 
 	// 카테고리 관리자 선택
-	@PutMapping("/cat/controller/updateAdmin/{catDomain}/{id}")
+	@PutMapping("/updateAdmin/{catDomain}/{id}")
 	@ApiOperation("updateCategoryAdmin")
 	public MyResponseEntity<String> updateAdmin(@PathVariable("catDomain")String catDomain,
 			@PathVariable("id") String id) {
@@ -53,7 +55,7 @@ public class CategoryController {
 	}
 
 	// 카테고리 이름 변경
-	@PutMapping("/cat/controller/updateCat/{catDomain}/{cat}")
+	@PutMapping("/updateCat/{catDomain}/{cat}")
 	@ApiOperation("updateCategoryName")
 	public MyResponseEntity<String> updateCat(@PathVariable("catDomain")String catDomain,
 			@PathVariable("cat") String cat) {
@@ -63,7 +65,7 @@ public class CategoryController {
 
 	// 카테고리 삭제
 	// 관련 게시글 전부  DB 트리거로 백업
-	@DeleteMapping("/cat/controller/deleteCat/{catDomain}")
+	@DeleteMapping("/deleteCat/{catDomain}")
 	@ApiOperation("deleteCategory")
 	public MyResponseEntity<Void> deleteCat(@PathVariable("catDomain") String catDomain) {
 		String deleteCheckCat = categoryService.deleteCat(catDomain);

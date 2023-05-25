@@ -48,5 +48,20 @@
     "name": "mybatis.configuration.map-underscore-to-camel-case",
     "type": "java.lang.String",
     "description": "A description for 'mybatis.configuration.map-underscore-to-camel-case'"
+  },
+  {
+    "name": "login.list",
+    "type": "java.lang.String",
+    "description": "A description for 'login.list'"
+  },
+  {
+    "name": "admin.list",
+    "type": "java.lang.String",
+    "description": "A description for 'admin.list'"
+  },
+  {
+    "name": "manager.list",
+    "type": "java.lang.String",
+    "description": "A description for 'manager.list'"
   }
 ]}

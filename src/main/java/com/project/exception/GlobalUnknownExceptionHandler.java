@@ -3,8 +3,8 @@ package com.project.exception;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-import com.project.config.MyResponseEntity;
 import com.project.exception.UnknownException;
+import com.project.common.MyResponseEntity;
 import com.project.dto.MyResponseEntityDTO;
 
 @RestControllerAdvice

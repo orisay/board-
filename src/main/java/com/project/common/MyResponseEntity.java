@@ -1,4 +1,4 @@
-package com.project.config;
+package com.project.common;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

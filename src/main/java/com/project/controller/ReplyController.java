@@ -5,9 +5,10 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.project.config.MyResponseEntity;
+import com.project.common.MyResponseEntity;
 import com.project.dto.MyResponseEntityDTO;
 import com.project.dto.ReplyDTO;
 import com.project.service.ReplyService;
@@ -15,11 +16,13 @@ import com.project.service.ReplyService;
 import io.swagger.annotations.ApiOperation;
 
 @RestController
+@RequestMapping("/reply")
 public class ReplyController {
 	@Autowired
 	ReplyService replyService;
 
-	@PostMapping("/reply/{boardNum}")
+	//댓글 작성
+	@PostMapping("/insert/{boardNum}")
 	@ApiOperation("insertReply")
 	public MyResponseEntity<Void> insertReply(@PathVariable("boardNum") Integer boardNum,
 			@RequestBody ReplyDTO replyDTO, @PathVariable(name = "rplNum", required = false) Integer rplNum) {
@@ -27,7 +30,8 @@ public class ReplyController {
 		return new MyResponseEntity<>(new MyResponseEntityDTO<>("댓글 작성 성공"));
 	}
 
-	@PutMapping("/reply/update/{rplNum}")
+	//댓글 수정
+	@PutMapping("/update/{rplNum}")
 	@ApiOperation("updateReply")
 	public MyResponseEntity<Void> updateReply(@PathVariable("rplNum") Integer rplNum,
 			@RequestBody ReplyDTO replyDTO) {
@@ -35,7 +39,8 @@ public class ReplyController {
 		return new MyResponseEntity<>(new MyResponseEntityDTO<>("댓글 수정 성공"));
 	}
 
-	@PutMapping("/reply/delete/{rplNum}")
+	//댓글 삭제
+	@PutMapping("/delete/{rplNum}")
 	@ApiOperation("deleteReply")
 	public MyResponseEntity<Void> deleteReply(@PathVariable("rplNum") Integer rplNum,
 			@RequestBody ReplyDTO replyDTO) {

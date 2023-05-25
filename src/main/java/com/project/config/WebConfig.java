@@ -1,0 +1,45 @@
+package com.project.config;
+
+import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.context.annotation.Bean;
+import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+
+import com.project.common.dto.AdminCheckInterceptorDTO;
+import com.project.common.dto.LoginCheckInterceptorDTO;
+import com.project.common.dto.ManagerCheckInterceptorDTO;
+import com.project.common.interceptor.AdminCheckInterceptor;
+import com.project.common.interceptor.LoginCheckInterceptor;
+import com.project.common.interceptor.ManagerCheckInterceptor;
+
+public class WebConfig implements WebMvcConfigurer {
+
+	@Override
+	public void addInterceptors(InterceptorRegistry registry) {
+		AdminCheckInterceptorDTO adminList = getAdmin();
+		ManagerCheckInterceptorDTO managerList = getManager();
+		LoginCheckInterceptorDTO loginList = getLogin();
+		registry.addInterceptor(new AdminCheckInterceptor()).addPathPatterns(adminList.getList());
+		registry.addInterceptor(new ManagerCheckInterceptor()).addPathPatterns(managerList.getList());
+		registry.addInterceptor(new LoginCheckInterceptor()).addPathPatterns(loginList.getList());
+	}
+
+	@Bean
+	@ConfigurationProperties(prefix = "cat")
+	public AdminCheckInterceptorDTO getAdmin() {
+		return new AdminCheckInterceptorDTO();
+	}
+
+	@Bean
+	@ConfigurationProperties(prefix = "mng")
+	public ManagerCheckInterceptorDTO getManager() {
+		return new ManagerCheckInterceptorDTO();
+	}
+
+	@Bean
+	@ConfigurationProperties(prefix = "login")
+	public LoginCheckInterceptorDTO getLogin() {
+		return new LoginCheckInterceptorDTO();
+	}
+
+}
