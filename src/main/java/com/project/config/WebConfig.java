@@ -11,17 +11,25 @@ import com.project.common.dto.ManagerCheckInterceptorDTO;
 import com.project.common.interceptor.AdminCheckInterceptor;
 import com.project.common.interceptor.LoginCheckInterceptor;
 import com.project.common.interceptor.ManagerCheckInterceptor;
+import com.project.common.interceptor.RateLimitInterceptor;
 
 public class WebConfig implements WebMvcConfigurer {
 
 	@Override
 	public void addInterceptors(InterceptorRegistry registry) {
+		registry.addInterceptor(new RateLimitInterceptor());
+
 		AdminCheckInterceptorDTO adminList = getAdmin();
 		ManagerCheckInterceptorDTO managerList = getManager();
 		LoginCheckInterceptorDTO loginList = getLogin();
 		registry.addInterceptor(new AdminCheckInterceptor()).addPathPatterns(adminList.getList());
 		registry.addInterceptor(new ManagerCheckInterceptor()).addPathPatterns(managerList.getList());
 		registry.addInterceptor(new LoginCheckInterceptor()).addPathPatterns(loginList.getList());
+	}
+
+	@Bean
+	public RateLimitInterceptor rateLimitInterceptor() {
+		return new RateLimitInterceptor(); // 새로 추가
 	}
 
 	@Bean
