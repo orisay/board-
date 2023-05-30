@@ -2,6 +2,274 @@
 <!DOCTYPE mapper
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-  <mapper namespace="com.project.dao.BoardDAO">
+<mapper namespace="com.project.dao.BoardDAO">
+	<select id="getMainList" resultType="mainDTO">
+		SELECT
+		CAT_DOMAIN
+		,TTL
+		,CTR_TM
+		FROM
+		(
+		SELECT
+		CAT_DOMAIN
+		,TTL
+		,CTR_TM
+		,ROW_NUMBER() OVER(PARTITION BY
+		CAT_DOMAIN ORDER BY CTR_TM DESC) AS IDX
+		FROM
+		TB_BOARD
+		) AS MAIN
+		WHERE
+		IDX<=10
+	</select>
 
-  </mapper>
+	<select id="totalCountByCat" parameterType="String"
+		resultType="Integer">
+		SELECT
+		COUNT(*)
+		FROM
+		TB_BOARD
+		WHERE
+		CAT_DOMAIN = {catDomain}
+	</select>
+
+	<select id="totalCountByBoard" parameterType="String"
+		resultType="Integer">
+		SELECT
+		COUNT(*)
+		FROM
+		TB_REPLY
+		WHERE
+		BOARD_NUM = {boardNum}
+	</select>
+
+	<select id="getBoardList" parameterType="BoardSearchDTO"
+		resultType="BoardDTO">
+		SELECT
+		BOARD.*
+		FROM
+		(
+		SELECT
+		BOARD_NUM
+		,CAT_DOMAIN
+		,CREATOR
+		,TTL
+		,CN
+		,VIEW
+		,RPL_CNT
+		,CRT_TM
+		,UP_TM
+		,ROW_NUMBER() OVER(ORDER BY CRT_TM DESC)
+		AS IDX
+		FROM
+		TB_BOARD
+		WHERE
+		CAT_DOMAIN = #{catDomain}
+		)
+		AS BOARD
+		WHERE
+		IDX
+		BETWEEN
+		#{startIdx}
+		AND
+		#{endIdx}
+	</select>
+
+	<insert id="insertBoard" parameterType="BoardDTO">
+		INSERT INTO
+		TB_BOARD
+		(
+		BOARD_NUM
+		,CAT_DOMAIN
+		,CREATOR
+		,TTL
+		,CN
+		,VIEW
+		,RPL_CNT
+		,CRT_TM
+		,UP_TM
+		)
+		VALUES
+		(
+		#{boardNum}
+		,#{catDomain}
+		,#{creator}
+		,#{ttl}
+		,#{cn}
+		,#{view}
+		,#{rplCnt}
+		,SYSDATE
+		,SYSDATE
+		)
+	</insert>
+
+	<update id="updateBoard" parameterType="BoardDTO">
+		UPDATE
+		TB_BOARD
+		SET
+		CN =
+		#{cn}
+		UP_TM = SYSDATE
+		WHERE
+		BOARD_NUM = #{boardNum}
+	</update>
+
+	<delete id="deleteBoard" parameterType="Integer">
+		DELETE
+		FROM
+		TB_BOARD
+		WHERE
+		BOARD_NUM = #{boardNum}
+	</delete>
+
+	<select id="searchBoardBasic" parameterType="BoardSearchDTO"
+		resultType="BoardDTO">
+		SELECT
+		BOARD.*
+		FROM
+		(
+		SELECT
+		BOARD_NUM
+		,CAT_DOMAIN
+		,CREATOR
+		,TTL
+		,CN
+		,VIEW
+		,RPL_CNT
+		,CRT_TM
+		,UP_TM
+		,ROW_NUMBER() OVER(ORDER BY CRT_TM DESC)
+		AS IDX
+		FROM
+		TB_BOARD
+		WHERE
+		CAT_DOMAIN = #{catDomain}
+		AND
+		#{target}
+		LIKE
+		CONCAT
+		('%', #{keyword}, '%')
+		)
+		AS BOARD
+		WHERE
+		IDX
+		BETWEEN
+		#{startIdx}
+		AND
+		#{endIdx}
+	</select>
+
+	<select id="searchBoardComplex" parameterType="BoardSearchDTO"
+		resultType="BoardDTO">
+		SELECT
+		BOARD.*
+		FROM
+		(
+		SELECT
+		BOARD_NUM
+		,CAT_DOMAIN
+		,CREATOR
+		,TTL
+		,CN
+		,VIEW
+		,RPL_CNT
+		,CRT_TM
+		,UP_TM
+		,ROW_NUMBER() OVER(ORDER BY CRT_TM DESC)
+		AS IDX
+		FROM
+		TB_BOARD
+		WHERE
+		CAT_DOMAIN = #{catDomain}
+		AND
+		(
+		TTL
+		LIKE CONCAT
+		('%' ,#{keyword}, '%')
+		OR
+		CN
+		LIKE CONCAT
+		('%', #{keyword}, '%')
+		)
+		)
+		AS BOARD
+		WHERE
+		IDX
+		BETWEEN
+		#{startIdx}
+		AND
+		#{endIdx}
+	</select>
+
+	<select id="searchBoardAll" parameterType="BoardSearchDTO"
+		resultType="BoardDTO">
+		SELECT
+		BOARD.*
+		FROM
+		(
+		SELECT
+		BOARD_NUM
+		,CAT_DOMAIN
+		,CREATOR
+		,TTL
+		,CN
+		,VIEW
+		,RPL_CNT
+		,CRT_TM
+		,UP_TM
+		,ROW_NUMBER() OVER(ORDER BY CRT_TM DESC)
+		AS IDX
+		FROM
+		TB_BOARD
+		WHERE
+		CAT_DOMAIN = #{catDomain}
+		AND
+		(
+		CREATOR
+		LIKE CONCAT
+		('%', #{keyword}, '%')
+		OR
+		TTL
+		LIKE CONCAT
+		('%',
+		#{keyword}, '%')
+		OR
+		CN
+		LIKE
+		CONCAT
+		('%', #{keyword}, '%')
+		)
+		)AS BOARD
+		WHERE
+		IDX
+		BETWEEN
+		#{startIdx}
+		AND
+		#{endIdx}
+	</select>
+
+	<update id="updateView" parameterType="BoardDetailDTO">
+		UPDATE
+		TB_BOARD
+		SET
+		VIEW = #{view}
+		WHERE
+		BOARD_NUM = #{boardNum}
+	</update>
+
+	<select id="boardDetail" parameterType="BoardDetailDTO"
+		resultType="BoardDetailDTO">
+
+		</select>
+
+	<select id="replyList" parameterType="BoardSearchDTO"
+		resultType="ReplyDTO"></select>
+
+	<insert id="backUpBoard" parameterType="BoardDTO"></insert>
+
+	<update id="totalCountPlusCat" parameterType="String"></update>
+
+	<update id="totalCountMinusCat" parameterType="String"></update>
+
+
+</mapper>

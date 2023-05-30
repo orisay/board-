@@ -18,5 +18,7 @@ public interface ReplyDAO {
 
 	Integer deleteReply(Integer rplNum);
 
+	Integer deleteRplCnNUll(Integer rplNum);
+
 
 }

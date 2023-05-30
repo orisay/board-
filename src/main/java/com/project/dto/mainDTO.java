@@ -4,12 +4,12 @@ import java.util.Date;
 
 public class mainDTO {
 
-	private String cat;
+	private String catDomain;
 	private String ttl;
 	private Date ctrTm;
-
-	public String getCat() {
-		return cat;
+	
+	public String getCatDomain() {
+		return catDomain;
 	}
 	public String getTtl() {
 		return ttl;
@@ -17,8 +17,8 @@ public class mainDTO {
 	public Date getCtrTm() {
 		return ctrTm;
 	}
-	public void setCat(String cat) {
-		this.cat = cat;
+	public void setCatDomain(String catDomain) {
+		this.catDomain = catDomain;
 	}
 	public void setTtl(String ttl) {
 		this.ttl = ttl;
@@ -26,12 +26,11 @@ public class mainDTO {
 	public void setCtrTm(Date ctrTm) {
 		this.ctrTm = ctrTm;
 	}
-
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
-		builder.append("mainDTO [cat=");
-		builder.append(cat);
+		builder.append("mainDTO [catDomain=");
+		builder.append(catDomain);
 		builder.append(", ttl=");
 		builder.append(ttl);
 		builder.append(", ctrTm=");
@@ -40,4 +39,5 @@ public class mainDTO {
 		return builder.toString();
 	}
 
+	
 }

@@ -1,14 +1,15 @@
 package com.project.dto;
 
-public class BoardSearchDTO {
+import java.util.List;
+
+public class BoardSearchSpecialDTO {
 
 	private String cat;
 	private Integer startIdx;
 	private Integer endIdx;
 	private String target;
-	private String keyword;
+	private List<?> keyword;
 	private String all;
-
 	public String getCat() {
 		return cat;
 	}
@@ -21,7 +22,7 @@ public class BoardSearchDTO {
 	public String getTarget() {
 		return target;
 	}
-	public String getKeyword() {
+	public List<?> getKeyword() {
 		return keyword;
 	}
 	public String getAll() {
@@ -39,12 +40,32 @@ public class BoardSearchDTO {
 	public void setTarget(String target) {
 		this.target = target;
 	}
-	public void setKeyword(String keyword) {
+	public void setKeyword(List<?> keyword) {
 		this.keyword = keyword;
 	}
 	public void setAll(String all) {
 		this.all = all;
 	}
+	@Override
+	public String toString() {
+		StringBuilder builder = new StringBuilder();
+		builder.append("BoardSearchSpecialDTO [cat=");
+		builder.append(cat);
+		builder.append(", startIdx=");
+		builder.append(startIdx);
+		builder.append(", endIdx=");
+		builder.append(endIdx);
+		builder.append(", target=");
+		builder.append(target);
+		builder.append(", keyword=");
+		builder.append(keyword);
+		builder.append(", all=");
+		builder.append(all);
+		builder.append("]");
+		return builder.toString();
+	}
+
+
 
 
 }

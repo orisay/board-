@@ -15,6 +15,8 @@ import com.project.config.IPConfig;
 import com.project.config.SessionConfig;
 import com.project.dao.ManagerDAO;
 import com.project.dto.BoardDTO;
+import com.project.dto.CategoryDTO;
+import com.project.dto.CheckRightCatDTO;
 import com.project.dto.MbDTO;
 import com.project.dto.ReplyDTO;
 import com.project.exception.UnknownException;
@@ -24,70 +26,134 @@ import com.project.exception.UnknownException;
 public class ManagerService {
 
 	@Autowired
-	ManagerDAO adminDAO;
+	private ManagerDAO managerDAO;
 
 	private static final Logger logger = LoggerFactory.getLogger(ManagerService.class);
 
+	// 서브 매니저 변경
 	public String changeSubManager(String catDomain, String id) {
-		return null;
+		boolean insertCheck = inputChangeSubManagerCheck(catDomain, id);
+		CategoryDTO categoryDTO = new CategoryDTO();
+		Integer insertCheckNum = null;
+		String successMesg = null;
+		if (insertCheck) {
+			categoryDTO.setCatDomain(catDomain);
+			categoryDTO.setMng(id);
+			insertCheckNum = managerDAO.changeSubManager(categoryDTO);
+		}
+		if (insertCheckNum == 1) {
+			successMesg = id;
+		} else {
+			logger.error("DB error or Fatal error");
+			throw new UnknownException("에상치 못한 값이 반환되었습니다.");
+		}
+		return successMesg;
 	}
 
 	// boardDTO 전체를 리스트로 받아서 삭제 기능
-	public List<Integer> deleteBoardNumList(List<BoardDTO> list) {
-		String accessIP = IPConfig.getIp(SessionConfig.getSession());
-		MbDTO memberInfo = SessionConfig.getMbDTO();
-		String memberId = memberInfo.getId();
-		if (list == null || list.isEmpty()) {
-			logger.warn("deleteBoardNumList access ID: {}, IP : {} insert null value list : {}", memberId, accessIP,
-					list);
-			throw new IllegalArgumentException(
-					"deleteBoardNumList insert null value memberId : " + memberId + ", accessIP : " + accessIP);
-		}
+	public List<Integer> deleteBoardNumList(String catDomain, List<BoardDTO> list) {
+		boolean insertCheck = inputdeleteBoardNumListCheck(catDomain, list);
 		List<Integer> deleteList = new ArrayList<>();
-		Boolean checkInsert = checkLevel(accessIP, memberInfo);
-		if (checkInsert) {
+		if (insertCheck) {
 			for (BoardDTO boardDTO : list) {
-				deleteList = deleteBoardDTO(boardDTO, deleteList);
+				deleteList = handleBoardDTO(catDomain, boardDTO, deleteList);
 			}
 		}
 		return deleteList;
 
 	}
 
-	// 기존 boardDTO는 백업 하고 boardDTO.get해서 하나씩 삭제
-	public List<Integer> deleteBoardDTO(BoardDTO boardDTO, List<Integer> deleteList) {
-		Integer deleteBoardNum = boardDTO.getBoardNum();
-		deleteList.add(deleteBoardNum);
-		adminDAO.deleteBackupBoard(boardDTO);
-		Integer insertCheckCount = adminDAO.deleteBoardNumList(deleteBoardNum);
-		insertErrorCheck(insertCheckCount);
-		return deleteList;
-	}
-
 	// ReplyDTO를 리스트로 받아서 삭제 기능
-	public List<Integer> deleteRplNumList(Integer boardNum, List<ReplyDTO> list) {
-		String accessIP = IPConfig.getIp(SessionConfig.getSession());
-		MbDTO memberInfo = SessionConfig.getMbDTO();
-		String memberId = memberInfo.getId();
-		if (boardNum == null || list == null || list.isEmpty()) {
-			logger.warn("deleteRplNumList access ID : {} , IP : {} insert values boardNum : {}, list : {}", memberId,
-					accessIP, boardNum, list);
-			throw new IllegalArgumentException(
-					"deleteRplNumList insert null values boardNum" + boardNum + ", list : " + list);
-		}
+	public List<Integer> deleteRplNumList(String catDomain, Integer boardNum, List<ReplyDTO> list) {
+		boolean insertCheck = inputdeleteRplNumListCheck(catDomain, boardNum, list);
 		List<Integer> deleteList = new ArrayList<>();
-		boolean checkInsert = checkLevel(accessIP, memberInfo);
-		if (checkInsert) {
+		if (insertCheck) {
 			for (ReplyDTO deleteReplyDTO : list) {
-				Integer deleteBoardNum = deleteReplyDTO(boardNum, deleteReplyDTO);
+				Integer deleteBoardNum = handleReplyDTO(boardNum, deleteReplyDTO);
 				deleteList.add(deleteBoardNum);
 			}
 		}
 		return deleteList;
 	}
 
+	//인자값 nullCheck , 레벨 체크 , 카테고리 권한 체크
+	private boolean inputChangeSubManagerCheck(String catDomain, String id) {
+		String accessIP = IPConfig.getIp(SessionConfig.getSession());
+		MbDTO memberInfo = SessionConfig.getMbDTO();
+		String memberId = memberInfo.getId();
+		if (catDomain == null || id == null) {
+			logger.warn("inputChangeSubManagerCheck access ID: {}, IP : {} insert null value catDomain : {}, id : {}",
+					memberId, accessIP, catDomain, id);
+			throw new IllegalArgumentException(
+					"inputChangeSubManagerCheck insert null value memberId : " + memberId + ", accessIP : " + accessIP);
+		}
+		boolean checkInsert = checkLevel(accessIP, memberInfo);
+		boolean checkRightCat = checkRightCat(catDomain, memberId);
+		if (checkInsert && checkRightCat) {
+			return true;
+		} else {
+			logger.error("예상치 못한 상태가 발생했습니다.");
+			throw new UnknownException("전혀 예기치 못한 상태가 발생했습니다.");
+		}
+	}
+
+	//인자값 nullCheck , 레벨 체크 , 카테고리 권한 체크
+	private boolean inputdeleteBoardNumListCheck(String catDomain, List<BoardDTO> list) {
+		String accessIP = IPConfig.getIp(SessionConfig.getSession());
+		MbDTO memberInfo = SessionConfig.getMbDTO();
+		String memberId = memberInfo.getId();
+		if (list == null || catDomain == null || list.isEmpty()) {
+			logger.warn("deleteBoardNumList access ID: {}, IP : {} insert null value list : {}", memberId, accessIP,
+					list);
+			throw new IllegalArgumentException(
+					"deleteBoardNumList insert null value memberId : " + memberId + ", accessIP : " + accessIP);
+		}
+		Boolean checkInsert = checkLevel(accessIP, memberInfo);
+		Boolean checkRightCat = checkRightCat(catDomain, memberId);
+		if (checkInsert && checkRightCat) {
+			return true;
+		} else {
+			logger.error("예상치 못한 상태가 발생했습니다.");
+			throw new UnknownException("전혀 예기치 못한 상태가 발생했습니다.");
+		}
+	}
+
+	//인자값 nullCheck , 레벨 체크 , 카테고리 권한 체크
+	private boolean inputdeleteRplNumListCheck(String catDomain, Integer boardNum, List<ReplyDTO> list) {
+		String accessIP = IPConfig.getIp(SessionConfig.getSession());
+		MbDTO memberInfo = SessionConfig.getMbDTO();
+		String memberId = memberInfo.getId();
+		if (list == null || catDomain == null || boardNum == null || list.isEmpty()) {
+			logger.warn("deleteBoardNumList access ID: {}, IP : {} "
+					+ "insert null value catDomain : {}, boardNum : {}, list : {}", memberId, accessIP, list);
+			throw new IllegalArgumentException(
+					"inputdeleteRplNumListCheck insert null value memberId : " + memberId + ", accessIP : " + accessIP);
+		}
+		Boolean checkInsert = checkLevel(accessIP, memberInfo);
+		Boolean checkRightCat = checkRightCat(catDomain, memberId);
+		if (checkInsert && checkRightCat) {
+			return true;
+		} else {
+			logger.error("예상치 못한 상태가 발생했습니다.");
+			throw new UnknownException("전혀 예기치 못한 상태가 발생했습니다.");
+		}
+	}
+
+	// 기존 boardDTO는 백업 하고 boardDTO.get해서 하나씩 삭제
+	public List<Integer> handleBoardDTO(String catDomain, BoardDTO boardDTO, List<Integer> deleteList) {
+		Integer deleteBoardNum = boardDTO.getBoardNum();
+		String checkCatDomain = boardDTO.getCatDomain();
+		if (checkCatDomain.equals(catDomain)) {
+			deleteList.add(deleteBoardNum);
+			managerDAO.deleteBackupBoard(boardDTO);
+			Integer insertCheckCount = managerDAO.deleteBoardNumList(deleteBoardNum);
+			insertErrorCheck(insertCheckCount);
+		}
+		return deleteList;
+	}
+
 	// ReplyDTO 뎁스 확인 후 삭제 또는 rplCn == null 변경 프론트에서 안보이게 처리
-	private Integer deleteReplyDTO(Integer boardNum, ReplyDTO deleteReplyDTO) {
+	private Integer handleReplyDTO(Integer boardNum, ReplyDTO deleteReplyDTO) {
 		Integer deleteNum = null;
 		Integer returnValue = null;
 		deleteReplyDTO.setBoardNum(boardNum);
@@ -107,24 +173,24 @@ public class ManagerService {
 
 	// 기존 DTO는 백업 이후 getRplNum를 List 저장 이용 null 변경
 	private Integer checkDepthOneGreater(ReplyDTO deleteReplyDTO, Integer rplNum, Integer returnValue) {
-		adminDAO.deleteReplyBackup(deleteReplyDTO);
+		managerDAO.deleteReplyBackup(deleteReplyDTO);
 		returnValue = deleteReplyDTO.getRplNum();
-		Integer insertCheckCount = adminDAO.deleteReplyNum(rplNum);
+		Integer insertCheckCount = managerDAO.deleteReplyNum(rplNum);
 		insertErrorCheck(insertCheckCount);
 		return returnValue;
 	}
 
 	// 기존 DTO는 백업 이후 getRplNum를 List 저장 이용 삭제
 	private Integer checkDepthOne(ReplyDTO deleteReplyDTO, Integer returnValue) {
-		adminDAO.deleteReplyBackup(deleteReplyDTO);
+		managerDAO.deleteReplyBackup(deleteReplyDTO);
 		deleteReplyDTO.setRplCn(null);
 		returnValue = deleteReplyDTO.getRplNum();
-		Integer insertCheckCount = adminDAO.setRplCnNull(deleteReplyDTO);
+		Integer insertCheckCount = managerDAO.setRplCnNull(deleteReplyDTO);
 		insertErrorCheck(insertCheckCount);
 		return returnValue;
 	}
 
-	// 인서트 체크
+	// 인서트 값이 정상이 아니면 에러
 	private boolean insertErrorCheck(Integer insertCheckCount) {
 		if (insertCheckCount == 1) {
 			return true;
@@ -173,6 +239,19 @@ public class ManagerService {
 	private boolean isLessLevel(UserRole userRole) {
 		boolean check = (userRole.getLevel() < UserRole.BASIC.getLevel());
 		return check;
+	}
+
+	private Boolean checkRightCat(String catDomain, String memberId) {
+		CheckRightCatDTO checkRightCatDTO = new CheckRightCatDTO();
+		checkRightCatDTO.setCatDomain(catDomain);
+		checkRightCatDTO.setMemberId(memberId);
+		Integer checkRightCat = managerDAO.selectMng(checkRightCatDTO);
+		if (checkRightCat == 1) {
+			return true;
+		} else {
+			logger.warn("not found manager access ID : {}", memberId);
+			throw new IllegalArgumentException("not found manager check RoleUser or catDomain");
+		}
 	}
 
 }

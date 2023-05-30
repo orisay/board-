@@ -17,7 +17,7 @@ import com.project.exception.UnknownException;
 public class ReplyService {
 
 	@Autowired
-	ReplyDAO replyDAO;
+	private ReplyDAO replyDAO;
 
 	private static final Logger logger = LogManager.getLogger(ReplyService.class);
 
@@ -26,8 +26,8 @@ public class ReplyService {
 	public Integer insertReply(Integer boardNum, ReplyDTO replyDTO, Integer rplNum) {
 		String id = getAccessRight();
 		if (boardNum == null || replyDTO == null) {
-			logger.warn("insertReply access user : {} , null values boardNum : {}, replyDTO : {}"
-					, id, boardNum, replyDTO);
+			logger.warn("insertReply access user : {} , null values boardNum : {}, replyDTO : {}", id, boardNum,
+					replyDTO);
 			throw new IllegalArgumentException(
 					"ReplyService insertReply null value boardNum : " + boardNum + " replyDTO : " + replyDTO);
 		} else if (rplNum != null) {
@@ -46,8 +46,8 @@ public class ReplyService {
 	public Integer updateReply(Integer rplNum, ReplyDTO replyDTO) {
 		String id = getAccessRight();
 		if (rplNum == null || replyDTO == null) {
-			logger.warn("updateReply access user : {} , null values boardNum : {}, replyDTO : {}"
-					, id, rplNum, replyDTO);
+			logger.warn("updateReply access user : {} , null values boardNum : {}, replyDTO : {}", id, rplNum,
+					replyDTO);
 			throw new IllegalArgumentException(
 					"ReplyService updateReply null value rplNum : " + rplNum + " replyDTO " + replyDTO);
 		}
@@ -60,17 +60,21 @@ public class ReplyService {
 	@Transactional
 	public Integer deleteReply(Integer rplNum, ReplyDTO replyDTO) {
 		String id = getAccessRight();
-
 		if (rplNum == null || replyDTO == null) {
-			logger.warn("deleteReply access user : {} , null values boardNum : {}, replyDTO : {}"
-					, id, rplNum, replyDTO);
+			logger.warn("deleteReply access user : {} , null values boardNum : {}, replyDTO : {}", id, rplNum,
+					replyDTO);
 			throw new IllegalArgumentException(
 					"ReplyService deleteReply null value rplNum : " + rplNum + " replyDTO " + replyDTO);
 		}
 		System.err.println(replyDTO);
 		replyDAO.countMinusBoard();
 		replyDAO.backUpReply(replyDTO);
-		Integer replyDelete = replyDAO.deleteReply(rplNum);
+		Integer replyDelete = null;
+		if (replyDTO.getDepth() == ConstantConfig.startDepth) {
+			replyDelete = replyDAO.deleteReply(rplNum);
+		} else if (replyDTO.getDepth() > ConstantConfig.startDepth) {
+			replyDelete = replyDAO.deleteRplCnNUll(rplNum);
+		}
 		return replyDelete;
 	}
 

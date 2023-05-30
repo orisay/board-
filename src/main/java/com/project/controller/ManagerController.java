@@ -23,26 +23,20 @@ import io.swagger.annotations.ApiOperation;
 public class ManagerController {
 	@Autowired
 	ManagerService adminservice;
-	// 게시글 한개 또는 여러개 삭제 그냥 리스트로 삭제 = 1개
-	// 댓글 삭제 = 여러개
-	// 카테고리별 부매니저 부여 변경 비워두기 공백으로 하면 없고 넣어두면 부매니저 두기
-	// DB 부매니저 테이블 따로 두기 스프링 시큐리티
-
-	// catDomain 필요여부 확인
-	// 게시글 체크 삭제 or 1개 삭제 (boardNum을 list로 받아 여러개 삭제 가능)
-	@DeleteMapping("/{boardNum}")
+	@DeleteMapping("/{catDomain}/{boardNum}")
 	@ApiOperation("deleteBoardNumList")
-	public MyResponseEntity<List<Integer>> deleteBoardNumList(@RequestParam("boardNum") List<BoardDTO> list) {
-		List<Integer> deleteBoardNumList = adminservice.deleteBoardNumList(list);
+	public MyResponseEntity<List<Integer>> deleteBoardNumList(@PathVariable("catDomain")String catDomain
+			, @RequestParam("boardNum") List<BoardDTO> list) {
+		List<Integer> deleteBoardNumList = adminservice.deleteBoardNumList(catDomain, list);
 		return new MyResponseEntity<>(new MyResponseEntityDTO<>("삭제", deleteBoardNumList));
 	}
 
 	// 댓글 체크 삭제 or 1개 삭제
-	@DeleteMapping("/{boardNum}/{rplNum}")
+	@DeleteMapping("/{catDomain}/{boardNum}/{rplNum}")
 	@ApiOperation("deleteRplNumList")
-	public MyResponseEntity<List<Integer>> deleteRplNumList(@PathVariable("boardNum") Integer boardNum,
-			@RequestParam("rplNum") List<ReplyDTO> list) {
-		List<Integer> deleteRplNumList = adminservice.deleteRplNumList(boardNum, list);
+	public MyResponseEntity<List<Integer>> deleteRplNumList(@PathVariable("catDomain")String catDomain
+			, @PathVariable("boardNum") Integer boardNum, @RequestParam("rplNum") List<ReplyDTO> list) {
+		List<Integer> deleteRplNumList = adminservice.deleteRplNumList(catDomain, boardNum, list);
 		return new MyResponseEntity<>(new MyResponseEntityDTO<>("삭제", deleteRplNumList));
 	}
 

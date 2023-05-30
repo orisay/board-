@@ -4,19 +4,23 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.project.config.ConstantConfig;
+import com.project.config.ConstantConfig.Target;
 import com.project.config.IPConfig;
 import com.project.config.SessionConfig;
 import com.project.dao.BoardDAO;
 import com.project.dto.BoardDTO;
 import com.project.dto.BoardDetailDTO;
 import com.project.dto.BoardSearchDTO;
+import com.project.dto.BoardSearchSpecialDTO;
 import com.project.dto.PageDTO;
 import com.project.dto.ReplyDTO;
 import com.project.dto.mainDTO;
@@ -71,20 +75,20 @@ public class BoardService {
 		boardSearchDTO.setKeyword(keyword);
 		List<BoardDTO> searchBoard = null;
 
-		switch (target) {
-		case "creator":
-		case "ttl":
-		case "cn":
-		case "rplCn":
+		Integer checkLevel = ConstantConfig.Target.valueOf(target.toUpperCase()).getLevel();
+		if (checkLevel < 4) {
 			searchBoard = boardDAO.searchBoardBasic(boardSearchDTO);
-			break;
-		case "ttl+cn":
+		} else if (checkLevel == 4) {
 			searchBoard = boardDAO.searchBoardComplex(boardSearchDTO);
-			break;
-		case "all":
+		} else if (checkLevel > 4) {
+//			BoardSearchSpecialDTO boardSearchSpecialDTO = new BoardSearchSpecialDTO();
+			//선 복사 대상 후 주입 대상
+//			BeanUtils.copyProperties(boardSearchDTO, boardSearchSpecialDTO);
+			//Target.getAllValue는 List<ENUM>으로 전부 가져온다.
+			//mybatis에서는 ENUM을 자동으로 String 치환해서 먹는다.
+//			boardSearchSpecialDTO.setKeyword(Target.getAllValue());
 			searchBoard = boardDAO.searchBoardAll(boardSearchDTO);
-			break;
-		default:
+		} else {
 			logger.error("boardSearch access User : {} default case target : {}, keyword : {}", user, target, keyword);
 			throw new UnknownException("BoardService boardSearch 예상치 못한 상태가 발생했습니다.");
 		}
@@ -105,6 +109,7 @@ public class BoardService {
 		}
 		boardDTO.setCatDomain(catDomain);
 		boardDTO.setCreator(user);
+		boardDTO.setView(ConstantConfig.startView);
 		Integer insertCount = boardDAO.insertBoard(boardDTO);
 		String resultMesg = null;
 		if (insertCount == 1) {
@@ -212,6 +217,7 @@ public class BoardService {
 		LocalDateTime lastClickTime = SessionConfig.getLastClick();
 		Boolean check = Duration.between(lastClickTime, LocalDateTime.now()).getSeconds() >= 1;
 		if (lastClickTime == null || check) {
+			boardDetailDTO.setView(boardDetailDTO.getView()+ConstantConfig.plusView);
 			boardDAO.updateView(boardDetailDTO);
 		} else {
 			logger.info("Too many clicked id" + SessionConfig.getMbDTO().getId());
@@ -230,7 +236,7 @@ public class BoardService {
 		PageDTO pageDTO = new PageDTO();
 		pageDTO.setCurPage(curPage);
 		pageDTO.setPerPage(perPage);
-		Integer totalCount = boardDAO.categoryBoardCount(catDomain);
+		Integer totalCount = checkTotaldCount(catDomain);
 		Integer totalPage = (int) ((double) totalCount / (int) perPage);
 		pageDTO.setTotalPage(totalPage);
 		Integer startIdx = ((pageDTO.getCurPage() - 1) * pageDTO.getCurPage()) + 1;
@@ -240,6 +246,16 @@ public class BoardService {
 		boardSearchDTO.setEndIdx(endIdx);
 		boardSearchDTO.setCat(catDomain);
 		return boardSearchDTO;
+	}
+
+	private Integer checkTotaldCount(String catDomain) {
+		Integer totalCount = null;
+		if (StringUtils.isNumeric(catDomain)) {
+			totalCount = boardDAO.totalCountByCat(catDomain);
+		} else {
+			totalCount = boardDAO.totalCountByBoard(catDomain);
+		}
+		return totalCount;
 	}
 
 	// guest인지 회원인지 확인
