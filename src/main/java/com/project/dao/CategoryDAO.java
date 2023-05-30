@@ -6,7 +6,7 @@ import com.project.dto.CategoryDTO;
 
 public interface CategoryDAO {
 
-	List<CategoryDTO> controllerCategory(String checkRole);
+	List<CategoryDTO> controllerCategory();
 
 	void insertCategory(CategoryDTO categoryDTO);
 

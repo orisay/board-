@@ -145,7 +145,7 @@ public class ManagerService {
 		String checkCatDomain = boardDTO.getCatDomain();
 		if (checkCatDomain.equals(catDomain)) {
 			deleteList.add(deleteBoardNum);
-			managerDAO.deleteBackupBoard(boardDTO);
+			managerDAO.deleteBoardBackup(boardDTO);
 			Integer insertCheckCount = managerDAO.deleteBoardNumList(deleteBoardNum);
 			insertErrorCheck(insertCheckCount);
 		}

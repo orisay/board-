@@ -7,20 +7,17 @@ import java.util.List;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.project.config.ConstantConfig;
-import com.project.config.ConstantConfig.Target;
 import com.project.config.IPConfig;
 import com.project.config.SessionConfig;
 import com.project.dao.BoardDAO;
 import com.project.dto.BoardDTO;
 import com.project.dto.BoardDetailDTO;
 import com.project.dto.BoardSearchDTO;
-import com.project.dto.BoardSearchSpecialDTO;
 import com.project.dto.PageDTO;
 import com.project.dto.ReplyDTO;
 import com.project.dto.mainDTO;
@@ -113,7 +110,6 @@ public class BoardService {
 		Integer insertCount = boardDAO.insertBoard(boardDTO);
 		String resultMesg = null;
 		if (insertCount == 1) {
-			boardDAO.totalCountPlusCat(catDomain);
 			resultMesg = "성공했습니다";
 		} else if (insertCount == 0) {
 			logger.warn("insertBoard access User : {} DB is not affected. catDomain: {}, boardDTO: {}", user, catDomain,
@@ -170,7 +166,6 @@ public class BoardService {
 		System.out.println("boardDelete" + boardDTO);
 		String resultMesg = null;
 		if (deleteCount == 1) {
-			boardDAO.totalCountMinusCat(boardDTO);
 			boardDAO.backUpBoard(boardDTO);
 			resultMesg = "성공했습니다";
 		} else if (deleteCount == 0) {

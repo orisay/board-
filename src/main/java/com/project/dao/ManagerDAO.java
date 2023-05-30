@@ -12,21 +12,16 @@ public interface ManagerDAO {
 
 	Integer changeSubManager(CategoryDTO categoryDTO);
 
-	void deleteReplyBackup(ReplyDTO deleteReplyDTO);
-
 	Integer deleteBoardNumList(Integer deleteBoardNum);
 
-	void deleteBackupBoard(BoardDTO boardDTO);
+	void deleteBoardBackup(BoardDTO boardDTO);
 
 	Integer deleteReplyNum(Integer rplNum);
+
+	void deleteReplyBackup(ReplyDTO deleteReplyDTO);
 
 	Integer setRplCnNull(ReplyDTO deleteReplyDTO);
 
 	Integer selectMng(CheckRightCatDTO checkRightCatDTO);
-
-
-
-
-
 
 }

@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.project.config.ConstantConfig;
 import com.project.config.ConstantConfig.UserRole;
 import com.project.config.IPConfig;
 import com.project.config.SessionConfig;
@@ -39,7 +40,7 @@ public class CategoryService {
 		}
 
 		if (!checkAdmin.equals(checkRole)) {
-			controllerCategory = categoryDAO.controllerCategory(checkRole);
+			controllerCategory = categoryDAO.controllerCategory();
 		} else {
 			logger.error("controllerCategory  access ID : {} unknown status", checkId);
 			throw new UnknownException("CategoryService controllerCategory에서 에상치 못한 상태가 발생했습니다..");
@@ -65,6 +66,8 @@ public class CategoryService {
 		if (checkRole != null && checkAdmin.equals(checkRole)) {
 			categoryDTO.setCrtNm(checkId);
 			categoryDTO.setMng(checkId);
+			categoryDTO.setBoardCnt(ConstantConfig.insertStartNum);
+			categoryDTO.setRplCnt(ConstantConfig.insertStartNum);
 			categoryDAO.insertCategory(categoryDTO);
 			mesg = categoryDTO.getCat() + "카테고리가 추가 되었습니다.";
 		} else {
@@ -83,8 +86,7 @@ public class CategoryService {
 		String mesg = null;
 
 		if (catDomain == null || id == null) {
-			logger.warn("updateMng access ID : {} insert null value catDomain : {}, id : {}"
-					, checkId, catDomain, id);
+			logger.warn("updateMng access ID : {} insert null value catDomain : {}, id : {}", checkId, catDomain, id);
 			throw new IllegalArgumentException(
 					"CategoryService updateMng insert null value catDomain : " + catDomain + " id : " + id);
 		}
@@ -114,10 +116,8 @@ public class CategoryService {
 		String checkAdmin = UserRole.ADMIN.name();
 		String mesg = null;
 
-
 		if (catDomain == null || cat == null) {
-			logger.warn("updateCat access ID : {} insert null value catDomain : {}, cat : {}"
-					, checkId, catDomain, cat);
+			logger.warn("updateCat access ID : {} insert null value catDomain : {}, cat : {}", checkId, catDomain, cat);
 			throw new IllegalArgumentException(
 					"CategoryService updateCat insert null value catDomain : " + catDomain + " cat : " + cat);
 		}
@@ -149,8 +149,7 @@ public class CategoryService {
 		String mesg = null;
 
 		if (catDomain == null) {
-			logger.warn("updateCat access ID : {} insert  null value catDomain : {}"
-					, checkId, catDomain);
+			logger.warn("updateCat access ID : {} insert  null value catDomain : {}", checkId, catDomain);
 			throw new IllegalArgumentException(
 					"CategoryService deleteCat " + "insert null value catDomain : " + catDomain);
 		}

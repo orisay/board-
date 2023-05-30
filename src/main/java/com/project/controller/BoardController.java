@@ -47,7 +47,7 @@ public class BoardController {
 		return new MyResponseEntity<>(new MyResponseEntityDTO<>("게시판 화면", boardList));
 	}
 
-	// 게시글 작성
+	// 게시글 작성 총 게시글 증가는 트리거로
 	@PostMapping("/insert/{catDomain}")
 	@ApiOperation("insertBoard")
 	public MyResponseEntity<String> insertBoard(@PathVariable("catDomain") String catDomain,
@@ -65,7 +65,7 @@ public class BoardController {
 		return new MyResponseEntity<>(new MyResponseEntityDTO<>("게시글 수정 여부", resultMesg));
 	}
 
-	// 게시글 삭제
+	// 게시글 삭제 총 게시글 감소는 트리거로
 	@DeleteMapping("/delete/{boardNum}")
 	@ApiOperation("deleteBoard")
 	public MyResponseEntity<String> deleteBoard(@PathVariable("boardNum") Integer boardNum,

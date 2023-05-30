@@ -7,7 +7,6 @@ import org.apache.ibatis.annotations.Mapper;
 import com.project.dto.BoardDTO;
 import com.project.dto.BoardDetailDTO;
 import com.project.dto.BoardSearchDTO;
-import com.project.dto.BoardSearchSpecialDTO;
 import com.project.dto.ReplyDTO;
 import com.project.dto.mainDTO;
 
@@ -41,14 +40,5 @@ public interface BoardDAO {
 	List<ReplyDTO> replyList(BoardSearchDTO boardSearchDTO);
 
 	void backUpBoard(BoardDTO boardDTO);
-
-	void totalCountPlusCat(String catDomain);
-
-	void totalCountMinusCat(BoardDTO boardDTO);
-
-
-
-
-
 
 }

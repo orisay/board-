@@ -45,6 +45,8 @@ public final class ConstantConfig {
 
 	public static final String LastClick = "lastClickTime";
 
+	public static final Integer insertStartNum = 0;
+
 	public static final Integer rplPlus = 1;
 
 	public static final String clientIp = "clientIp";
