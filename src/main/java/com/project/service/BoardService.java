@@ -239,7 +239,7 @@ public class BoardService {
 		BoardSearchDTO boardSearchDTO = new BoardSearchDTO();
 		boardSearchDTO.setStartIdx(startIdx);
 		boardSearchDTO.setEndIdx(endIdx);
-		boardSearchDTO.setCat(catDomain);
+		boardSearchDTO.setCatDomain(catDomain);
 		return boardSearchDTO;
 	}
 
