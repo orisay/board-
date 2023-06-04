@@ -6,13 +6,13 @@ import com.project.dto.ReplyDTO;
 @Mapper
 public interface ReplyDAO {
 
-	Integer countPlusBoard(Integer rplplus);
+	Integer countPlusBoard(Integer boardNum);
 
 	Integer insertReply(ReplyDTO replyDTO);
 
 	Integer updateReply(ReplyDTO replyDTO);
 
-	Integer countMinusBoard();
+	Integer countMinusBoard(Integer boardNum);
 
 	void backUpReply(ReplyDTO replyDTO);
 

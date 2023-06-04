@@ -41,4 +41,8 @@ public interface BoardDAO {
 
 	void backUpBoard(BoardDTO boardDTO);
 
+	void plusCountCategoryboardCnt(BoardDTO boardDTO);
+
+	void minusCountCategoryboardCnt(BoardDTO boardDTO);
+
 }

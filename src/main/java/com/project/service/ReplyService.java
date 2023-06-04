@@ -36,7 +36,7 @@ public class ReplyService {
 
 		replyDTO.setId(id);
 		replyDTO.setBoardNum(boardNum);
-		replyDAO.countPlusBoard(ConstantConfig.rplPlus);
+		replyDAO.countPlusBoard(boardNum);
 		Integer replyInsert = replyDAO.insertReply(replyDTO);
 		return replyInsert;
 	}
@@ -67,7 +67,7 @@ public class ReplyService {
 					"ReplyService deleteReply null value rplNum : " + rplNum + " replyDTO " + replyDTO);
 		}
 		System.err.println(replyDTO);
-		replyDAO.countMinusBoard();
+		replyDAO.countMinusBoard(replyDTO.getBoardNum());
 		replyDAO.backUpReply(replyDTO);
 		Integer replyDelete = null;
 		if (replyDTO.getDepth() == ConstantConfig.startDepth) {

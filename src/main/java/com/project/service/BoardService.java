@@ -110,6 +110,8 @@ public class BoardService {
 		Integer insertCount = boardDAO.insertBoard(boardDTO);
 		String resultMesg = null;
 		if (insertCount == 1) {
+			//이때 게시글 증가 dao 함수 추가
+			boardDAO.plusCountCategoryboardCnt(boardDTO);
 			resultMesg = "성공했습니다";
 		} else if (insertCount == 0) {
 			logger.warn("insertBoard access User : {} DB is not affected. catDomain: {}, boardDTO: {}", user, catDomain,
@@ -167,6 +169,7 @@ public class BoardService {
 		String resultMesg = null;
 		if (deleteCount == 1) {
 			boardDAO.backUpBoard(boardDTO);
+			boardDAO.minusCountCategoryboardCnt(boardDTO);
 			resultMesg = "성공했습니다";
 		} else if (deleteCount == 0) {
 			logger.warn("deleteBoard access User : {} DB is not affected. boardNum: {}, boardDTO: {}", user, boardNum,

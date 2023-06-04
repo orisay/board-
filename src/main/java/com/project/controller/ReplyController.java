@@ -22,6 +22,7 @@ public class ReplyController {
 	@Autowired
 	ReplyService replyService;
 
+	//리플DTO DEPTH 올려줘야함 항상 값을 가지고있음.
 	//댓글 작성
 	@PostMapping("/insert/{boardNum}")
 	@ApiOperation("insertReply")

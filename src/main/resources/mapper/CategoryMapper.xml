@@ -3,73 +3,78 @@
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.project.dao.CategoryDAO">
+
 	<select id="controllerCategory" resultType="CategoryDTO">
 		SELECT
-		CAT_DOMAIN
-		,CAT
-		,BOARD_CNT
-		,RPL_CNT
-		,MNG
-		,CRT_TM
-		,UP_TM
-		,CRT_NM
-		,UP_NM
+				CAT_DOMAIN
+				,CAT
+				,BOARD_CNT
+				,RPL_CNT
+				,MNG
+				,CRT_TM
+				,UP_TM
+				,CRT_NM
+				,UP_NM
 		FROM
-		TB_CATEGORY
+				TB_CATEGORY
 	</select>
+
 	<insert id="insertCategory" parameterType="CategoryDTO">
-		INSERT
-		INTO
-		TB_CATEGORY
-		(
-		CAT_DOMAIN
-		,CAT
-		,BOARD_CNT
-		,RPL_CNT
-		,MNG
-		,CRT_TM
-		,UP_TM
-		,CRT_NM
-		,UP_NM
-		)
+		INSERT INTO
+				TB_CATEGORY
+				(
+				CAT_DOMAIN
+				,CAT
+				,BOARD_CNT
+				,RPL_CNT
+				,MNG
+				,CRT_TM
+				,UP_TM
+				,CRT_NM
+				,UP_NM
+				)
 		VALUES
-		(
-		#{catDomain}
-		,#{cat}
-		,#{boardCnt}
-		,#{rplCnt}
-		,#{mng}
-		,SYSDATE
-		,SYSDATE
-		,#{crtNm}
-		,#{crtNm}
-		)
+				(
+				#{catDomain}
+				,#{cat}
+				,#{boardCnt}
+				,#{rplCnt}
+				,#{mng}
+				,SYSDATE
+				,SYSDATE
+				,#{crtNm}
+				,#{crtNm}
+				)
 	</insert>
+
 	<update id="updateMng" parameterType="CategoryDTO">
 		UPDATE
-		TB_CATEGORY
+				TB_CATEGORY
 		SET
-		MNG = #{mng}
-		,UP_TM = SYSDATE
-		,UP_NM = #{upNm}
+				MNG = #{mng}
+				,UP_TM = SYSDATE
+				,UP_NM = #{upNm}
 		WHERE
-		CAT_DOMAIN = #{catDomain}
+				CAT_DOMAIN = #{catDomain}
 	</update>
+
 	<update id="updateCat" parameterType="CategoryDTO">
 		UPDATE
-		TB_CATEGORY
+				TB_CATEGORY
 		SET
-		CAT = #{cat}
-		,UP_TM = SYSDATE
-		,UP_NM = #{upNm}
+				CAT = #{cat}
+				,UP_TM = SYSDATE
+				,UP_NM = #{upNm}
 		WHERE
-		CAT_DOMAIN = #{catDomain}
+				CAT_DOMAIN = #{catDomain}
 	</update>
+
 	<delete id="deleteCat" parameterType="String">
 		DELETE
 		FROM
-		TB_CATEGORY
+				TB_CATEGORY
 		WHERE
-		CAT_DOMAIN = #{catDomain}
+				CAT_DOMAIN = #{catDomain}
 	</delete>
+
 </mapper>

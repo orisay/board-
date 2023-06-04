@@ -2,6 +2,112 @@
 <!DOCTYPE mapper
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-  <mapper namespace="com.project.dao.ReplyDAO">
+<mapper namespace="com.project.dao.ReplyDAO">
 
-  </mapper>
+	<update id="countPlusBoard" parameterType="Integer">
+		UPDATE
+		TB_REPLY
+		SET
+		RPL_CNT = RPL_CNT + 1
+		WHERE
+		BOARD_NUM = #{boardNum}
+	</update>
+
+	<insert id="insertReply" parameterType="ReplyDTO">
+		INSERT INTO
+		TB_REPLY
+		(
+		RPL_NUM
+		,BOARD_NUM
+		,ID
+		,RPL_CN
+		,CRT_TM
+		,UP_TM
+		,PW
+		,PARENT_RPL
+		,DEPTH
+		)
+		VALUES
+		(
+		#{rplNum}
+		,#{boardNum}
+		,#{id}
+		,#{rplCn}
+		,SYSDATE
+		,SYSDATE
+		,#{pw}
+		,#{parentRpl}
+		,#{depth}
+		)
+	</insert>
+
+	<update id="updateReply" parameterType="ReplyDTO">
+		UPDATE
+		TB_REPLY
+		SET
+		RPL_CN =
+		#{rplCn}
+		,UP_TM = SYSDATE
+		WHERE
+		ID = #{id}
+		AND
+		PW = #{PW}
+	</update>
+
+	<update id="countMinusBoard" parameterType="Integer">
+		UPDATE
+		TB_REPLY
+		SET
+		RPL_CNT = RPL_CNT - 1
+		WHERE
+		BOARD_NUM = #{boardNum}
+	</update>
+
+	<insert id="backUpReply" parameterType="ReplyDTO">
+		INSERT INTO
+		TB_DEL_REPLY
+		(
+		RPL_NUM
+		,BOARD_NUM
+		,ID
+		,RPL_CN
+		,CRT_TM
+		,UP_TM
+		,PW
+		,PARENT_RPL
+		,DEPTH
+		)
+		VALUES
+		(
+		#{rplNum}
+		,#{boardNum}
+		,#{id}
+		,#{rplCn}
+		,#{CRT_TM}
+		,SYSDATE
+		,#{pw}
+		,#{parentRpl}
+		,#{depth}
+		)
+	</insert>
+
+	<delete id="deleteReply" parameterType="Integer">
+		DELETE
+		FROM
+		TB_REPLY
+		WHERE
+		ID = #{id}
+		AND
+		PW = #{PW}
+	</delete>
+
+	<update id="deleteRplCnNUll" parameterType="Integer">
+		UPDATE
+		TB_REPLY
+		SET
+		RPL_CN = NULL
+		WHERE
+		RPL_NUM = #{rplNum}
+	</update>
+
+</mapper>

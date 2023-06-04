@@ -3,188 +3,179 @@
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.project.dao.BoardDAO">
+
 	<select id="getMainList" resultType="mainDTO">
 		SELECT
-		CAT_DOMAIN
-		,TTL
-		,CTR_TM
+				CAT_DOMAIN
+				,TTL
+				,CTR_TM
 		FROM
-		(
+				(
 		SELECT
-		CAT_DOMAIN
-		,TTL
-		,CTR_TM
-		,ROW_NUMBER() OVER(PARTITION BY
-		CAT_DOMAIN ORDER BY CTR_TM DESC) AS IDX
+				CAT_DOMAIN
+				,TTL
+				,CTR_TM
+				,ROW_NUMBER() OVER(PARTITION BY
+				CAT_DOMAIN ORDER BY CTR_TM DESC) AS IDX
 		FROM
-		TB_BOARD
-		) AS MAIN
+				TB_BOARD
+				) AS MAIN
 		WHERE
-		IDX<=10
+				IDX<=10
 	</select>
 
-	<select id="totalCountByCat" parameterType="String"
-		resultType="Integer">
+	<select id="totalCountByCat" parameterType="String" resultType="Integer">
 		SELECT
-		COUNT(*)
+				COUNT(*)
 		FROM
-		TB_BOARD
+				TB_BOARD
 		WHERE
-		CAT_DOMAIN = #{catDomain}
+				CAT_DOMAIN = #{catDomain}
 	</select>
 
-	<select id="totalCountByBoard" parameterType="String"
-		resultType="Integer">
+	<select id="totalCountByBoard" parameterType="String" resultType="Integer">
 		SELECT
-		COUNT(*)
+				COUNT(*)
 		FROM
-		TB_REPLY
+				TB_REPLY
 		WHERE
-		BOARD_NUM = #{boardNum}
+				BOARD_NUM = #{boardNum}
 	</select>
 
-	<select id="getBoardList" parameterType="BoardSearchDTO"
-		resultType="BoardDTO">
+	<select id="getBoardList" parameterType="BoardSearchDTO" resultType="BoardDTO">
 		SELECT
-		BOARD.*
+				BOARD.*
 		FROM
-		(
-		SELECT
-		BOARD_NUM
-		,CAT_DOMAIN
-		,CREATOR
-		,TTL
-		,CN
-		,VIEW
-		,RPL_CNT
-		,CRT_TM
-		,UP_TM
-		,ROW_NUMBER() OVER(ORDER BY CRT_TM DESC)
-		AS IDX
+				(
+				SELECT
+				BOARD_NUM
+				,CAT_DOMAIN
+				,CREATOR
+				,TTL
+				,CN
+				,VIEW
+				,RPL_CNT
+				,CRT_TM
+				,UP_TM
+				,ROW_NUMBER() OVER(ORDER BY CRT_TM DESC)
+				AS IDX
 		FROM
-		TB_BOARD
+				TB_BOARD
 		WHERE
-		CAT_DOMAIN = #{catDomain}
-		)
-		AS BOARD
+				CAT_DOMAIN = #{catDomain}
+				) AS BOARD
 		WHERE
-		IDX
+				IDX
 		BETWEEN
-		#{startIdx}
+				#{startIdx}
 		AND
-		#{endIdx}
+				#{endIdx}
 	</select>
 
 	<insert id="insertBoard" parameterType="BoardDTO">
 		INSERT INTO
-		TB_BOARD
-		(
-		BOARD_NUM
-		,CAT_DOMAIN
-		,CREATOR
-		,TTL
-		,CN
-		,VIEW
-		,RPL_CNT
-		,CRT_TM
-		,UP_TM
-		)
+				TB_BOARD
+				(
+				BOARD_NUM
+				,CAT_DOMAIN
+				,CREATOR
+				,TTL
+				,CN
+				,VIEW
+				,RPL_CNT
+				,CRT_TM
+				,UP_TM
+				)
 		VALUES
-		(
-		#{boardNum}
-		,#{catDomain}
-		,#{creator}
-		,#{ttl}
-		,#{cn}
-		,#{view}
-		,#{rplCnt}
-		,SYSDATE
-		,SYSDATE
-		)
+				(
+				#{boardNum}
+				,#{catDomain}
+				,#{creator}
+				,#{ttl}
+				,#{cn}
+				,#{view}
+				,#{rplCnt}
+				,SYSDATE
+				,SYSDATE
+				)
 	</insert>
 
 	<update id="updateBoard" parameterType="BoardDTO">
 		UPDATE
-		TB_BOARD
+				TB_BOARD
 		SET
-		CN =
-		#{cn}
-		,UP_TM = SYSDATE
+				CN = #{cn}
+				,UP_TM = SYSDATE
 		WHERE
-		BOARD_NUM = #{boardNum}
+				BOARD_NUM = #{boardNum}
 	</update>
 
 	<delete id="deleteBoard" parameterType="Integer">
 		DELETE
 		FROM
-		TB_BOARD
+				TB_BOARD
 		WHERE
-		BOARD_NUM = #{boardNum}
+				BOARD_NUM = #{boardNum}
 		AND
-		PW = #{pw}
+				PW = #{pw}
 	</delete>
 
-	<select id="searchBoardBasic" parameterType="BoardSearchDTO"
-		resultType="BoardDTO">
+	<select id="searchBoardBasic" parameterType="BoardSearchDTO" resultType="BoardDTO">
 		SELECT
-		BOARD.*
+				BOARD.*
 		FROM
-		(
+				(
 		SELECT
-		BOARD_NUM
-		,CAT_DOMAIN
-		,CREATOR
-		,TTL
-		,CN
-		,VIEW
-		,RPL_CNT
-		,CRT_TM
-		,UP_TM
-		,ROW_NUMBER() OVER(ORDER BY CRT_TM DESC)
-		AS IDX
+				BOARD_NUM
+				,CAT_DOMAIN
+				,CREATOR
+				,TTL
+				,CN
+				,VIEW
+				,RPL_CNT
+				,CRT_TM
+				,UP_TM
+				,ROW_NUMBER() OVER(ORDER BY CRT_TM DESC)
+				AS IDX
 		FROM
-		TB_BOARD
+				TB_BOARD
 		WHERE
-		CAT_DOMAIN = #{catDomain}
+				CAT_DOMAIN = #{catDomain}
 		AND
-		#{target}
-		LIKE
-		CONCAT
-		('%', #{keyword}, '%')
-		)
-		AS BOARD
+				#{target}
+		LIKE CONCAT
+				('%', #{keyword}, '%')
+				) AS BOARD
 		WHERE
-		IDX
+				IDX
 		BETWEEN
-		#{startIdx}
+				#{startIdx}
 		AND
-		#{endIdx}
+				#{endIdx}
 	</select>
 
-	<select id="searchBoardComplex" parameterType="BoardSearchDTO"
-		resultType="BoardDTO">
+	<select id="searchBoardComplex" parameterType="BoardSearchDTO" resultType="BoardDTO">
 		SELECT
-		BOARD.*
+				BOARD.*
 		FROM
-		(
+				(
 		SELECT
-		BOARD_NUM
-		,CAT_DOMAIN
-		,CREATOR
-		,TTL
-		,CN
-		,VIEW
-		,RPL_CNT
-		,CRT_TM
-		,UP_TM
-		,ROW_NUMBER() OVER(ORDER BY CRT_TM DESC)
-		AS IDX
+				BOARD_NUM
+				,CAT_DOMAIN
+				,CREATOR
+				,TTL
+				,CN
+				,VIEW
+				,RPL_CNT
+				,CRT_TM
+				,UP_TM
+				,ROW_NUMBER() OVER(ORDER BY CRT_TM DESC) AS IDX
 		FROM
-		TB_BOARD
+				TB_BOARD
 		WHERE
-		CAT_DOMAIN = #{catDomain}
+				CAT_DOMAIN = #{catDomain}
 		AND
-		(
+				(
 		TTL
 		LIKE CONCAT
 		('%' ,#{keyword}, '%')
@@ -192,154 +183,167 @@
 		CN
 		LIKE CONCAT
 		('%', #{keyword}, '%')
-		)
-		)
-		AS BOARD
+				)
+				) AS BOARD
 		WHERE
-		IDX
+				IDX
 		BETWEEN
-		#{startIdx}
+				#{startIdx}
 		AND
-		#{endIdx}
+				#{endIdx}
 	</select>
 
-	<select id="searchBoardAll" parameterType="BoardSearchDTO"
-		resultType="BoardDTO">
+	<select id="searchBoardAll" parameterType="BoardSearchDTO" resultType="BoardDTO">
 		SELECT
-		BOARD.*
+				BOARD.*
 		FROM
-		(
+				(
 		SELECT
-		BOARD_NUM
-		,CAT_DOMAIN
-		,CREATOR
-		,TTL
-		,CN
-		,VIEW
-		,RPL_CNT
-		,CRT_TM
-		,UP_TM
-		,ROW_NUMBER() OVER(ORDER BY CRT_TM DESC)
-		AS IDX
+				BOARD_NUM
+				,CAT_DOMAIN
+				,CREATOR
+				,TTL
+				,CN
+				,VIEW
+				,RPL_CNT
+				,CRT_TM
+				,UP_TM
+				,ROW_NUMBER() OVER(ORDER BY CRT_TM DESC) AS IDX
 		FROM
-		TB_BOARD
+				TB_BOARD
 		WHERE
-		CAT_DOMAIN = #{catDomain}
+				CAT_DOMAIN = #{catDomain}
 		AND
-		(
-		CREATOR
+				(
+				CREATOR
+		LIKE CONCAT
+				('%', #{keyword}, '%')
+		OR
+				TTL
 		LIKE CONCAT
 		('%', #{keyword}, '%')
 		OR
-		TTL
+				CN
 		LIKE CONCAT
-		('%',
-		#{keyword}, '%')
-		OR
-		CN
-		LIKE
-		CONCAT
 		('%', #{keyword}, '%')
-		)
-		)AS BOARD
+				)
+				) AS BOARD
 		WHERE
-		IDX
+				IDX
 		BETWEEN
-		#{startIdx}
+				#{startIdx}
 		AND
-		#{endIdx}
+				#{endIdx}
 	</select>
 
 	<update id="updateView" parameterType="BoardDetailDTO">
 		UPDATE
-		TB_BOARD
+				TB_BOARD
 		SET
-		VIEW =
-		#{view}
+				VIEW = VIEW + #{view}
 		WHERE
-		BOARD_NUM = #{boardNum}
+				BOARD_NUM = #{boardNum}
 	</update>
 
-	<select id="boardDetail" parameterType="BoardDetailDTO"
-		resultType="BoardDetailDTO">
+	<select id="boardDetail" parameterType="BoardDetailDTO" resultType="BoardDetailDTO">
 		SELECT
-		BOARD_NUM
-		,CAT_DOMAIN
-		,CREATOR
-		,TTL
-		,CN
-		,VIEW
-		,RPL_CNT
-		,CRT_TM
-		,UP_TM
+				BOARD_NUM
+				,CAT_DOMAIN
+				,CREATOR
+				,TTL
+				,CN
+				,VIEW
+				,RPL_CNT
+				,CRT_TM
+				,UP_TM
 		FROM
-		TB_BOARD
+				TB_BOARD
 		WHERE
-		BOARD_NUM = #{boardNum}
+				BOARD_NUM = #{boardNum}
 	</select>
 
-	<select id="replyList" parameterType="BoardSearchDTO"
-		resultType="ReplyDTO">
+	<select id="replyList" parameterType="BoardSearchDTO" resultType="ReplyDTO">
 		SELECT
-		IDX,
-		REPLY.*
-		FROM (
-		SELECT
-		,RPL_NUM
-		,BOARD_NUM
-		,ID
-		,RPL_CN
-		,CRT_TM
-		,UP_TM
-		,PW
-		,PARENT_RPL
-		,DEPTH
-		,CONNECT_BY_ROOT RPL_NUM AS
-		"START_RPLNUM"
-		,ROW_NUMBER() OVER(ORDER BY CRT_TM ASC) AS IDX
+				IDX,
+				REPLY.*
 		FROM
-		TB_REPLY
+				(
+		SELECT
+				,RPL_NUM
+				,BOARD_NUM
+				,ID
+				,RPL_CN
+				,CRT_TM
+				,UP_TM
+				,PW
+				,PARENT_RPL
+				,DEPTH
+				,CONNECT_BY_ROOT RPL_NUM AS "START_RPLNUM"
+				,ROW_NUMBER() OVER(ORDER BY CRT_TM ASC) AS IDX
+		FROM
+				TB_REPLY
 		WHERE
-		BOARD_NUM = #{boardNum}
+				BOARD_NUM = #{boardNum}
 		START WITH
-		PARENT_RPL = 0
+				PARENT_RPL = 0
 		CONNECT BY
 		PRIOR
-		RPL_NUM = PARENT_RPL
+				RPL_NUM = PARENT_RPL
 		ORDER SIBLINGS BY
-		CRT_TM ASC
-		) REPLY
+				CRT_TM ASC
+				) AS "REPLY"
 		WHERE
-		IDX
-		BETWEEN #{startIdx} AND #{endIdx}
+				IDX
+		BETWEEN
+				#{startIdx}
+		AND
+				#{endIdx}
 	</select>
 
 	<insert id="backUpBoard" parameterType="BoardDTO">
 		INSERT INTO
-		TB_DEL_BOARD
-		(
-		BOARD_NUM
-		,CAT_DOMAIN
-		,CREATOR
-		,TTL
-		,CN
-		,VIEW
-		,RPL_CNT
-		,CRT_TM
-		,UP_TM
-		)
+				TB_DEL_BOARD
+				(
+				BOARD_NUM
+				,CAT_DOMAIN
+				,CREATOR
+				,TTL
+				,CN
+				,VIEW
+				,RPL_CNT
+				,CRT_TM
+				,UP_TM
+				)
 		VALUES
-		(
-		#{boardNum}
-		,#{catDomain}
-		,#{creator}
-		,#{ttl}
-		,#{cn}
-		,#{view}
-		,#{rplCnt}
-		,#{crtTm}
-		,SYSDATE
-		)
+				(
+				#{boardNum}
+				,#{catDomain}
+				,#{creator}
+				,#{ttl}
+				,#{cn}
+				,#{view}
+				,#{rplCnt}
+				,#{crtTm}
+				,SYSDATE
+				)
 	</insert>
+
+	<update id="plusCountCategoryboardCnt" parameterType="BoardDTO">
+		UPDATE
+				TB_CATEGORY
+		SET
+				RPL_CNT = RPL_CNT + 1
+		WHERE
+				CAT_DOMAIN = #{catDomain}
+	</update>
+
+	<update id="plusCountCategoryboardCnt" parameterType="BoardDTO">
+		UPDATE
+				TB_CATEGORY
+		SET
+				RPL_CNT = RPL_CNT - 1
+		WHERE
+				CAT_DOMAIN = #{catDomain}
+	</update>
 
 </mapper>
