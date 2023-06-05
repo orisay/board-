@@ -91,7 +91,7 @@
 		)
 	</insert>
 
-	<delete id="deleteReply" parameterType="Integer">
+	<delete id="deleteReply" parameterType="ReplyDTO">
 		DELETE
 		FROM
 		TB_REPLY
@@ -101,7 +101,26 @@
 		PW = #{PW}
 	</delete>
 
-	<update id="deleteRplCnNUll" parameterType="Integer">
+	<update id="deleteRplCnNUll" parameterType="ReplyDTO">
+		UPDATE
+		TB_REPLY
+		SET
+		RPL_CN = NULL
+		WHERE
+		RPL_NUM = #{rplNum}
+		AND
+		PW = #{pw}
+	</update>
+
+	<delete id="deleteReply" parameterType="ReplyDTO">
+		DELETE
+		FROM
+		TB_REPLY
+		WHERE
+		ID = #{id}
+	</delete>
+
+	<update id="deleteRplCnNUll" parameterType="ReplyDTO">
 		UPDATE
 		TB_REPLY
 		SET

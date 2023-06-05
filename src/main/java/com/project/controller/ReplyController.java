@@ -22,8 +22,7 @@ public class ReplyController {
 	@Autowired
 	ReplyService replyService;
 
-	//리플DTO DEPTH 올려줘야함 항상 값을 가지고있음.
-	//댓글 작성
+	// 댓글 작성
 	@PostMapping("/insert/{boardNum}")
 	@ApiOperation("insertReply")
 	public MyResponseEntity<Void> insertReply(@PathVariable("boardNum") Integer boardNum,
@@ -32,21 +31,20 @@ public class ReplyController {
 		return new MyResponseEntity<>(new MyResponseEntityDTO<>("댓글 작성 성공"));
 	}
 
-	//댓글 수정
+	// 댓글 수정
 	@PutMapping("/update/{rplNum}")
 	@ApiOperation("updateReply")
-	public MyResponseEntity<Void> updateReply(@PathVariable("rplNum") Integer rplNum,
-			@RequestBody ReplyDTO replyDTO) {
-		replyService.updateReply(rplNum, replyDTO);
+	public MyResponseEntity<Void> updateReply(@RequestBody ReplyDTO replyDTO) {
+		replyService.updateReply(replyDTO);
 		return new MyResponseEntity<>(new MyResponseEntityDTO<>("댓글 수정 성공"));
 	}
 
-	//댓글 삭제
+	// 댓글 삭제
+	//spring boot 내장 tomcat은 deletemapping requestbody 지원해준다.
 	@DeleteMapping("/delete/{rplNum}")
 	@ApiOperation("deleteReply")
-	public MyResponseEntity<Void> deleteReply(@PathVariable("rplNum") Integer rplNum,
-			@RequestBody ReplyDTO replyDTO) {
-		replyService.deleteReply(rplNum, replyDTO);
+	public MyResponseEntity<Void> deleteReply(@RequestBody ReplyDTO replyDTO) {
+		replyService.deleteReply(replyDTO);
 		return new MyResponseEntity<>(new MyResponseEntityDTO<>("댓글 삭제 성공"));
 	}
 }

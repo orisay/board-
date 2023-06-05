@@ -16,9 +16,13 @@ public interface ReplyDAO {
 
 	void backUpReply(ReplyDTO replyDTO);
 
-	Integer deleteReply(Integer rplNum);
+	Integer deleteGuestReply(ReplyDTO replyDTO);
 
-	Integer deleteRplCnNUll(Integer rplNum);
+	Integer deleteGuestRplCnNUll(ReplyDTO replyDTO);
+
+	Integer deleteMemberReply(ReplyDTO replyDTO);
+
+	Integer deleteMemberRplCnNUll(ReplyDTO replyDTO);
 
 
 }

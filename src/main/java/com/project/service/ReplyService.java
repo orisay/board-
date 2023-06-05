@@ -43,37 +43,37 @@ public class ReplyService {
 
 	// 댓글 수정
 	@Transactional
-	public Integer updateReply(Integer rplNum, ReplyDTO replyDTO) {
+	public Integer updateReply(ReplyDTO replyDTO) {
 		String id = getAccessRight();
-		if (rplNum == null || replyDTO == null) {
-			logger.warn("updateReply access user : {} , null values boardNum : {}, replyDTO : {}", id, rplNum,
-					replyDTO);
-			throw new IllegalArgumentException(
-					"ReplyService updateReply null value rplNum : " + rplNum + " replyDTO " + replyDTO);
+		if (replyDTO == null) {
+			logger.warn("updateReply access user : {} , null values replyDTO : {}", id, replyDTO);
+			throw new IllegalArgumentException("ReplyService updateReply null value replyDTO : " + replyDTO);
 		}
-		replyDTO.setRplNum(rplNum);
 		Integer replyUpdate = replyDAO.updateReply(replyDTO);
 		return replyUpdate;
 	}
 
 	// 댓글 삭제
 	@Transactional
-	public Integer deleteReply(Integer rplNum, ReplyDTO replyDTO) {
+	public Integer deleteReply(ReplyDTO replyDTO) {
 		String id = getAccessRight();
-		if (rplNum == null || replyDTO == null) {
-			logger.warn("deleteReply access user : {} , null values boardNum : {}, replyDTO : {}", id, rplNum,
-					replyDTO);
-			throw new IllegalArgumentException(
-					"ReplyService deleteReply null value rplNum : " + rplNum + " replyDTO " + replyDTO);
+		if (replyDTO == null) {
+			logger.warn("deleteReply access user : {} , null values  replyDTO : {}", id, replyDTO);
+			throw new IllegalArgumentException("ReplyService deleteReply null value replyDTO : " + replyDTO);
 		}
 		System.err.println(replyDTO);
 		replyDAO.countMinusBoard(replyDTO.getBoardNum());
 		replyDAO.backUpReply(replyDTO);
 		Integer replyDelete = null;
-		if (replyDTO.getDepth() == ConstantConfig.startDepth) {
-			replyDelete = replyDAO.deleteReply(rplNum);
-		} else if (replyDTO.getDepth() > ConstantConfig.startDepth) {
-			replyDelete = replyDAO.deleteRplCnNUll(rplNum);
+
+		if (replyDTO.getDepth() == ConstantConfig.startDepth && id.equals("guestId")) {
+			replyDelete = replyDAO.deleteGuestReply(replyDTO);
+		} else if (replyDTO.getDepth() > ConstantConfig.startDepth && id.equals("guestId")) {
+			replyDelete = replyDAO.deleteGuestRplCnNUll(replyDTO);
+		} else if (replyDTO.getDepth() == ConstantConfig.startDepth && id.equals("memberId")) {
+			replyDelete = replyDAO.deleteMemberReply(replyDTO);
+		} else if (replyDTO.getDepth() > ConstantConfig.startDepth && id.equals("memberId")) {
+			replyDelete = replyDAO.deleteMemberRplCnNUll(replyDTO);
 		}
 		return replyDelete;
 	}
