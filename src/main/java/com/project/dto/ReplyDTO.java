@@ -10,80 +10,63 @@ public class ReplyDTO {
     private String rplCn;
     private Date crtTm;
     private Date upTm;
+    private Integer depth;
     private String pw;
     private Integer parentRpl;
-    private Integer depth;
 
-	public Integer getRplNum() {
+    public Integer getRplNum() {
 		return rplNum;
 	}
-
 	public Integer getBoardNum() {
 		return boardNum;
 	}
-
 	public String getId() {
 		return id;
 	}
-
 	public String getRplCn() {
 		return rplCn;
 	}
-
 	public Date getCrtTm() {
 		return crtTm;
 	}
-
 	public Date getUpTm() {
 		return upTm;
 	}
-
-	public String getPw() {
-		return pw;
-	}
-
-	public Integer getParentRpl() {
-		return parentRpl;
-	}
-
 	public Integer getDepth() {
 		return depth;
 	}
-
+	public String getPw() {
+		return pw;
+	}
+	public Integer getParentRpl() {
+		return parentRpl;
+	}
 	public void setRplNum(Integer rplNum) {
 		this.rplNum = rplNum;
 	}
-
 	public void setBoardNum(Integer boardNum) {
 		this.boardNum = boardNum;
 	}
-
 	public void setId(String id) {
 		this.id = id;
 	}
-
 	public void setRplCn(String rplCn) {
 		this.rplCn = rplCn;
 	}
-
 	public void setCrtTm(Date crtTm) {
 		this.crtTm = crtTm;
 	}
-
 	public void setUpTm(Date upTm) {
 		this.upTm = upTm;
 	}
-
+	public void setDepth(Integer depth) {
+		this.depth = depth;
+	}
 	public void setPw(String pw) {
 		this.pw = pw;
 	}
-
 	public void setParentRpl(Integer parentRpl) {
 		this.parentRpl = parentRpl;
-	}
-
-	public void setDepth(Integer depth) {
-		this.depth = depth;
 	}
 
 	@Override
@@ -101,15 +84,14 @@ public class ReplyDTO {
 		builder.append(crtTm);
 		builder.append(", upTm=");
 		builder.append(upTm);
+		builder.append(", depth=");
+		builder.append(depth);
 		builder.append(", pw=");
 		builder.append(pw);
 		builder.append(", parentRpl=");
 		builder.append(parentRpl);
-		builder.append(", depth=");
-		builder.append(depth);
 		builder.append("]");
 		return builder.toString();
 	}
-
 
 }

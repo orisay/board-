@@ -61,7 +61,7 @@ public final class ConstantConfig {
 			"NuLL", "nUlL", "NuLl", "NUlL", "nULl", "NULl" };
 
 	public enum UserRole {
-		BASIC(1), SUB_MANAGER(2), MANAGER(3), ADMIN(4);
+		BASIC(1), SUB_MNG(2), MNG(3), ADMIN(4);
 
 		// () 안은 ENUM 상수 값에 할당된 값이 아니라 연결된 값이다.
 		// ENUM java 내에서 특수한 클래스라 할당하는 정규 문법이 없다. 대신 연결해 줘야 한다.

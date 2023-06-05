@@ -6,127 +6,126 @@
 
 	<update id="countPlusBoard" parameterType="Integer">
 		UPDATE
-		TB_REPLY
+				TB_REPLY
 		SET
-		RPL_CNT = RPL_CNT + 1
+				RPL_CNT = RPL_CNT + 1
 		WHERE
-		BOARD_NUM = #{boardNum}
+				BOARD_NUM = #{boardNum}
 	</update>
 
 	<insert id="insertReply" parameterType="ReplyDTO">
 		INSERT INTO
-		TB_REPLY
-		(
-		RPL_NUM
-		,BOARD_NUM
-		,ID
-		,RPL_CN
-		,CRT_TM
-		,UP_TM
-		,PW
-		,PARENT_RPL
-		,DEPTH
-		)
+				TB_REPLY
+				(
+				RPL_NUM
+				,BOARD_NUM
+				,ID
+				,RPL_CN
+				,CRT_TM
+				,UP_TM
+				,DEPTH
+				,PW
+				,PARENT_RPL
+				)
 		VALUES
-		(
-		#{rplNum}
-		,#{boardNum}
-		,#{id}
-		,#{rplCn}
-		,SYSDATE
-		,SYSDATE
-		,#{pw}
-		,#{parentRpl}
-		,#{depth}
-		)
+				(
+				#{rplNum}
+				,#{boardNum}
+				,#{id}
+				,#{rplCn}
+				,SYSDATE
+				,SYSDATE
+				,#{depth}
+				,#{pw}
+				,#{parentRpl}
+				)
 	</insert>
 
 	<update id="updateReply" parameterType="ReplyDTO">
 		UPDATE
-		TB_REPLY
+				TB_REPLY
 		SET
-		RPL_CN =
-		#{rplCn}
-		,UP_TM = SYSDATE
+				RPL_CN = #{rplCn}
+				,UP_TM = SYSDATE
 		WHERE
-		ID = #{id}
+				ID = #{id}
 		AND
-		PW = #{PW}
+				PW = #{PW}
 	</update>
 
 	<update id="countMinusBoard" parameterType="Integer">
 		UPDATE
-		TB_REPLY
+				TB_REPLY
 		SET
-		RPL_CNT = RPL_CNT - 1
+				RPL_CNT = RPL_CNT - 1
 		WHERE
-		BOARD_NUM = #{boardNum}
+				BOARD_NUM = #{boardNum}
 	</update>
 
 	<insert id="backUpReply" parameterType="ReplyDTO">
 		INSERT INTO
-		TB_DEL_REPLY
-		(
-		RPL_NUM
-		,BOARD_NUM
-		,ID
-		,RPL_CN
-		,CRT_TM
-		,UP_TM
-		,PW
-		,PARENT_RPL
-		,DEPTH
-		)
+				TB_DEL_REPLY
+				(
+				RPL_NUM
+				,BOARD_NUM
+				,ID
+				,RPL_CN
+				,CRT_TM
+				,UP_TM
+				,DEPTH
+				,PW
+				,PARENT_RPL
+				)
 		VALUES
-		(
-		#{rplNum}
-		,#{boardNum}
-		,#{id}
-		,#{rplCn}
-		,#{CRT_TM}
-		,SYSDATE
-		,#{pw}
-		,#{parentRpl}
-		,#{depth}
-		)
+				(
+				#{rplNum}
+				,#{boardNum}
+				,#{id}
+				,#{rplCn}
+				,#{CRT_TM}
+				,SYSDATE
+				,#{depth}
+				,#{pw}
+				,#{parentRpl}
+				)
 	</insert>
 
-	<delete id="deleteReply" parameterType="ReplyDTO">
+	<delete id="deleteGuestReply" parameterType="ReplyDTO">
 		DELETE
 		FROM
-		TB_REPLY
+				TB_REPLY
 		WHERE
-		ID = #{id}
+				ID = #{id}
 		AND
-		PW = #{PW}
+				PW = #{PW}
 	</delete>
 
-	<update id="deleteRplCnNUll" parameterType="ReplyDTO">
+	<update id="deleteGuestRplCnNUll" parameterType="ReplyDTO">
 		UPDATE
-		TB_REPLY
+				TB_REPLY
 		SET
-		RPL_CN = NULL
+				RPL_CN = NULL
 		WHERE
-		RPL_NUM = #{rplNum}
+				RPL_NUM = #{rplNum}
 		AND
-		PW = #{pw}
+				PW = #{pw}
 	</update>
 
-	<delete id="deleteReply" parameterType="ReplyDTO">
+	<delete id="deleteMemberReply" parameterType="ReplyDTO">
 		DELETE
 		FROM
-		TB_REPLY
+				TB_REPLY
 		WHERE
-		ID = #{id}
+				ID = #{id}
 	</delete>
 
-	<update id="deleteRplCnNUll" parameterType="ReplyDTO">
+	<update id="deleteMemberRplCnNUll" parameterType="ReplyDTO">
 		UPDATE
-		TB_REPLY
+				TB_REPLY
 		SET
-		RPL_CN = NULL
+				RPL_CN = NULL
 		WHERE
-		RPL_NUM = #{rplNum}
+				RPL_NUM = #{rplNum}
 	</update>
 
 </mapper>
