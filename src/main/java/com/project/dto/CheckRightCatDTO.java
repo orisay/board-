@@ -3,26 +3,28 @@ package com.project.dto;
 public class CheckRightCatDTO {
 
 	private String catDomain;
-	private String memberId;
+	private String Id;
+
 	public String getCatDomain() {
 		return catDomain;
 	}
-	public String getMemberId() {
-		return memberId;
+	public String getId() {
+		return Id;
 	}
 	public void setCatDomain(String catDomain) {
 		this.catDomain = catDomain;
 	}
-	public void setMemberId(String memberId) {
-		this.memberId = memberId;
+	public void setId(String id) {
+		Id = id;
 	}
+
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
 		builder.append("CheckRightCatDTO [catDomain=");
 		builder.append(catDomain);
-		builder.append(", memberId=");
-		builder.append(memberId);
+		builder.append(", Id=");
+		builder.append(Id);
 		builder.append("]");
 		return builder.toString();
 	}

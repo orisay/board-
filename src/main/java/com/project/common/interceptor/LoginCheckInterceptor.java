@@ -20,7 +20,7 @@ public class LoginCheckInterceptor implements HandlerInterceptor {
 	@Override
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
 			throws Exception {
-		String roleCheckLogin = SessionConfig.getMbDTO().getRole();
+		String roleCheckLogin = SessionConfig.MbSessionDTO().getRole();
 		String iDCheckLogin = SessionConfig.getSession().getId();
 		String rightCheckLogin = ConstantConfig.UserRole.BASIC.name();
 		String loginIP = IPConfig.getIp(SessionConfig.getSession());

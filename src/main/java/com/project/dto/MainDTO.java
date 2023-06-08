@@ -2,12 +2,12 @@ package com.project.dto;
 
 import java.util.Date;
 
-public class mainDTO {
+public class MainDTO {
 
 	private String catDomain;
 	private String ttl;
 	private Date ctrTm;
-	
+
 	public String getCatDomain() {
 		return catDomain;
 	}
@@ -39,5 +39,5 @@ public class mainDTO {
 		return builder.toString();
 	}
 
-	
+
 }

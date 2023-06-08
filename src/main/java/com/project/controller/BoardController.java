@@ -17,7 +17,7 @@ import com.project.common.MyResponseEntity;
 import com.project.dto.BoardDTO;
 import com.project.dto.BoardDetailDTO;
 import com.project.dto.MyResponseEntityDTO;
-import com.project.dto.mainDTO;
+import com.project.dto.MainDTO;
 import com.project.service.BoardService;
 
 import io.swagger.annotations.ApiOperation;
@@ -32,8 +32,8 @@ public class BoardController {
 	// 메인화면
 	@GetMapping("/")
 	@ApiOperation("boardMain")
-	public MyResponseEntity<List<mainDTO>> main() {
-		List<mainDTO> mainList = boardService.getMainList();
+	public MyResponseEntity<List<MainDTO>> main() {
+		List<MainDTO> mainList = boardService.getMainList();
 		return new MyResponseEntity<>(new MyResponseEntityDTO<>("main 화면", mainList));
 	}
 

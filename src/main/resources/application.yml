@@ -19,7 +19,7 @@ spring:
       max-age: 3600
 mybatis:
   mapper-locations: mapper/*.xml
-  type-aliases-package: com.example
+  type-aliases-package: com.project.dto
   configuration:
     map-underscore-to-camel-case: true
 server:

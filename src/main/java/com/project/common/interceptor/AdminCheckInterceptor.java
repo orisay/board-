@@ -20,7 +20,7 @@ public class AdminCheckInterceptor implements HandlerInterceptor {
 	@Override
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
 			throws Exception {
-		String roleCheckAdmin = SessionConfig.getMbDTO().getRole();
+		String roleCheckAdmin = SessionConfig.MbSessionDTO().getRole();
 		String iDCheckAdmin = SessionConfig.getSession().getId();
 		String rightCheckAdmin = ConstantConfig.UserRole.ADMIN.name();
 		String adminIP = IPConfig.getIp(SessionConfig.getSession());

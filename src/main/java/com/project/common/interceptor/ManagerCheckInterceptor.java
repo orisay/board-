@@ -20,9 +20,9 @@ public class ManagerCheckInterceptor implements HandlerInterceptor {
 	@Override
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
 			throws Exception {
-		String roleCheckMNG = SessionConfig.getMbDTO().getRole();
+		String roleCheckMNG = SessionConfig.MbSessionDTO().getRole();
 		String iDCheckMNG = SessionConfig.getSession().getId();
-		String rightCheckMNG = ConstantConfig.UserRole.MANAGER.name();
+		String rightCheckMNG = ConstantConfig.UserRole.MNG.name();
 		String mngIP = IPConfig.getIp(SessionConfig.getSession());
 		if (roleCheckMNG == null) {
 			logger.warn("non-role user access and view windows that need session ID : {}, IP : {} "

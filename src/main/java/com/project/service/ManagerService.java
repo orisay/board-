@@ -15,9 +15,8 @@ import com.project.config.IPConfig;
 import com.project.config.SessionConfig;
 import com.project.dao.ManagerDAO;
 import com.project.dto.BoardDTO;
-import com.project.dto.CategoryDTO;
 import com.project.dto.CheckRightCatDTO;
-import com.project.dto.MbDTO;
+import com.project.dto.MbSessionDTO;
 import com.project.dto.ReplyDTO;
 import com.project.exception.UnknownException;
 
@@ -33,15 +32,16 @@ public class ManagerService {
 	// 서브 매니저 변경
 	public String changeSubManager(String catDomain, String id) {
 		boolean insertCheck = inputChangeSubManagerCheck(catDomain, id);
-		CategoryDTO categoryDTO = new CategoryDTO();
-		Integer insertCheckNum = null;
+		MbSessionDTO mbSessionDTO = new MbSessionDTO();
+		Integer insertCheckCount = null;
 		String successMesg = null;
 		if (insertCheck) {
-			categoryDTO.setCatDomain(catDomain);
-			categoryDTO.setMng(id);
-			insertCheckNum = managerDAO.changeSubManager(categoryDTO);
+			mbSessionDTO.setCatDomain(catDomain);
+			mbSessionDTO.setRoleNum(UserRole.SUB_MNG.getLevel());
+			mbSessionDTO.setId(id);
+			insertCheckCount = managerDAO.changeSubManager(mbSessionDTO);
 		}
-		if (insertCheckNum == 1) {
+		if (insertCheckCount == 1) {
 			successMesg = id;
 		} else {
 			logger.error("DB error or Fatal error");
@@ -79,7 +79,7 @@ public class ManagerService {
 	//인자값 nullCheck , 레벨 체크 , 카테고리 권한 체크
 	private boolean inputChangeSubManagerCheck(String catDomain, String id) {
 		String accessIP = IPConfig.getIp(SessionConfig.getSession());
-		MbDTO memberInfo = SessionConfig.getMbDTO();
+		MbSessionDTO memberInfo = SessionConfig.MbSessionDTO();
 		String memberId = memberInfo.getId();
 		if (catDomain == null || id == null) {
 			logger.warn("inputChangeSubManagerCheck access ID: {}, IP : {} insert null value catDomain : {}, id : {}",
@@ -100,7 +100,7 @@ public class ManagerService {
 	//인자값 nullCheck , 레벨 체크 , 카테고리 권한 체크
 	private boolean inputdeleteBoardNumListCheck(String catDomain, List<BoardDTO> list) {
 		String accessIP = IPConfig.getIp(SessionConfig.getSession());
-		MbDTO memberInfo = SessionConfig.getMbDTO();
+		MbSessionDTO memberInfo = SessionConfig.MbSessionDTO();
 		String memberId = memberInfo.getId();
 		if (list == null || catDomain == null || list.isEmpty()) {
 			logger.warn("deleteBoardNumList access ID: {}, IP : {} insert null value list : {}", memberId, accessIP,
@@ -121,7 +121,7 @@ public class ManagerService {
 	//인자값 nullCheck , 레벨 체크 , 카테고리 권한 체크
 	private boolean inputdeleteRplNumListCheck(String catDomain, Integer boardNum, List<ReplyDTO> list) {
 		String accessIP = IPConfig.getIp(SessionConfig.getSession());
-		MbDTO memberInfo = SessionConfig.getMbDTO();
+		MbSessionDTO memberInfo = SessionConfig.MbSessionDTO();
 		String memberId = memberInfo.getId();
 		if (list == null || catDomain == null || boardNum == null || list.isEmpty()) {
 			logger.warn("deleteBoardNumList access ID: {}, IP : {} "
@@ -204,7 +204,7 @@ public class ManagerService {
 	}
 
 	// 권한 체크
-	private boolean checkLevel(String accessIP, MbDTO memberInfo) {
+	private boolean checkLevel(String accessIP, MbSessionDTO memberInfo) {
 		String accessRole = memberInfo.getRole();
 		String memberId = memberInfo.getId();
 		UserRole userRole = UserRole.valueOf(accessRole);
@@ -241,15 +241,15 @@ public class ManagerService {
 		return check;
 	}
 
-	private Boolean checkRightCat(String catDomain, String memberId) {
+	private Boolean checkRightCat(String catDomain, String Id) {
 		CheckRightCatDTO checkRightCatDTO = new CheckRightCatDTO();
 		checkRightCatDTO.setCatDomain(catDomain);
-		checkRightCatDTO.setMemberId(memberId);
+		checkRightCatDTO.setId(Id);
 		Integer checkRightCat = managerDAO.selectMng(checkRightCatDTO);
 		if (checkRightCat == 1) {
 			return true;
 		} else {
-			logger.warn("not found manager access ID : {}", memberId);
+			logger.warn("not found manager access ID : {}", Id);
 			throw new IllegalArgumentException("not found manager check RoleUser or catDomain");
 		}
 	}

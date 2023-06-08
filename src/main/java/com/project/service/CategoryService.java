@@ -29,8 +29,8 @@ public class CategoryService {
 	@Transactional
 	public List<CategoryDTO> controllerCategory() {
 		String guestIP = IPConfig.getIp(SessionConfig.getSession());
-		String checkId = SessionConfig.getMbDTO().getId();
-		String checkRole = SessionConfig.getMbDTO().getRole();
+		String checkId = SessionConfig.MbSessionDTO().getId();
+		String checkRole = SessionConfig.MbSessionDTO().getRole();
 		String checkAdmin = UserRole.ADMIN.name();
 		List<CategoryDTO> controllerCategory = Collections.emptyList();
 
@@ -52,8 +52,8 @@ public class CategoryService {
 	// 여기서는 싱크로 나이즈 필요하지 않을까?
 	@Transactional
 	public String insertCategory(CategoryDTO categoryDTO) {
-		String checkId = SessionConfig.getMbDTO().getId();
-		String checkRole = SessionConfig.getMbDTO().getRole();
+		String checkId = SessionConfig.MbSessionDTO().getId();
+		String checkRole = SessionConfig.MbSessionDTO().getRole();
 		String checkAdmin = UserRole.ADMIN.name();
 		String mesg = null;
 
@@ -80,8 +80,8 @@ public class CategoryService {
 	// 카테고리 관리자 수정
 	@Transactional
 	public String updateMng(String catDomain, String id) {
-		String checkId = SessionConfig.getMbDTO().getId();
-		String checkRole = SessionConfig.getMbDTO().getRole();
+		String checkId = SessionConfig.MbSessionDTO().getId();
+		String checkRole = SessionConfig.MbSessionDTO().getRole();
 		String checkAdmin = UserRole.ADMIN.name();
 		String mesg = null;
 
@@ -111,8 +111,8 @@ public class CategoryService {
 	// 카테고리 이름 변경
 	@Transactional
 	public String updateCat(String catDomain, String cat) {
-		String checkId = SessionConfig.getMbDTO().getId();
-		String checkRole = SessionConfig.getMbDTO().getRole();
+		String checkId = SessionConfig.MbSessionDTO().getId();
+		String checkRole = SessionConfig.MbSessionDTO().getRole();
 		String checkAdmin = UserRole.ADMIN.name();
 		String mesg = null;
 
@@ -143,8 +143,8 @@ public class CategoryService {
 	// 카테고리 로그 테이블 따로 존재 트리거 작동
 	@Transactional
 	public String deleteCat(String catDomain) {
-		String checkId = SessionConfig.getMbDTO().getId();
-		String checkRole = SessionConfig.getMbDTO().getRole();
+		String checkId = SessionConfig.MbSessionDTO().getId();
+		String checkRole = SessionConfig.MbSessionDTO().getRole();
 		String checkAdmin = UserRole.ADMIN.name();
 		String mesg = null;
 

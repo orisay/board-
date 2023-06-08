@@ -8,12 +8,12 @@ import com.project.dto.BoardDTO;
 import com.project.dto.BoardDetailDTO;
 import com.project.dto.BoardSearchDTO;
 import com.project.dto.ReplyDTO;
-import com.project.dto.mainDTO;
+import com.project.dto.MainDTO;
 
 @Mapper
 public interface BoardDAO {
 
-	List<mainDTO> getMainList();
+	List<MainDTO> getMainList();
 
 	Integer totalCountByCat(String catDomain);
 

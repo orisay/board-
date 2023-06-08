@@ -20,13 +20,12 @@ import com.project.dto.BoardDetailDTO;
 import com.project.dto.BoardSearchDTO;
 import com.project.dto.PageDTO;
 import com.project.dto.ReplyDTO;
-import com.project.dto.mainDTO;
+import com.project.dto.MainDTO;
 import com.project.exception.UnknownException;
 
 @Service
 public class BoardService {
 
-	// TO DO 마무리 예외처리 할 것
 	@Autowired
 	BoardDAO boardDAO;
 
@@ -35,8 +34,8 @@ public class BoardService {
 	// main입니다.
 	// oracle에서 autocommit 비활성화 했습니다.
 	@Transactional
-	public List<mainDTO> getMainList() {
-		List<mainDTO> mainList = boardDAO.getMainList();
+	public List<MainDTO> getMainList() {
+		List<MainDTO> mainList = boardDAO.getMainList();
 		return mainList;
 	}
 
@@ -78,12 +77,6 @@ public class BoardService {
 		} else if (checkLevel == 4) {
 			searchBoard = boardDAO.searchBoardComplex(boardSearchDTO);
 		} else if (checkLevel > 4) {
-//			BoardSearchSpecialDTO boardSearchSpecialDTO = new BoardSearchSpecialDTO();
-			//선 복사 대상 후 주입 대상
-//			BeanUtils.copyProperties(boardSearchDTO, boardSearchSpecialDTO);
-			//Target.getAllValue는 List<ENUM>으로 전부 가져온다.
-			//mybatis에서는 ENUM을 자동으로 String 치환해서 먹는다.
-//			boardSearchSpecialDTO.setKeyword(Target.getAllValue());
 			searchBoard = boardDAO.searchBoardAll(boardSearchDTO);
 		} else {
 			logger.error("boardSearch access User : {} default case target : {}, keyword : {}", user, target, keyword);
@@ -100,17 +93,18 @@ public class BoardService {
 			logger.warn("insertBoard access User : {} null value catDomain : {}, boardDTO " + ": {}", user, catDomain,
 					boardDTO);
 			StringBuilder errorMesg = new StringBuilder();
-			errorMesg.append("BoardService insertBoard null value catDomain : ").append(catDomain)
-					.append(" boardDTO : ").append(boardDTO);
+			errorMesg.append("BoardService insertBoard null value catDomain : ");
+			errorMesg.append(catDomain);
+			errorMesg.append(" boardDTO : ");
+			errorMesg.append(boardDTO);
 			throw new IllegalArgumentException(errorMesg.toString());
 		}
 		boardDTO.setCatDomain(catDomain);
-		boardDTO.setCreator(user);
+		boardDTO.setCreator(user); // ip 또는 id set
 		boardDTO.setView(ConstantConfig.startView);
 		Integer insertCount = boardDAO.insertBoard(boardDTO);
 		String resultMesg = null;
 		if (insertCount == 1) {
-			//이때 게시글 증가 dao 함수 추가
 			boardDAO.plusCountCategoryboardCnt(boardDTO);
 			resultMesg = "성공했습니다";
 		} else if (insertCount == 0) {
@@ -132,8 +126,10 @@ public class BoardService {
 			logger.warn("updateBoard access User : {} null value catDomain : {}, " + "boardDTO : {}", user, catDomain,
 					boardDTO);
 			StringBuilder errorMesg = new StringBuilder();
-			errorMesg.append("BoardService updateBoard null value catDomain : ").append(catDomain)
-					.append(" boardDTO : ").append(boardDTO);
+			errorMesg.append("BoardService updateBoard null value catDomain : ");
+			errorMesg.append(catDomain);
+			errorMesg.append(" boardDTO : ");
+			errorMesg.append(boardDTO);
 			throw new IllegalArgumentException(errorMesg.toString());
 		}
 		boardDTO.setCatDomain(catDomain);
@@ -160,12 +156,13 @@ public class BoardService {
 			logger.warn("deleteBoard access User : {} null value boardNum : {}," + " boardDTO : {}", user, boardNum,
 					boardDTO);
 			StringBuilder errorMesg = new StringBuilder();
-			errorMesg.append("BoardService deleteBoard null value boardNum : ").append(boardNum).append(" boardDTO : ")
-					.append(boardDTO);
+			errorMesg.append("BoardService deleteBoard null value boardNum : ");
+			errorMesg.append(boardNum);
+			errorMesg.append(" boardDTO : ");
+			errorMesg.append(boardDTO);
 			throw new IllegalArgumentException(errorMesg.toString());
 		}
 		Integer deleteCount = boardDAO.deleteBoard(boardNum);
-		System.out.println("boardDelete" + boardDTO);
 		String resultMesg = null;
 		if (deleteCount == 1) {
 			boardDAO.backUpBoard(boardDTO);
@@ -215,10 +212,10 @@ public class BoardService {
 		LocalDateTime lastClickTime = SessionConfig.getLastClick();
 		Boolean check = Duration.between(lastClickTime, LocalDateTime.now()).getSeconds() >= 1;
 		if (lastClickTime == null || check) {
-			boardDetailDTO.setView(boardDetailDTO.getView()+ConstantConfig.plusView);
+			boardDetailDTO.setView(boardDetailDTO.getView() + ConstantConfig.plusView);
 			boardDAO.updateView(boardDetailDTO);
 		} else {
-			logger.info("Too many clicked id" + SessionConfig.getMbDTO().getId());
+			logger.info("Too many clicked id" + SessionConfig.MbSessionDTO().getId());
 		}
 
 	}
@@ -259,7 +256,7 @@ public class BoardService {
 	// guest인지 회원인지 확인
 	private String getAccessRight() {
 		String guestId = IPConfig.getIp(SessionConfig.getSession());
-		String memberId = SessionConfig.getMbDTO().getId();
+		String memberId = SessionConfig.MbSessionDTO().getId();
 		String mesg = null;
 
 		if (guestId == null) {

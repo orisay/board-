@@ -3,8 +3,14 @@
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.project.dao.ManagerDAO">
-	<update id="changeSubManager" parameterType="CategoryDTO">
-		<!-- 테이블 제작 필요 -->
+	<update id="changeSubManager" parameterType="MbSessionDTO">
+		UPDATE
+		MP_MB_ROLE
+		SET
+		ROLE_NUM = #{roleNum}
+		CAT_DOMAIN =#{catDomain}
+		WHERE
+		ID = #{id}
 	</update>
 
 	<delete id="deleteBoardNumList" parameterType="BoardDTO">
@@ -87,6 +93,16 @@
 		RPL_NUM = #{rplNum}
 	</update>
 
-	<select id="selectMng"><!-- db제작 아직 안함 추후 -->
+	<select id="selectMng" parameterType="CheckRightCatDTO">
+		SELECT
+		ROLE_NUM
+		,ID
+		CAT_DOMAIN
+		FROM
+		MP_MB_ROLE
+		WHERE
+		CAT_DOMAIN = #{catDomain}
+		AND
+		ID = #{id}
 	</select>
 </mapper>

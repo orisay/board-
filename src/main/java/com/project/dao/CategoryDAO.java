@@ -2,8 +2,10 @@ package com.project.dao;
 
 import java.util.List;
 
-import com.project.dto.CategoryDTO;
+import org.apache.ibatis.annotations.Mapper;
 
+import com.project.dto.CategoryDTO;
+@Mapper
 public interface CategoryDAO {
 
 	List<CategoryDTO> controllerCategory();

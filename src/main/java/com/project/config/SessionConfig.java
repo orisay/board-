@@ -8,7 +8,7 @@ import javax.servlet.http.HttpSession;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
-import com.project.dto.MbDTO;
+import com.project.dto.MbSessionDTO;
 
 public class SessionConfig {
 
@@ -22,10 +22,10 @@ public class SessionConfig {
 	}
 
 	//service에서 처리를 위해서 설정
-	public static MbDTO getMbDTO() {
+	public static MbSessionDTO MbSessionDTO() {
 		HttpSession session = getSession();
-		MbDTO mbDTO = (MbDTO) session.getAttribute(ConstantConfig.Member_INFO);
-		return mbDTO;
+		MbSessionDTO mbSessionDTO = (MbSessionDTO) session.getAttribute(ConstantConfig.Member_INFO);
+		return mbSessionDTO;
 	}
 
 	//view에 사용 할 마지막 클릭 조회

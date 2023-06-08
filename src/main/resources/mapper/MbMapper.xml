@@ -134,7 +134,7 @@
 				ADDR1 = #{addr2}
 	</select>
 
-	<select id="searchId" parameterType="MbDTO" resultType="String">
+	<select id="searchPw" parameterType="MbDTO" resultType="String">
 		SELECT
 				PW
 		FROM
@@ -147,6 +147,20 @@
 				ADDR1 = #{addr1}
 		AND
 				ADDR1 = #{addr2}
+	</select>
+
+	<select id="insertRole" parameterType="MbDTO">
+	INSERT INTO
+			MP_MB_ROLE
+			(
+			ROLE_NUM
+			,ID
+			)
+	VALUES
+			(
+			1
+			,#{id}
+			)
 	</select>
 
 </mapper>

@@ -43,6 +43,7 @@ public class MbService {
 		}
 
 		if (insertCheck == 1) {
+			mbDAO.insertRole(mbDTO);
 			mesg = "회원 가입 성공 ID : " + checkId;
 		} else if (insertCheck == 0) {
 			mesg = "회원 가입 실패";
@@ -114,7 +115,7 @@ public class MbService {
 	// 마이 페이지
 	@Transactional
 	public MbDTO getMyPage() {
-		String mbId = SessionConfig.getMbDTO().getId();
+		String mbId = SessionConfig.MbSessionDTO().getId();
 		String gusetIP = IPConfig.getIp(SessionConfig.getSession());
 		MbDTO mbDTO = new MbDTO();
 
@@ -129,7 +130,7 @@ public class MbService {
 	// 마이 페이지 수정
 	@Transactional
 	public String updateMyPage(MbDTO mbDTO) {
-		String memberId = SessionConfig.getMbDTO().getId();
+		String memberId = SessionConfig.MbSessionDTO().getId();
 		Integer updateMyPage = null;
 		String updateMyPageMesg = null;
 
@@ -153,7 +154,7 @@ public class MbService {
 
 	// 비밀번호 변경
 	public String updatePw(String pw, String newPw) {
-		String memberId = SessionConfig.getMbDTO().getId();
+		String memberId = SessionConfig.MbSessionDTO().getId();
 		Integer insertCheck = null;
 		if (pw == null || newPw == null) {
 			logger.warn("updatePw access ID : {} null vaule pw : {}, newPw : {}", memberId, pw, newPw);

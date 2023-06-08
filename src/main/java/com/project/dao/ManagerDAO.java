@@ -3,14 +3,14 @@ package com.project.dao;
 import org.apache.ibatis.annotations.Mapper;
 
 import com.project.dto.BoardDTO;
-import com.project.dto.CategoryDTO;
 import com.project.dto.CheckRightCatDTO;
+import com.project.dto.MbSessionDTO;
 import com.project.dto.ReplyDTO;
 
 @Mapper
 public interface ManagerDAO {
 
-	Integer changeSubManager(CategoryDTO categoryDTO);
+	Integer changeSubManager(MbSessionDTO mbSessionDTO);
 
 	Integer deleteBoardNumList(Integer deleteBoardNum);
 

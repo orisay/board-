@@ -4,7 +4,7 @@
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.project.dao.BoardDAO">
 
-	<select id="getMainList" resultType="mainDTO">
+	<select id="getMainList" resultType="MainDTO">
 		SELECT
 				CAT_DOMAIN
 				,TTL
@@ -21,7 +21,7 @@
 				TB_BOARD
 				) AS MAIN
 		WHERE
-				IDX<=10
+				IDX &lt; 10
 	</select>
 
 	<select id="totalCountByCat" parameterType="String" resultType="Integer">
@@ -85,6 +85,7 @@
 				,RPL_CNT
 				,CRT_TM
 				,UP_TM
+				,PW
 				)
 		VALUES
 				(
@@ -97,6 +98,7 @@
 				,#{rplCnt}
 				,SYSDATE
 				,SYSDATE
+				,#{pw}
 				)
 	</insert>
 
@@ -108,6 +110,8 @@
 				,UP_TM = SYSDATE
 		WHERE
 				BOARD_NUM = #{boardNum}
+		AND
+				PW = #{pw}
 	</update>
 
 	<delete id="deleteBoard" parameterType="Integer">
@@ -240,7 +244,7 @@
 		UPDATE
 				TB_BOARD
 		SET
-				VIEW = VIEW + #{view}
+				VIEW = VIEW + 1
 		WHERE
 				BOARD_NUM = #{boardNum}
 	</update>
@@ -337,7 +341,7 @@
 				CAT_DOMAIN = #{catDomain}
 	</update>
 
-	<update id="plusCountCategoryboardCnt" parameterType="BoardDTO">
+	<update id="minusCountCategoryboardCnt" parameterType="BoardDTO">
 		UPDATE
 				TB_CATEGORY
 		SET

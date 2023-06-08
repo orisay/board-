@@ -13,6 +13,7 @@ public class BoardDTO {
     private Integer rplCnt;
     private Date crtTm;
     private Date upTm;
+    private String pw;
 
     public Integer getBoardNum() {
 		return boardNum;
@@ -41,6 +42,9 @@ public class BoardDTO {
 	public Date getUpTm() {
 		return upTm;
 	}
+	public String getPw() {
+		return pw;
+	}
 	public void setBoardNum(Integer boardNum) {
 		this.boardNum = boardNum;
 	}
@@ -68,6 +72,9 @@ public class BoardDTO {
 	public void setUpTm(Date upTm) {
 		this.upTm = upTm;
 	}
+	public void setPw(String pw) {
+		this.pw = pw;
+	}
 
 	@Override
 	public String toString() {
@@ -90,9 +97,10 @@ public class BoardDTO {
 		builder.append(crtTm);
 		builder.append(", upTm=");
 		builder.append(upTm);
+		builder.append(", pw=");
+		builder.append(pw);
 		builder.append("]");
 		return builder.toString();
 	}
-
 
 }

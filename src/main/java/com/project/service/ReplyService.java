@@ -81,7 +81,7 @@ public class ReplyService {
 	// guest인지 회원인지 확인
 	private String getAccessRight() {
 		String guestId = IPConfig.getIp(SessionConfig.getSession());
-		String memberId = SessionConfig.getMbDTO().getId();
+		String memberId = SessionConfig.MbSessionDTO().getId();
 		String mesg = null;
 
 		if (guestId == null) {
