@@ -16,6 +16,7 @@ import com.project.dto.UpdatePwDTO;
 import com.project.exception.UnknownException;
 
 @Service
+@Transactional
 public class MbService {
 
 	private static final Logger logger = LogManager.getLogger(MbService.class);
@@ -24,7 +25,6 @@ public class MbService {
 	MbDAO mbDAO;
 
 	// 회원 가입
-	@Transactional
 	public String insertMb(MbDTO mbDTO) {
 		String gusetIP = IPConfig.getIp(SessionConfig.getSession());
 		String checkId = null;
@@ -55,7 +55,6 @@ public class MbService {
 	}
 
 	// 아이디 중복 검사
-	@Transactional
 	public String checkId(String id) {
 		String gusetIP = IPConfig.getIp(SessionConfig.getSession());
 		String insertId = null;
@@ -82,7 +81,6 @@ public class MbService {
 	}
 
 	// 로그인
-	@Transactional
 	public String getLogin(MbDTO mbDTO) {
 		String gusetIP = IPConfig.getIp(SessionConfig.getSession());
 		Integer resultLogin = null;
@@ -113,7 +111,6 @@ public class MbService {
 	}
 
 	// 마이 페이지
-	@Transactional
 	public MbDTO getMyPage() {
 		String mbId = SessionConfig.MbSessionDTO().getId();
 		String gusetIP = IPConfig.getIp(SessionConfig.getSession());
@@ -128,7 +125,6 @@ public class MbService {
 	}
 
 	// 마이 페이지 수정
-	@Transactional
 	public String updateMyPage(MbDTO mbDTO) {
 		String memberId = SessionConfig.MbSessionDTO().getId();
 		Integer updateMyPage = null;

@@ -9,7 +9,7 @@ public class BoardDTO {
     private String creator;
     private String ttl;
     private String cn;
-    private Integer view;
+    private Integer viewCnt;
     private Integer rplCnt;
     private Date crtTm;
     private Date upTm;
@@ -30,8 +30,8 @@ public class BoardDTO {
 	public String getCn() {
 		return cn;
 	}
-	public Integer getView() {
-		return view;
+	public Integer getViewCnt() {
+		return viewCnt;
 	}
 	public Integer getRplCnt() {
 		return rplCnt;
@@ -60,8 +60,8 @@ public class BoardDTO {
 	public void setCn(String cn) {
 		this.cn = cn;
 	}
-	public void setView(Integer view) {
-		this.view = view;
+	public void setViewCnt(Integer viewCnt) {
+		this.viewCnt = viewCnt;
 	}
 	public void setRplCnt(Integer rplCnt) {
 		this.rplCnt = rplCnt;
@@ -89,8 +89,8 @@ public class BoardDTO {
 		builder.append(ttl);
 		builder.append(", cn=");
 		builder.append(cn);
-		builder.append(", view=");
-		builder.append(view);
+		builder.append(", viewCnt=");
+		builder.append(viewCnt);
 		builder.append(", rplCnt=");
 		builder.append(rplCnt);
 		builder.append(", crtTm=");

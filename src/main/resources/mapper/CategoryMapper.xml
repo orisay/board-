@@ -76,5 +76,4 @@
 		WHERE
 				CAT_DOMAIN = #{catDomain}
 	</delete>
-
 </mapper>

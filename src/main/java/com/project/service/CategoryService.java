@@ -39,7 +39,7 @@ public class CategoryService {
 			throw new IllegalArgumentException("CategoryService controllerCategory have not right user");
 		}
 
-		if (!checkAdmin.equals(checkRole)) {
+		if (checkAdmin.equals(checkRole)) {
 			controllerCategory = categoryDAO.controllerCategory();
 		} else {
 			logger.error("controllerCategory  access ID : {} unknown status", checkId);

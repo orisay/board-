@@ -25,11 +25,8 @@ public class CategoryController {
 
 	@Autowired
 	CategoryService categoryService;
-	// cat 생성,수정(spring security) 삭제(db role)
-	// 수정 내 = (카테고리 관리자 선택, 카테고리 이름 변경)
-	// cat 화면 표?가 좋을듯
 
-	// 메인
+	// 메인 성공
 	@GetMapping("/controller")
 	@ApiOperation("controllerCategory")
 	public MyResponseEntity<List<CategoryDTO>> controllerCategory() {
@@ -37,7 +34,7 @@ public class CategoryController {
 		return new MyResponseEntity<>(new MyResponseEntityDTO<>("관리자 권한", controllerCategory));
 	}
 
-	// 카테고리 추가
+	// 카테고리 추가 성공
 	@PostMapping("/insert")
 	@ApiOperation("insertCategory")
 	public MyResponseEntity<String> insertCategory(@RequestBody CategoryDTO categoryDTO) {
@@ -45,7 +42,7 @@ public class CategoryController {
 		return new MyResponseEntity<>(new MyResponseEntityDTO<>("카테고리 추가 여부", insertCheck));
 	}
 
-	// 카테고리 관리자 선택
+	// 카테고리 관리자 선택 성공
 	@PutMapping("/updateAdmin/{catDomain}/{id}")
 	@ApiOperation("updateCategoryAdmin")
 	public MyResponseEntity<String> updateAdmin(@PathVariable("catDomain")String catDomain,
@@ -54,7 +51,7 @@ public class CategoryController {
 		return new MyResponseEntity<>(new MyResponseEntityDTO<>("등록된 매니저", updateCheckId));
 	}
 
-	// 카테고리 이름 변경
+	// 카테고리 이름 변경 성공
 	@PutMapping("/updateCat/{catDomain}/{cat}")
 	@ApiOperation("updateCategoryName")
 	public MyResponseEntity<String> updateCat(@PathVariable("catDomain")String catDomain,
@@ -63,8 +60,8 @@ public class CategoryController {
 		return new MyResponseEntity<>(new MyResponseEntityDTO<>("변경된 카테고리 이름" + updateCheckCat));
 	}
 
-	// 카테고리 삭제
-	// 관련 게시글 전부  DB 트리거로 백업
+	// 카테고리 삭제 성공
+	// 관련 게시글 전부  DB 트리거로 백업 성공
 	@DeleteMapping("/deleteCat/{catDomain}")
 	@ApiOperation("deleteCategory")
 	public MyResponseEntity<Void> deleteCat(@PathVariable("catDomain") String catDomain) {

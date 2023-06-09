@@ -29,7 +29,7 @@
 				)
 		VALUES
 				(
-				#{rplNum}
+				TB_REPLY_SEQ.NEXTVAL
 				,#{boardNum}
 				,#{id}
 				,#{rplCn}

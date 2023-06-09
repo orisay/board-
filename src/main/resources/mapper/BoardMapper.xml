@@ -8,20 +8,20 @@
 		SELECT
 				CAT_DOMAIN
 				,TTL
-				,CTR_TM
+				,CRT_TM
 		FROM
 				(
 		SELECT
 				CAT_DOMAIN
 				,TTL
-				,CTR_TM
+				,CRT_TM
 				,ROW_NUMBER() OVER(PARTITION BY
-				CAT_DOMAIN ORDER BY CTR_TM DESC) AS IDX
+				CAT_DOMAIN ORDER BY CRT_TM DESC) IDX
 		FROM
 				TB_BOARD
-				) AS MAIN
+				) MAIN
 		WHERE
-				IDX &lt; 10
+				IDX <![CDATA[<=]]> 10
 	</select>
 
 	<select id="totalCountByCat" parameterType="String" resultType="Integer">
@@ -33,7 +33,7 @@
 				CAT_DOMAIN = #{catDomain}
 	</select>
 
-	<select id="totalCountByBoard" parameterType="String" resultType="Integer">
+	<select id="totalCountByBoard" parameterType="Integer" resultType="Integer">
 		SELECT
 				COUNT(*)
 		FROM
@@ -53,17 +53,17 @@
 				,CREATOR
 				,TTL
 				,CN
-				,VIEW
+				,VIEW_CNT
 				,RPL_CNT
 				,CRT_TM
 				,UP_TM
 				,ROW_NUMBER() OVER(ORDER BY CRT_TM DESC)
-				AS IDX
+				IDX
 		FROM
 				TB_BOARD
 		WHERE
 				CAT_DOMAIN = #{catDomain}
-				) AS BOARD
+				) BOARD
 		WHERE
 				IDX
 		BETWEEN
@@ -81,7 +81,7 @@
 				,CREATOR
 				,TTL
 				,CN
-				,VIEW
+				,VIEW_CNT
 				,RPL_CNT
 				,CRT_TM
 				,UP_TM
@@ -89,12 +89,12 @@
 				)
 		VALUES
 				(
-				#{boardNum}
+				TB_BOARD_SEQ.NEXTVAL
 				,#{catDomain}
 				,#{creator}
 				,#{ttl}
 				,#{cn}
-				,#{view}
+				,#{viewCnt}
 				,#{rplCnt}
 				,SYSDATE
 				,SYSDATE
@@ -135,7 +135,7 @@
 				,CREATOR
 				,TTL
 				,CN
-				,VIEW
+				,VIEW_CNT
 				,RPL_CNT
 				,CRT_TM
 				,UP_TM
@@ -169,7 +169,7 @@
 				,CREATOR
 				,TTL
 				,CN
-				,VIEW
+				,VIEW_CNT
 				,RPL_CNT
 				,CRT_TM
 				,UP_TM
@@ -208,7 +208,7 @@
 				,CREATOR
 				,TTL
 				,CN
-				,VIEW
+				,VIEW_CNT
 				,RPL_CNT
 				,CRT_TM
 				,UP_TM
@@ -244,7 +244,7 @@
 		UPDATE
 				TB_BOARD
 		SET
-				VIEW = VIEW + 1
+				VIEW_CNT = VIEW_CNT + 1
 		WHERE
 				BOARD_NUM = #{boardNum}
 	</update>
@@ -256,7 +256,7 @@
 				,CREATOR
 				,TTL
 				,CN
-				,VIEW
+				,VIEW_CNT
 				,RPL_CNT
 				,CRT_TM
 				,UP_TM
@@ -313,7 +313,7 @@
 				,CREATOR
 				,TTL
 				,CN
-				,VIEW
+				,VIEW_CNT
 				,RPL_CNT
 				,CRT_TM
 				,UP_TM
@@ -325,7 +325,7 @@
 				,#{creator}
 				,#{ttl}
 				,#{cn}
-				,#{view}
+				,#{viewCnt}
 				,#{rplCnt}
 				,#{crtTm}
 				,SYSDATE

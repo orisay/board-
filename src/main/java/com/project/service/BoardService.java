@@ -101,7 +101,7 @@ public class BoardService {
 		}
 		boardDTO.setCatDomain(catDomain);
 		boardDTO.setCreator(user); // ip 또는 id set
-		boardDTO.setView(ConstantConfig.startView);
+		boardDTO.setViewCnt(ConstantConfig.startView);
 		Integer insertCount = boardDAO.insertBoard(boardDTO);
 		String resultMesg = null;
 		if (insertCount == 1) {
@@ -212,7 +212,7 @@ public class BoardService {
 		LocalDateTime lastClickTime = SessionConfig.getLastClick();
 		Boolean check = Duration.between(lastClickTime, LocalDateTime.now()).getSeconds() >= 1;
 		if (lastClickTime == null || check) {
-			boardDetailDTO.setView(boardDetailDTO.getView() + ConstantConfig.plusView);
+			boardDetailDTO.setViewCnt(boardDetailDTO.getViewCnt() + ConstantConfig.plusView);
 			boardDAO.updateView(boardDetailDTO);
 		} else {
 			logger.info("Too many clicked id" + SessionConfig.MbSessionDTO().getId());

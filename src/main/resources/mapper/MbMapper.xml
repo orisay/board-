@@ -149,7 +149,7 @@
 				ADDR1 = #{addr2}
 	</select>
 
-	<select id="insertRole" parameterType="MbDTO">
+	<insert id="insertRole" parameterType="MbDTO">
 	INSERT INTO
 			MP_MB_ROLE
 			(
@@ -161,6 +161,6 @@
 			1
 			,#{id}
 			)
-	</select>
+	</insert>
 
 </mapper>

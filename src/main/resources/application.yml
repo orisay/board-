@@ -1,7 +1,7 @@
 spring:
   datasource:
     driver-class-name: oracle.jdbc.driver.OracleDriver
-    url: jdbc:oracle:thin:@15.164.101.174:8091
+    url: jdbc:oracle:thin:@localhost:1521:xe
     username: board
     password: minmax
     tomcat:

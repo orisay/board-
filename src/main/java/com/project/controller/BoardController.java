@@ -29,7 +29,7 @@ public class BoardController {
 	@Autowired
 	BoardService boardService;
 
-	// 메인화면
+	// 메인화면 성공
 	@GetMapping("/")
 	@ApiOperation("boardMain")
 	public MyResponseEntity<List<MainDTO>> main() {
@@ -38,16 +38,16 @@ public class BoardController {
 	}
 
 	// 게시판
-	@GetMapping("/{catDomain}/{perPage}/{curPage}")
+	@GetMapping("/{catDomain}/{curPage}/{perPage}")
 	@ApiOperation("boardList")
 	public MyResponseEntity<List<BoardDTO>> getBoardList(@PathVariable("catDomain") String catDomain,
 			@PathVariable(name = "curPage", required = false) Integer curPage,
-			@PathVariable(name = "purPage", required = false) Integer perPage) {
+			@PathVariable(name = "perPage", required = false) Integer perPage) {
 		List<BoardDTO> boardList = boardService.getBoardList(catDomain, curPage, perPage);
 		return new MyResponseEntity<>(new MyResponseEntityDTO<>("게시판 화면", boardList));
 	}
 
-	// 게시글 작성
+	// 게시글 작성 성공
 	@PostMapping("/insert/{catDomain}")
 	@ApiOperation("insertBoard")
 	public MyResponseEntity<String> insertBoard(@PathVariable("catDomain") String catDomain,

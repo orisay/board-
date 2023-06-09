@@ -13,7 +13,6 @@ public class MbDTO {
     private String phon1;
     private String phon2;
     private String phon3;
-    private String role;
     private Date crtTm;
     private String tel1;
     private String tel2;
@@ -45,9 +44,6 @@ public class MbDTO {
 	}
 	public String getPhon3() {
 		return phon3;
-	}
-	public String getRole() {
-		return role;
 	}
 	public Date getCrtTm() {
 		return crtTm;
@@ -88,9 +84,6 @@ public class MbDTO {
 	public void setPhon3(String phon3) {
 		this.phon3 = phon3;
 	}
-	public void setRole(String role) {
-		this.role = role;
-	}
 	public void setCrtTm(Date crtTm) {
 		this.crtTm = crtTm;
 	}
@@ -125,8 +118,6 @@ public class MbDTO {
 		builder.append(phon2);
 		builder.append(", phon3=");
 		builder.append(phon3);
-		builder.append(", role=");
-		builder.append(role);
 		builder.append(", crtTm=");
 		builder.append(crtTm);
 		builder.append(", tel1=");
