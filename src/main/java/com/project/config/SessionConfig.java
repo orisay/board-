@@ -1,6 +1,7 @@
 package com.project.config;
 
 import java.time.LocalDateTime;
+import java.util.Date;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -37,6 +38,9 @@ public class SessionConfig {
 	public static LocalDateTime getLastClick() {
 		HttpSession session = getSession();
 		LocalDateTime lastClick = (LocalDateTime) session.getAttribute(ConstantConfig.LastClick);
+		if (lastClick == null) {
+			lastClick = LocalDateTime.now();
+		}
 		return lastClick;
 	}
 

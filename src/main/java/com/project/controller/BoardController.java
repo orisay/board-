@@ -37,7 +37,7 @@ public class BoardController {
 		return new MyResponseEntity<>(new MyResponseEntityDTO<>("main 화면", mainList));
 	}
 
-	// 게시판
+	// 게시판 성공
 	@GetMapping("/{catDomain}/{curPage}/{perPage}")
 	@ApiOperation("boardList")
 	public MyResponseEntity<List<BoardDTO>> getBoardList(@PathVariable("catDomain") String catDomain,
@@ -56,7 +56,7 @@ public class BoardController {
 		return new MyResponseEntity<>(new MyResponseEntityDTO<>("게시글 작성 여부", resultMesg));
 	}
 
-	// 게시글 수정
+	// 게시글 수정 성공
 	@PutMapping("/update/{catDomain}/{boardNum}")
 	@ApiOperation("updateBoard")
 	public MyResponseEntity<String> updateBoard(@PathVariable("catDomain") String catDomain,
@@ -65,22 +65,23 @@ public class BoardController {
 		return new MyResponseEntity<>(new MyResponseEntityDTO<>("게시글 수정 여부", resultMesg));
 	}
 
-	// 게시글 삭제
+	// 게시글 삭제 성공
 	@DeleteMapping("/delete/{boardNum}")
 	@ApiOperation("deleteBoard")
 	public MyResponseEntity<String> deleteBoard(@PathVariable("boardNum") Integer boardNum,
 			@RequestBody BoardDTO boardDTO) {
 		String resultMesg = boardService.deleteBoard(boardNum, boardDTO);
-		return new MyResponseEntity<>(new MyResponseEntityDTO<>("게시글 삭제 성공", resultMesg));
+		return new MyResponseEntity<>(new MyResponseEntityDTO<>("게시글 삭제 여부", resultMesg));
 	}
 
-	// 게시글 검색
-	@GetMapping("/search/{catDomain}/{perPage}/{curPage}")
+	// 게시글 검색 성공
+	@GetMapping("/search/{catDomain}/{curPage}/{perPage}")
 	@ApiOperation("searchBoard")
-	public MyResponseEntity<List<BoardDTO>> searchBoard(@PathVariable("cat") String catDomian,
-			@PathVariable(name = "perPage", required = false) Integer perPage, @PathVariable(name = "curPage", required = false) Integer curPage,
-			@RequestParam("target") String target, @RequestParam("keyword") String keyword) {
-		List<BoardDTO> boardSearch = boardService.searchBoard(catDomian, perPage, curPage, target, keyword);
+	public MyResponseEntity<List<BoardDTO>> searchBoard(@PathVariable("catDomain") String catDomain,
+			@PathVariable(name = "curPage", required = false) Integer curPage,
+			@PathVariable(name = "perPage", required = false) Integer perPage,
+			@RequestParam("target") String target,@RequestParam("keyword") String keyword) {
+		List<BoardDTO> boardSearch = boardService.searchBoard(catDomain, curPage, perPage, target, keyword);
 		return new MyResponseEntity<>(new MyResponseEntityDTO<>("게시글 검색 성공", boardSearch));
 	}
 
@@ -88,7 +89,8 @@ public class BoardController {
 	@GetMapping("/detail/{catDomain}/{boardNum}/{curPage}")
 	@ApiOperation("boardDetail")
 	public MyResponseEntity<BoardDetailDTO> boardDetail(@PathVariable("catDomain") String catDomain,
-			@PathVariable("boardNum") Integer boardNum, @PathVariable(name = "curPage" , required = false) Integer curPage) {
+			@PathVariable("boardNum") Integer boardNum,
+			@PathVariable(name = "curPage", required = false) Integer curPage) {
 		BoardDetailDTO board = boardService.boardDetail(catDomain, boardNum, curPage);
 		return new MyResponseEntity<>(new MyResponseEntityDTO<>("게시글 상세 내용", board));
 	}

@@ -7,7 +7,6 @@ public class BoardSearchDTO {
 	private Integer endIdx;
 	private String target;
 	private String keyword;
-	private String all;
 
 	public String getCatDomain() {
 		return catDomain;
@@ -27,10 +26,6 @@ public class BoardSearchDTO {
 
 	public String getKeyword() {
 		return keyword;
-	}
-
-	public String getAll() {
-		return all;
 	}
 
 	public void setCatDomain(String catDomain) {
@@ -53,10 +48,6 @@ public class BoardSearchDTO {
 		this.keyword = keyword;
 	}
 
-	public void setAll(String all) {
-		this.all = all;
-	}
-
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
@@ -70,8 +61,6 @@ public class BoardSearchDTO {
 		builder.append(target);
 		builder.append(", keyword=");
 		builder.append(keyword);
-		builder.append(", all=");
-		builder.append(all);
 		builder.append("]");
 		return builder.toString();
 	}

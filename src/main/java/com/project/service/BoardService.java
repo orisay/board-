@@ -24,6 +24,7 @@ import com.project.dto.MainDTO;
 import com.project.exception.UnknownException;
 
 @Service
+@Transactional
 public class BoardService {
 
 	@Autowired
@@ -33,14 +34,12 @@ public class BoardService {
 
 	// main입니다.
 	// oracle에서 autocommit 비활성화 했습니다.
-	@Transactional
 	public List<MainDTO> getMainList() {
 		List<MainDTO> mainList = boardDAO.getMainList();
 		return mainList;
 	}
 
 	// 게시판 화면
-	@Transactional
 	public List<BoardDTO> getBoardList(String catDomain, Integer curPage, Integer perPage) {
 		String user = getAccessRight();
 		if (catDomain == null) {
@@ -53,7 +52,6 @@ public class BoardService {
 	}
 
 	// 게시글 조건별 검색 기능
-	@Transactional
 	public List<BoardDTO> searchBoard(String catDomain, Integer perPage, Integer curPage, String target,
 			String keyword) {
 		String user = getAccessRight();
@@ -62,15 +60,18 @@ public class BoardService {
 			logger.warn("searchBoard access User : {} null value catDomain : {}, target : " + "{}, keyword : {}", user,
 					catDomain, target, keyword);
 			StringBuilder errorMesg = new StringBuilder();
-			errorMesg.append("BoardService searchBoard null value catDomain : ").append(catDomain).append(" tartget : ")
-					.append(target).append(" keyword : ").append(keyword);
+			errorMesg.append("BoardService searchBoard null value catDomain : ");
+			errorMesg.append(catDomain);
+			errorMesg.append(" tartget : ");
+			errorMesg.append(target);
+			errorMesg.append(" keyword : ");
+			errorMesg.append(keyword);
 			throw new IllegalArgumentException(errorMesg.toString());
 		}
 		BoardSearchDTO boardSearchDTO = paging(catDomain, curPage, perPage);
 		boardSearchDTO.setTarget(target);
 		boardSearchDTO.setKeyword(keyword);
 		List<BoardDTO> searchBoard = null;
-
 		Integer checkLevel = ConstantConfig.Target.valueOf(target.toUpperCase()).getLevel();
 		if (checkLevel < 4) {
 			searchBoard = boardDAO.searchBoardBasic(boardSearchDTO);
@@ -86,7 +87,6 @@ public class BoardService {
 	}
 
 	// 게시글 등록
-	@Transactional
 	public String insertBoard(String catDomain, BoardDTO boardDTO) {
 		String user = getAccessRight();
 		if (catDomain == null || boardDTO == null) {
@@ -119,7 +119,6 @@ public class BoardService {
 	}
 
 	// 게시글 수정
-	@Transactional
 	public String updateBoard(String catDomain, BoardDTO boardDTO) {
 		String user = getAccessRight();
 		if (catDomain == null || boardDTO == null) {
@@ -149,7 +148,6 @@ public class BoardService {
 	}
 
 	// 게시글 삭제
-	@Transactional
 	public String deleteBoard(Integer boardNum, BoardDTO boardDTO) {
 		String user = getAccessRight();
 		if (boardNum == null || boardDTO == null) {
@@ -162,7 +160,7 @@ public class BoardService {
 			errorMesg.append(boardDTO);
 			throw new IllegalArgumentException(errorMesg.toString());
 		}
-		Integer deleteCount = boardDAO.deleteBoard(boardNum);
+		Integer deleteCount = boardDAO.deleteBoard(boardDTO);
 		String resultMesg = null;
 		if (deleteCount == 1) {
 			boardDAO.backUpBoard(boardDTO);
@@ -181,7 +179,6 @@ public class BoardService {
 	}
 
 	// 게시글 상세보기
-	@Transactional
 	public BoardDetailDTO boardDetail(String catDomain, Integer boardNum, Integer curPage) {
 		String user = getAccessRight();
 		if (catDomain == null || boardNum == null) {
@@ -207,7 +204,6 @@ public class BoardService {
 	}
 
 	// 게시글 조회 수 증가 (시간 제한 걸어서 초당 제한)
-	@Transactional
 	private void viewUpdate(BoardDetailDTO boardDetailDTO) {
 		LocalDateTime lastClickTime = SessionConfig.getLastClick();
 		Boolean check = Duration.between(lastClickTime, LocalDateTime.now()).getSeconds() >= 1;
@@ -234,7 +230,7 @@ public class BoardService {
 		Integer totalCount = checkTotaldCount(catDomain);
 		Integer totalPage = (int) ((double) totalCount / (int) perPage);
 		pageDTO.setTotalPage(totalPage);
-		Integer startIdx = ((pageDTO.getCurPage() - 1) * pageDTO.getCurPage()) + 1;
+		Integer startIdx = ((pageDTO.getCurPage() - 1) * pageDTO.getPerPage()) + 1;
 		Integer endIdx = (pageDTO.getPerPage() * pageDTO.getCurPage());
 		BoardSearchDTO boardSearchDTO = new BoardSearchDTO();
 		boardSearchDTO.setStartIdx(startIdx);
@@ -245,10 +241,11 @@ public class BoardService {
 
 	private Integer checkTotaldCount(String catDomain) {
 		Integer totalCount = null;
-		if (StringUtils.isNumeric(catDomain)) {
+		if (!StringUtils.isNumeric(catDomain)) {
 			totalCount = boardDAO.totalCountByCat(catDomain);
 		} else {
-			totalCount = boardDAO.totalCountByBoard(catDomain);
+			Integer boardNum = Integer.parseInt(catDomain);
+			totalCount = boardDAO.totalCountByBoard(boardNum);
 		}
 		return totalCount;
 	}

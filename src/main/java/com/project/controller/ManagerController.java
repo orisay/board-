@@ -17,17 +17,19 @@ import com.project.dto.ReplyDTO;
 import com.project.service.ManagerService;
 
 import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.parameters.RequestBody;
 
 @RestController
 @RequestMapping("/mng")
 public class ManagerController {
 	@Autowired
 	ManagerService adminservice;
+
 	@DeleteMapping("/{catDomain}/{boardNum}")
 	@ApiOperation("deleteBoardNumList")
 	public MyResponseEntity<List<Integer>> deleteBoardNumList(@PathVariable("catDomain")String catDomain
-			, @RequestParam("boardNum") List<BoardDTO> list) {
-		List<Integer> deleteBoardNumList = adminservice.deleteBoardNumList(catDomain, list);
+			, @RequestBody List<BoardDTO> boardNum) {
+		List<Integer> deleteBoardNumList = adminservice.deleteBoardNumList(catDomain, boardNum);
 		return new MyResponseEntity<>(new MyResponseEntityDTO<>("삭제", deleteBoardNumList));
 	}
 

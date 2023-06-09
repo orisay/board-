@@ -114,7 +114,7 @@
 				PW = #{pw}
 	</update>
 
-	<delete id="deleteBoard" parameterType="Integer">
+	<delete id="deleteBoard" parameterType="BoardDTO">
 		DELETE
 		FROM
 				TB_BOARD
@@ -139,17 +139,20 @@
 				,RPL_CNT
 				,CRT_TM
 				,UP_TM
-				,ROW_NUMBER() OVER(ORDER BY CRT_TM DESC)
-				AS IDX
+				,ROW_NUMBER() OVER(ORDER BY CRT_TM DESC) AS IDX
 		FROM
 				TB_BOARD
 		WHERE
 				CAT_DOMAIN = #{catDomain}
 		AND
 				#{target}
-		LIKE CONCAT
-				('%', #{keyword}, '%')
-				) AS BOARD
+		LIKE
+		CONCAT
+		(CONCAT
+				('%', #{keyword}),
+				 '%')
+				)
+				BOARD
 		WHERE
 				IDX
 		BETWEEN
@@ -181,14 +184,21 @@
 		AND
 				(
 		TTL
-		LIKE CONCAT
-		('%' ,#{keyword}, '%')
+		LIKE
+		CONCAT
+		(CONCAT
+				('%', #{keyword}),
+				 '%')
 		OR
 		CN
-		LIKE CONCAT
-		('%', #{keyword}, '%')
+		LIKE
+		CONCAT
+		(CONCAT
+				('%', #{keyword}),
+				 '%')
 				)
-				) AS BOARD
+				)
+				BOARD
 		WHERE
 				IDX
 		BETWEEN
@@ -220,18 +230,28 @@
 		AND
 				(
 				CREATOR
-		LIKE CONCAT
-				('%', #{keyword}, '%')
+		LIKE
+		CONCAT
+		(CONCAT
+				('%', #{keyword}),
+				 '%')
 		OR
 				TTL
-		LIKE CONCAT
-		('%', #{keyword}, '%')
+		LIKE
+		CONCAT
+		(CONCAT
+				('%', #{keyword}),
+				 '%')
 		OR
 				CN
-		LIKE CONCAT
-		('%', #{keyword}, '%')
+		LIKE
+		CONCAT
+		(CONCAT
+				('%', #{keyword}),
+				 '%')
 				)
-				) AS BOARD
+				)
+				BOARD
 		WHERE
 				IDX
 		BETWEEN
@@ -273,7 +293,7 @@
 		FROM
 				(
 		SELECT
-				,RPL_NUM
+				RPL_NUM
 				,BOARD_NUM
 				,ID
 				,RPL_CN
@@ -287,7 +307,7 @@
 		FROM
 				TB_REPLY
 		WHERE
-				BOARD_NUM = #{boardNum}
+				BOARD_NUM = #{catDomain}
 		START WITH
 				PARENT_RPL = 0
 		CONNECT BY
@@ -295,7 +315,8 @@
 				RPL_NUM = PARENT_RPL
 		ORDER SIBLINGS BY
 				CRT_TM ASC
-				) AS "REPLY"
+				)
+				"REPLY"
 		WHERE
 				IDX
 		BETWEEN

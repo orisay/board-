@@ -17,7 +17,7 @@ public interface BoardDAO {
 
 	Integer totalCountByCat(String catDomain);
 
-	Integer totalCountByBoard(String boardNum);
+	Integer totalCountByBoard(Integer boardNum);
 
 	List<BoardDTO> getBoardList(BoardSearchDTO boardSearchDTO);
 
@@ -25,7 +25,7 @@ public interface BoardDAO {
 
 	Integer updateBoard(BoardDTO boardDTO);
 
-	Integer deleteBoard(Integer boardNum);
+	Integer deleteBoard(BoardDTO boardDTO);
 
 	List<BoardDTO> searchBoardBasic(BoardSearchDTO boardSearchDTO);
 
