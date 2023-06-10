@@ -25,9 +25,8 @@ public class MbController {
 	MbService mbService;
 
 	// 아이디 찾기 -메일주소 // 비밀 번호찾기 추가 해야함 - 아이디 -메일 주소
-	// 비밀번호 변경
 
-	// 회원 가입
+	// 회원 가입 성공
 	@PostMapping("/insert")
 	@ApiOperation("insertMb")
 	public MyResponseEntity<String> insertMb(@RequestBody MbDTO mbDTO) {

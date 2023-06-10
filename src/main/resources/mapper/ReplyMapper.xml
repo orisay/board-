@@ -6,7 +6,7 @@
 
 	<update id="countPlusBoard" parameterType="Integer">
 		UPDATE
-				TB_REPLY
+				TB_BOARD
 		SET
 				RPL_CNT = RPL_CNT + 1
 		WHERE
@@ -41,7 +41,7 @@
 				)
 	</insert>
 
-	<update id="updateReply" parameterType="ReplyDTO">
+	<update id="updateGuestReply" parameterType="ReplyDTO">
 		UPDATE
 				TB_REPLY
 		SET
@@ -50,12 +50,26 @@
 		WHERE
 				ID = #{id}
 		AND
-				PW = #{PW}
+				PW = #{pw}
+		AND
+				RPL_NUM = #{rplNum}
+	</update>
+
+	<update id="updateMemberReply" parameterType="ReplyDTO">
+		UPDATE
+				TB_REPLY
+		SET
+				RPL_CN = #{rplCn}
+				,UP_TM = SYSDATE
+		WHERE
+				ID = #{id}
+		AND
+				RPL_NUM = #{rplNum}
 	</update>
 
 	<update id="countMinusBoard" parameterType="Integer">
 		UPDATE
-				TB_REPLY
+				TB_BOARD
 		SET
 				RPL_CNT = RPL_CNT - 1
 		WHERE
@@ -82,7 +96,7 @@
 				,#{boardNum}
 				,#{id}
 				,#{rplCn}
-				,#{CRT_TM}
+				,#{crtTm}
 				,SYSDATE
 				,#{depth}
 				,#{pw}
@@ -97,7 +111,9 @@
 		WHERE
 				ID = #{id}
 		AND
-				PW = #{PW}
+				PW = #{pw}
+		AND
+				RPL_NUM = #{rplNum}
 	</delete>
 
 	<update id="deleteGuestRplCnNUll" parameterType="ReplyDTO">
@@ -117,6 +133,8 @@
 				TB_REPLY
 		WHERE
 				ID = #{id}
+		AND
+				RPL_NUM = #{rplNum}
 	</delete>
 
 	<update id="deleteMemberRplCnNUll" parameterType="ReplyDTO">

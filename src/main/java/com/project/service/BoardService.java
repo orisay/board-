@@ -185,8 +185,10 @@ public class BoardService {
 			logger.warn("boardDetail access User : {} null value catDomain" + " : {}, boardNum : {}", user, catDomain,
 					boardNum);
 			StringBuilder errorMesg = new StringBuilder();
-			errorMesg.append("BoardService boardDetail null value catDomain : ").append(catDomain)
-					.append(" boardNum : ").append(boardNum);
+			errorMesg.append("BoardService boardDetail null value catDomain : ");
+			errorMesg.append(catDomain);
+			errorMesg.append(" boardNum : ");
+			errorMesg.append(boardNum);
 			throw new IllegalArgumentException(errorMesg.toString());
 		}
 

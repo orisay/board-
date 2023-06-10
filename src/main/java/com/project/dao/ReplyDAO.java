@@ -10,7 +10,9 @@ public interface ReplyDAO {
 
 	Integer insertReply(ReplyDTO replyDTO);
 
-	Integer updateReply(ReplyDTO replyDTO);
+	Integer updateGuestReply(ReplyDTO replyDTO);
+
+	Integer updateMemberReply(ReplyDTO replyDTO);
 
 	Integer countMinusBoard(Integer boardNum);
 
@@ -23,6 +25,8 @@ public interface ReplyDAO {
 	Integer deleteMemberReply(ReplyDTO replyDTO);
 
 	Integer deleteMemberRplCnNUll(ReplyDTO replyDTO);
+
+
 
 
 }

@@ -13,6 +13,8 @@ public final class ConstantConfig {
 
 	public static final Integer plusView = 1;
 
+	public static final Integer compare = 0;
+
 	public enum Target {
 		CREATOR(1)
 		, TTL(2)

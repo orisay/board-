@@ -288,8 +288,18 @@
 
 	<select id="replyList" parameterType="BoardSearchDTO" resultType="ReplyDTO">
 		SELECT
-				IDX,
-				REPLY.*
+				RPL_NUM
+				,ID
+				,RPL_CN
+				,CRT_TM
+				,UP_TM
+				,DEPTH
+				,PARENT_RPL
+		FROM
+				(
+		SELECT
+				ROWNUM AS "IX"
+				,IDX.*
 		FROM
 				(
 		SELECT
@@ -302,23 +312,22 @@
 				,DEPTH
 				,PW
 				,PARENT_RPL
-				,CONNECT_BY_ROOT RPL_NUM AS "START_RPLNUM"
-				,ROW_NUMBER() OVER(ORDER BY CRT_TM ASC) AS IDX
 		FROM
 				TB_REPLY
 		WHERE
 				BOARD_NUM = #{catDomain}
 		START WITH
 				PARENT_RPL = 0
-		CONNECT BY
-		PRIOR
+		CONNECT BY PRIOR
 				RPL_NUM = PARENT_RPL
 		ORDER SIBLINGS BY
-				CRT_TM ASC
+				DEPTH ASC
+				,CRT_TM ASC
 				)
-				"REPLY"
-		WHERE
 				IDX
+				)
+		WHERE
+				IX
 		BETWEEN
 				#{startIdx}
 		AND

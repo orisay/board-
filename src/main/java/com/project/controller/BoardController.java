@@ -85,7 +85,8 @@ public class BoardController {
 		return new MyResponseEntity<>(new MyResponseEntityDTO<>("게시글 검색 성공", boardSearch));
 	}
 
-	// 게시글 상세
+	// 게시글 상세 성공
+	// 댓글 계층 구조 페이징 성공
 	@GetMapping("/detail/{catDomain}/{boardNum}/{curPage}")
 	@ApiOperation("boardDetail")
 	public MyResponseEntity<BoardDetailDTO> boardDetail(@PathVariable("catDomain") String catDomain,

@@ -22,6 +22,7 @@ import io.swagger.v3.oas.annotations.parameters.RequestBody;
 @RestController
 @RequestMapping("/mng")
 public class ManagerController {
+
 	@Autowired
 	ManagerService adminservice;
 
