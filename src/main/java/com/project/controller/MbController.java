@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.project.common.MyResponseEntity;
 import com.project.dto.MbDTO;
 import com.project.dto.MyResponseEntityDTO;
+import com.project.dto.SearchInfoDTO;
+import com.project.dto.UpdatePwDTO;
 import com.project.service.MbService;
 
 import io.swagger.annotations.ApiOperation;
@@ -24,25 +26,23 @@ public class MbController {
 	@Autowired
 	MbService mbService;
 
-	// 아이디 찾기 -메일주소 // 비밀 번호찾기 추가 해야함 - 아이디 -메일 주소
-
 	// 회원 가입 성공
-	@PostMapping("/insert")
+	@PostMapping("/")
 	@ApiOperation("insertMb")
 	public MyResponseEntity<String> insertMb(@RequestBody MbDTO mbDTO) {
 		String insertMb = mbService.insertMb(mbDTO);
 		return new MyResponseEntity<>(new MyResponseEntityDTO<>("회원 가입 여부", insertMb));
 	}
 
-	// 아이디 중복 검사
-	@GetMapping("/insert/{id}")
+	// 아이디 중복 검사 성공
+	@GetMapping("/id-check/{id}")
 	@ApiOperation("checkId")
 	public MyResponseEntity<String> checkId(@PathVariable("id") String id) {
 		String checkId = mbService.checkId(id);
 		return new MyResponseEntity<>(new MyResponseEntityDTO<>("아이디 중복 확인", checkId));
 	}
 
-	// 로그인
+	// 로그인 성공
 	@PostMapping("/login")
 	@ApiOperation("login")
 	public MyResponseEntity<String> getLogin(@RequestBody MbDTO mbDTO) {
@@ -50,53 +50,51 @@ public class MbController {
 		return new MyResponseEntity<>(new MyResponseEntityDTO<>("로그인 여부", checkLogin));
 	}
 
-	// 로그아웃
-	@DeleteMapping("/check/logout")
+	// 로그아웃 작동
+	@DeleteMapping("/logout")
 	@ApiOperation("logout")
 	public MyResponseEntity<Void> getLogout() {
 		mbService.getLogout();
 		return new MyResponseEntity<>(new MyResponseEntityDTO<>("로그 아웃"));
 	}
 
-	// 마이 페이지
-	@GetMapping("/check/myPage")
+	// 마이 페이지 성공
+	@GetMapping("/check/mypage")
 	@ApiOperation("myPage")
 	public MyResponseEntity<MbDTO> getMyPage() {
 		MbDTO mbDTO = mbService.getMyPage();
 		return new MyResponseEntity<>(new MyResponseEntityDTO<>("마이 페이지", mbDTO));
 	}
 
-	// 마이 페이지 수정
-	@PutMapping("/check/update")
+	// 마이 페이지 수정 성공
+	@PutMapping("/check/mypage")
 	@ApiOperation("updateMyPage")
 	public MyResponseEntity<String> updateMyPage(@RequestBody MbDTO mbDTO) {
 		String updateMyPage = mbService.updateMyPage(mbDTO);
 		return new MyResponseEntity<>(new MyResponseEntityDTO<>("마이 페이지 수정", updateMyPage));
 	}
 
-	// 비밀번호 변경
-	@PutMapping("/check/updatePw")
+	// 비밀번호 변경 성공
+	@PutMapping("/check/pw")
 	@ApiOperation("updatePW")
-	public MyResponseEntity<String> updatePW(@PathVariable("pw") String pw, @PathVariable("newPw") String newPw) {
-		String checkInsert = mbService.updatePw(pw, newPw);
+	public MyResponseEntity<String> updatePW(@RequestBody UpdatePwDTO updatePwDTO) {
+		String checkInsert = mbService.updatePw(updatePwDTO);
 		return new MyResponseEntity<>(new MyResponseEntityDTO<>("비밀번호 변경", checkInsert));
 	}
 
-	// 아이디 찾기
-	@GetMapping("/searchId")
+	// 아이디 찾기 성공
+	@PostMapping("/search-id")
 	@ApiOperation("searchID")
-	public MyResponseEntity<String> searchId(@PathVariable("nm") String nm, @PathVariable("addr1") String addr1,
-			@PathVariable("addr2") String addr2) {
-		String searchId = mbService.searchId(nm, addr1, addr2);
+	public MyResponseEntity<String> searchId(@RequestBody SearchInfoDTO searchInfoDTO) {
+		String searchId = mbService.searchId(searchInfoDTO);
 		return new MyResponseEntity<>(new MyResponseEntityDTO<>("아이디 찾기", searchId));
 	}
 
-	// 비밀번호 찾기
-	@GetMapping("/searchPw")
+	// 비밀번호 찾기 성공
+	@PostMapping("/search-pw")
 	@ApiOperation("searchPW")
-	public MyResponseEntity<String> serarchPw(@PathVariable("nm") String nm, @PathVariable("id") String id,
-			@PathVariable("addr1") String addr1, @PathVariable("addr2") String addr2) {
-		String searchPw = mbService.searchPw(nm, id, addr1, addr2);
+	public MyResponseEntity<String> serarchPw(@RequestBody SearchInfoDTO searchInfoDTO) {
+		String searchPw = mbService.searchPw(searchInfoDTO);
 		return new MyResponseEntity<>(new MyResponseEntityDTO<>("비밀번호 찾기", searchPw));
 	}
 }

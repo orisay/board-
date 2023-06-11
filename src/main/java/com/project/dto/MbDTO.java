@@ -8,6 +8,8 @@ public class MbDTO {
     private String als;
     private String pw;
     private String nm;
+    private String email;
+    private String domain;
     private String addr1;
     private String addr2;
     private String phon1;
@@ -29,6 +31,12 @@ public class MbDTO {
 	}
 	public String getNm() {
 		return nm;
+	}
+	public String getEmail() {
+		return email;
+	}
+	public String getDomain() {
+		return domain;
 	}
 	public String getAddr1() {
 		return addr1;
@@ -69,6 +77,12 @@ public class MbDTO {
 	public void setNm(String nm) {
 		this.nm = nm;
 	}
+	public void setEmail(String email) {
+		this.email = email;
+	}
+	public void setDomain(String domain) {
+		this.domain = domain;
+	}
 	public void setAddr1(String addr1) {
 		this.addr1 = addr1;
 	}
@@ -108,6 +122,10 @@ public class MbDTO {
 		builder.append(pw);
 		builder.append(", nm=");
 		builder.append(nm);
+		builder.append(", email=");
+		builder.append(email);
+		builder.append(", domain=");
+		builder.append(domain);
 		builder.append(", addr1=");
 		builder.append(addr1);
 		builder.append(", addr2=");

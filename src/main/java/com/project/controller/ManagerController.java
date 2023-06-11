@@ -24,13 +24,13 @@ import io.swagger.v3.oas.annotations.parameters.RequestBody;
 public class ManagerController {
 
 	@Autowired
-	ManagerService adminservice;
+	ManagerService managerService;
 
-	@DeleteMapping("/{catDomain}/{boardNum}")
+	@DeleteMapping("/{catDomain}")
 	@ApiOperation("deleteBoardNumList")
 	public MyResponseEntity<List<Integer>> deleteBoardNumList(@PathVariable("catDomain")String catDomain
 			, @RequestBody List<BoardDTO> boardNum) {
-		List<Integer> deleteBoardNumList = adminservice.deleteBoardNumList(catDomain, boardNum);
+		List<Integer> deleteBoardNumList = managerService.deleteBoardNumList(catDomain, boardNum);
 		return new MyResponseEntity<>(new MyResponseEntityDTO<>("삭제", deleteBoardNumList));
 	}
 
@@ -39,7 +39,7 @@ public class ManagerController {
 	@ApiOperation("deleteRplNumList")
 	public MyResponseEntity<List<Integer>> deleteRplNumList(@PathVariable("catDomain")String catDomain
 			, @PathVariable("boardNum") Integer boardNum, @RequestParam("rplNum") List<ReplyDTO> list) {
-		List<Integer> deleteRplNumList = adminservice.deleteRplNumList(catDomain, boardNum, list);
+		List<Integer> deleteRplNumList = managerService.deleteRplNumList(catDomain, boardNum, list);
 		return new MyResponseEntity<>(new MyResponseEntityDTO<>("삭제", deleteRplNumList));
 	}
 
@@ -48,7 +48,7 @@ public class ManagerController {
 	@ApiOperation("changeSubManager")
 	public MyResponseEntity<String> changeSubManager(@PathVariable("catDomain") String catDomain,
 			@PathVariable("id") String id) {
-		String subManager = adminservice.changeSubManager(catDomain, id);
+		String subManager = managerService.changeSubManager(catDomain, id);
 		return new MyResponseEntity<>(new MyResponseEntityDTO<>("서브매니저 : ", subManager));
 	}
 

@@ -12,6 +12,8 @@
 				,ALS
 				,PW
 				,NM
+				,EMAIL
+				,DOMAIN
 				,ADDR1
 				,ADDR2
 				,PHON1
@@ -28,6 +30,8 @@
 				,#{als}
 				,#{pw}
 				,#{nm}
+				,#{email}
+				,#{domain}
 				,#{addr1}
 				,#{addr2}
 				,#{phon1}
@@ -55,6 +59,8 @@
 				,ALS
 				,PW
 				,NM
+				,EMAIL
+				,DOMAIN
 				,ADDR1
 				,ADDR2
 				,PHON1
@@ -78,6 +84,8 @@
 				,ALS
 				,PW
 				,NM
+				,EMAIL
+				,DOMAIN
 				,ADDR1
 				,ADDR2
 				,PHON1
@@ -98,6 +106,8 @@
 				TB_MB
 		SET
 				ALS = #{als}
+				,EMAIL = #{email}
+				,DOMAIN = #{domain}
 				,ADDR1 = #{addr1}
 				,ADDR2 = #{addr2}
 				,PHON1 = #{phon1}
@@ -121,7 +131,7 @@
 				PW = #{pw}
 	</update>
 
-	<select id="searchId" parameterType="MbDTO" resultType="String">
+	<select id="searchId" parameterType="SearchInfoDTO" resultType="String">
 		SELECT
 				ID
 		FROM
@@ -129,12 +139,12 @@
 		WHERE
 				NM = #{nm}
 		AND
-				ADDR1 = #{addr1}
+				EMAIL = #{email}
 		AND
-				ADDR1 = #{addr2}
+				DOMAIN = #{domain}
 	</select>
 
-	<select id="searchPw" parameterType="MbDTO" resultType="String">
+	<select id="searchPw" parameterType="SearchInfoDTO" resultType="String">
 		SELECT
 				PW
 		FROM
@@ -144,9 +154,9 @@
 		AND
 				NM = #{nm}
 		AND
-				ADDR1 = #{addr1}
+				EMAIL = #{email}
 		AND
-				ADDR1 = #{addr2}
+				DOMAIN = #{domain}
 	</select>
 
 	<insert id="insertRole" parameterType="MbDTO">

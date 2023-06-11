@@ -23,8 +23,8 @@ public class ReplyController {
 	ReplyService replyService;
 
 	// 댓글 작성 성공
-	@PostMapping("/insert/{boardNum}")
-	@ApiOperation("insertReply")
+	@PostMapping("/{boardNum}")
+	@ApiOperation("createReply")
 	public MyResponseEntity<Void> insertReply(@PathVariable("boardNum") Integer boardNum,
 			@RequestBody ReplyDTO replyDTO, @PathVariable(name = "rplNum", required = false) Integer rplNum) {
 		replyService.insertReply(boardNum, replyDTO, rplNum);
@@ -32,7 +32,7 @@ public class ReplyController {
 	}
 
 	// 댓글 수정 성공
-	@PutMapping("/update/{rplNum}")
+	@PutMapping("/{rplNum}")
 	@ApiOperation("updateReply")
 	public MyResponseEntity<Void> updateReply(@RequestBody ReplyDTO replyDTO) {
 		replyService.updateReply(replyDTO);
@@ -42,7 +42,7 @@ public class ReplyController {
 	// 댓글 삭제 성공
 	//대댓글 null 변경 없는 것은 삭제 성공
 	//spring boot 내장 tomcat은 deletemapping requestbody 지원해준다.
-	@DeleteMapping("/delete/{rplNum}")
+	@DeleteMapping("/{rplNum}")
 	@ApiOperation("deleteReply")
 	public MyResponseEntity<Void> deleteReply(@RequestBody ReplyDTO replyDTO) {
 		replyService.deleteReply(replyDTO);

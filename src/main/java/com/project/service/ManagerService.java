@@ -82,10 +82,11 @@ public class ManagerService {
 		MbSessionDTO memberInfo = SessionConfig.MbSessionDTO();
 		String memberId = memberInfo.getId();
 		if (catDomain == null || id == null) {
-			logger.warn("inputChangeSubManagerCheck access ID: {}, IP : {} insert null value catDomain : {}, id : {}",
-					memberId, accessIP, catDomain, id);
+			logger.warn("inputChangeSubManagerCheck access ID: {}, IP : {} insert null value "
+					+ "catDomain : {}, id : {}", memberId, accessIP, catDomain, id);
 			throw new IllegalArgumentException(
-					"inputChangeSubManagerCheck insert null value memberId : " + memberId + ", accessIP : " + accessIP);
+					"inputChangeSubManagerCheck insert null value memberId : "
+							+ memberId + ", accessIP : " + accessIP);
 		}
 		boolean checkInsert = checkLevel(accessIP, memberInfo);
 		boolean checkRightCat = checkRightCat(catDomain, memberId);
@@ -103,10 +104,11 @@ public class ManagerService {
 		MbSessionDTO memberInfo = SessionConfig.MbSessionDTO();
 		String memberId = memberInfo.getId();
 		if (list == null || catDomain == null || list.isEmpty()) {
-			logger.warn("deleteBoardNumList access ID: {}, IP : {} insert null value list : {}", memberId, accessIP,
-					list);
+			logger.warn("deleteBoardNumList access ID: {}, IP : {} insert null value list : {}"
+					, memberId, accessIP, list);
 			throw new IllegalArgumentException(
-					"deleteBoardNumList insert null value memberId : " + memberId + ", accessIP : " + accessIP);
+					"deleteBoardNumList insert null value memberId : "
+			+ memberId + ", accessIP : " + accessIP);
 		}
 		Boolean checkInsert = checkLevel(accessIP, memberInfo);
 		Boolean checkRightCat = checkRightCat(catDomain, memberId);
@@ -125,9 +127,11 @@ public class ManagerService {
 		String memberId = memberInfo.getId();
 		if (list == null || catDomain == null || boardNum == null || list.isEmpty()) {
 			logger.warn("deleteBoardNumList access ID: {}, IP : {} "
-					+ "insert null value catDomain : {}, boardNum : {}, list : {}", memberId, accessIP, list);
+					+ "insert null value catDomain : {}, boardNum : {}, list : {}"
+					, memberId, accessIP, list);
 			throw new IllegalArgumentException(
-					"inputdeleteRplNumListCheck insert null value memberId : " + memberId + ", accessIP : " + accessIP);
+					"inputdeleteRplNumListCheck insert null value memberId : "
+			+ memberId + ", accessIP : " + accessIP);
 		}
 		Boolean checkInsert = checkLevel(accessIP, memberInfo);
 		Boolean checkRightCat = checkRightCat(catDomain, memberId);
@@ -245,8 +249,10 @@ public class ManagerService {
 		CheckRightCatDTO checkRightCatDTO = new CheckRightCatDTO();
 		checkRightCatDTO.setCatDomain(catDomain);
 		checkRightCatDTO.setId(Id);
+		System.err.println(checkRightCatDTO);
 		Integer checkRightCat = managerDAO.selectMng(checkRightCatDTO);
-		if (checkRightCat == 1) {
+		System.err.println(checkRightCat);
+		if (checkRightCat > UserRole.SUB_MNG.getLevel()) {
 			return true;
 		} else {
 			logger.warn("not found manager access ID : {}", Id);

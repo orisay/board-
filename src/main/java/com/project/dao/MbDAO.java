@@ -3,6 +3,7 @@ package com.project.dao;
 import org.apache.ibatis.annotations.Mapper;
 
 import com.project.dto.MbDTO;
+import com.project.dto.SearchInfoDTO;
 import com.project.dto.UpdatePwDTO;
 @Mapper
 public interface MbDAO {
@@ -13,7 +14,7 @@ public interface MbDAO {
 
 	String getId(String id);
 
-	Integer getLogin(MbDTO mbDTO);
+	MbDTO getLogin(MbDTO mbDTO);
 
 	MbDTO getMyPage(String mbId);
 
@@ -21,8 +22,8 @@ public interface MbDAO {
 
 	Integer updatePw(UpdatePwDTO updatePwDTO);
 
-	String searchId(MbDTO mbDTO);
+	String searchId(SearchInfoDTO searchInfoDTO);
 
-	String searchPw(MbDTO mbDTO);
+	String searchPw(SearchInfoDTO searchInfoDTO);
 
 }

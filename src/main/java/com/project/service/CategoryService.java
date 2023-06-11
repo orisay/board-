@@ -83,7 +83,8 @@ public class CategoryService {
 		String mesg = null;
 
 		if (catDomain == null || id == null) {
-			logger.warn("updateMng access ID : {} insert null value catDomain : {}, id : {}", checkId, catDomain, id);
+			logger.warn("updateMng access ID : {} insert null value catDomain : {}, id : {}"
+					, checkId, catDomain, id);
 			throw new IllegalArgumentException(
 					"CategoryService updateMng insert null value catDomain : " + catDomain + " id : " + id);
 		}
@@ -113,7 +114,8 @@ public class CategoryService {
 		String mesg = null;
 
 		if (catDomain == null || cat == null) {
-			logger.warn("updateCat access ID : {} insert null value catDomain : {}, cat : {}", checkId, catDomain, cat);
+			logger.warn("updateCat access ID : {} insert null value catDomain : {}, cat : {}"
+					, checkId, catDomain, cat);
 			throw new IllegalArgumentException(
 					"CategoryService updateCat insert null value catDomain : " + catDomain + " cat : " + cat);
 		}
@@ -144,7 +146,8 @@ public class CategoryService {
 		String mesg = null;
 
 		if (catDomain == null) {
-			logger.warn("updateCat access ID : {} insert  null value catDomain : {}", checkId, catDomain);
+			logger.warn("updateCat access ID : {} insert  null value catDomain : {}"
+					, checkId, catDomain);
 			throw new IllegalArgumentException(
 					"CategoryService deleteCat " + "insert null value catDomain : " + catDomain);
 		}

@@ -26,8 +26,8 @@ public class ReplyService {
 	public Integer insertReply(Integer boardNum, ReplyDTO replyDTO, Integer rplNum) {
 		String info = getAccessInfo();
 		if (boardNum == null || replyDTO == null) {
-			logger.warn("insertReply access info : {} , null values boardNum : {}, replyDTO : {}", info, boardNum,
-					replyDTO);
+			logger.warn("insertReply access info : {} , null values boardNum : {}, replyDTO : {}"
+					, info, boardNum, replyDTO);
 			throw new IllegalArgumentException(
 					"ReplyService insertReply null value boardNum : " + boardNum + " replyDTO : " + replyDTO);
 		} else if (rplNum != null) {

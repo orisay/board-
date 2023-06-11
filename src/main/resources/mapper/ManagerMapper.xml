@@ -93,11 +93,9 @@
 		RPL_NUM = #{rplNum}
 	</update>
 
-	<select id="selectMng" parameterType="CheckRightCatDTO">
+	<select id="selectMng" parameterType="CheckRightCatDTO" resultType="Integer">
 		SELECT
 		ROLE_NUM
-		,ID
-		CAT_DOMAIN
 		FROM
 		MP_MB_ROLE
 		WHERE

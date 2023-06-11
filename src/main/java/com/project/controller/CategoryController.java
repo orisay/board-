@@ -27,32 +27,32 @@ public class CategoryController {
 	CategoryService categoryService;
 
 	// 메인 성공
-	@GetMapping("/controller")
-	@ApiOperation("controllerCategory")
+	@GetMapping("/")
+	@ApiOperation("controllerByCategory")
 	public MyResponseEntity<List<CategoryDTO>> controllerCategory() {
 		List<CategoryDTO> controllerCategory = categoryService.controllerCategory();
 		return new MyResponseEntity<>(new MyResponseEntityDTO<>("관리자 권한", controllerCategory));
 	}
 
 	// 카테고리 추가 성공
-	@PostMapping("/insert")
-	@ApiOperation("insertCategory")
+	@PostMapping("/")
+	@ApiOperation("createCategory")
 	public MyResponseEntity<String> insertCategory(@RequestBody CategoryDTO categoryDTO) {
 		String insertCheck = categoryService.insertCategory(categoryDTO);
 		return new MyResponseEntity<>(new MyResponseEntityDTO<>("카테고리 추가 여부", insertCheck));
 	}
 
 	// 카테고리 관리자 선택 성공
-	@PutMapping("/updateAdmin/{catDomain}/{id}")
-	@ApiOperation("updateCategoryAdmin")
-	public MyResponseEntity<String> updateAdmin(@PathVariable("catDomain")String catDomain,
+	@PutMapping("/{catDomain}/mng/{id}")
+	@ApiOperation("updateCategoryMng")
+	public MyResponseEntity<String> updateMng(@PathVariable("catDomain")String catDomain,
 			@PathVariable("id") String id) {
 		String updateCheckId = categoryService.updateMng(catDomain, id);
 		return new MyResponseEntity<>(new MyResponseEntityDTO<>("등록된 매니저", updateCheckId));
 	}
 
 	// 카테고리 이름 변경 성공
-	@PutMapping("/updateCat/{catDomain}/{cat}")
+	@PutMapping("/{catDomain}/cat/{cat}")
 	@ApiOperation("updateCategoryName")
 	public MyResponseEntity<String> updateCat(@PathVariable("catDomain")String catDomain,
 			@PathVariable("cat") String cat) {
@@ -62,7 +62,7 @@ public class CategoryController {
 
 	// 카테고리 삭제 성공
 	// 관련 게시글 전부  DB 트리거로 백업 성공
-	@DeleteMapping("/deleteCat/{catDomain}")
+	@DeleteMapping("/{catDomain}")
 	@ApiOperation("deleteCategory")
 	public MyResponseEntity<Void> deleteCat(@PathVariable("catDomain") String catDomain) {
 		String deleteCheckCat = categoryService.deleteCat(catDomain);

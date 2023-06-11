@@ -44,7 +44,8 @@ public class BoardService {
 		String user = getAccessRight();
 		if (catDomain == null) {
 			logger.warn("getBoardList access User : {} null value catDomain : {}", user, catDomain);
-			throw new IllegalArgumentException("BoardService getBoardList null value catDomain " + ": " + catDomain);
+			throw new IllegalArgumentException(
+					"BoardService getBoardList null value catDomain " + ": " + catDomain);
 		}
 		BoardSearchDTO boardSearchDTO = paging(catDomain, curPage, perPage);
 		List<BoardDTO> boardList = boardDAO.getBoardList(boardSearchDTO);
@@ -52,23 +53,24 @@ public class BoardService {
 	}
 
 	// 게시글 조건별 검색 기능
-	public List<BoardDTO> searchBoard(String catDomain, Integer perPage, Integer curPage, String target,
-			String keyword) {
+	public List<BoardDTO> searchBoard(String catDomain,String target, String keyword,
+			 Integer curPage, Integer perPage) {
 		String user = getAccessRight();
 
-		if (catDomain == null || target == null || keyword == null) {
-			logger.warn("searchBoard access User : {} null value catDomain : {}, target : " + "{}, keyword : {}", user,
-					catDomain, target, keyword);
+		if (catDomain == null || target == null ) {
+			logger.warn("searchBoard access User : {} null value catDomain : {}, target : "
+		+ "{}", user, catDomain, target);
 			StringBuilder errorMesg = new StringBuilder();
 			errorMesg.append("BoardService searchBoard null value catDomain : ");
 			errorMesg.append(catDomain);
 			errorMesg.append(" tartget : ");
 			errorMesg.append(target);
-			errorMesg.append(" keyword : ");
-			errorMesg.append(keyword);
 			throw new IllegalArgumentException(errorMesg.toString());
 		}
 		BoardSearchDTO boardSearchDTO = paging(catDomain, curPage, perPage);
+		if (keyword == null) {
+			keyword = "";
+		}
 		boardSearchDTO.setTarget(target);
 		boardSearchDTO.setKeyword(keyword);
 		List<BoardDTO> searchBoard = null;
@@ -80,7 +82,8 @@ public class BoardService {
 		} else if (checkLevel > 4) {
 			searchBoard = boardDAO.searchBoardAll(boardSearchDTO);
 		} else {
-			logger.error("boardSearch access User : {} default case target : {}, keyword : {}", user, target, keyword);
+			logger.error("boardSearch access User : {} default case target : {}, keyword : {}"
+					, user, target, keyword);
 			throw new UnknownException("BoardService boardSearch 예상치 못한 상태가 발생했습니다.");
 		}
 		return searchBoard;
@@ -90,8 +93,8 @@ public class BoardService {
 	public String insertBoard(String catDomain, BoardDTO boardDTO) {
 		String user = getAccessRight();
 		if (catDomain == null || boardDTO == null) {
-			logger.warn("insertBoard access User : {} null value catDomain : {}, boardDTO " + ": {}", user, catDomain,
-					boardDTO);
+			logger.warn("insertBoard access User : {} null value catDomain : {}, boardDTO "
+					+ ": {}" , user, catDomain, boardDTO);
 			StringBuilder errorMesg = new StringBuilder();
 			errorMesg.append("BoardService insertBoard null value catDomain : ");
 			errorMesg.append(catDomain);
@@ -108,8 +111,8 @@ public class BoardService {
 			boardDAO.plusCountCategoryboardCnt(boardDTO);
 			resultMesg = "성공했습니다";
 		} else if (insertCount == 0) {
-			logger.warn("insertBoard access User : {} DB is not affected. catDomain: {}, boardDTO: {}", user, catDomain,
-					boardDTO);
+			logger.warn("insertBoard access User : {} DB is not affected. catDomain: {},"
+					+ " boardDTO: {}", user, catDomain, boardDTO);
 			resultMesg = "실패했습니다";
 		} else {
 			logger.error("insertBoard access User : {} unknown status", user);
@@ -122,8 +125,8 @@ public class BoardService {
 	public String updateBoard(String catDomain, BoardDTO boardDTO) {
 		String user = getAccessRight();
 		if (catDomain == null || boardDTO == null) {
-			logger.warn("updateBoard access User : {} null value catDomain : {}, " + "boardDTO : {}", user, catDomain,
-					boardDTO);
+			logger.warn("updateBoard access User : {} null value catDomain : {}, "
+					+ "boardDTO : {}", user, catDomain, boardDTO);
 			StringBuilder errorMesg = new StringBuilder();
 			errorMesg.append("BoardService updateBoard null value catDomain : ");
 			errorMesg.append(catDomain);
@@ -137,8 +140,8 @@ public class BoardService {
 		if (updateCount == 1) {
 			resultMesg = "성공했습니다.";
 		} else if (updateCount == 0) {
-			logger.warn("updateBoard access User : {} DB is not affected. catDomain: {}, boardDTO: {}", user, catDomain,
-					boardDTO);
+			logger.warn("updateBoard access User : {} DB is not affected. catDomain: {}, "
+					+ "boardDTO: {}", user, catDomain, boardDTO);
 			resultMesg = "실패했습니다.";
 		} else {
 			logger.error("updateBoard access User : {} unknown status", user);
@@ -151,8 +154,8 @@ public class BoardService {
 	public String deleteBoard(Integer boardNum, BoardDTO boardDTO) {
 		String user = getAccessRight();
 		if (boardNum == null || boardDTO == null) {
-			logger.warn("deleteBoard access User : {} null value boardNum : {}," + " boardDTO : {}", user, boardNum,
-					boardDTO);
+			logger.warn("deleteBoard access User : {} null value boardNum : {},"
+							+ " boardDTO : {}", user, boardNum, boardDTO);
 			StringBuilder errorMesg = new StringBuilder();
 			errorMesg.append("BoardService deleteBoard null value boardNum : ");
 			errorMesg.append(boardNum);
@@ -167,8 +170,8 @@ public class BoardService {
 			boardDAO.minusCountCategoryboardCnt(boardDTO);
 			resultMesg = "성공했습니다";
 		} else if (deleteCount == 0) {
-			logger.warn("deleteBoard access User : {} DB is not affected. boardNum: {}, boardDTO: {}", user, boardNum,
-					boardDTO);
+			logger.warn("deleteBoard access User : {} DB is not affected. boardNum: {}"
+					+ ", boardDTO: {}", user, boardNum, boardDTO);
 			resultMesg = "실패했습니다";
 		} else {
 			logger.error("deleteBoard access User : {} unknown status", user);
@@ -182,8 +185,8 @@ public class BoardService {
 	public BoardDetailDTO boardDetail(String catDomain, Integer boardNum, Integer curPage) {
 		String user = getAccessRight();
 		if (catDomain == null || boardNum == null) {
-			logger.warn("boardDetail access User : {} null value catDomain" + " : {}, boardNum : {}", user, catDomain,
-					boardNum);
+			logger.warn("boardDetail access User : {} null value catDomain"
+						+ " : {}, boardNum : {}", user, catDomain, boardNum);
 			StringBuilder errorMesg = new StringBuilder();
 			errorMesg.append("BoardService boardDetail null value catDomain : ");
 			errorMesg.append(catDomain);

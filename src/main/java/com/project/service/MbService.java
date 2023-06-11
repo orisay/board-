@@ -12,6 +12,7 @@ import com.project.config.IPConfig;
 import com.project.config.SessionConfig;
 import com.project.dao.MbDAO;
 import com.project.dto.MbDTO;
+import com.project.dto.SearchInfoDTO;
 import com.project.dto.UpdatePwDTO;
 import com.project.exception.UnknownException;
 
@@ -83,24 +84,22 @@ public class MbService {
 	// 로그인
 	public String getLogin(MbDTO mbDTO) {
 		String gusetIP = IPConfig.getIp(SessionConfig.getSession());
-		Integer resultLogin = null;
+		MbDTO resultLogin = null;
 		String checkLoginMesg = null;
 
 		if (mbDTO == null) {
 			logger.warn("checkId access ID : {} null value", gusetIP);
 			throw new IllegalArgumentException("MbService getLogin insert null value");
 		}
-
 		resultLogin = mbDAO.getLogin(mbDTO);
-
-		if (resultLogin == 1) {
+		if (mbDTO.getId().equals(resultLogin.getId())) {
 			checkLoginMesg = "로그인 성공." + mbDTO.getId();
-		} else if (resultLogin == 0) {
-			checkLoginMesg = "로그인 실패.";
-		} else {
-			logger.error("getLogin access IP : {} unkonwn status insert value : {}, Id : {}, Pw : {}", gusetIP, mbDTO,
-					mbDTO.getId(), mbDTO.getPw());
+		} else if (!mbDTO.getId().equals(resultLogin.getId())) {
+			logger.error("getLogin access IP : {} unkonwn status insert value : {}, Id : {}, Pw : {}"
+					, gusetIP, mbDTO, mbDTO.getId(), mbDTO.getPw());
 			throw new UnknownException("MbService getLogin에서 비정상적인 값이 발생 했습니다.");
+		} else {
+			checkLoginMesg = "로그인 실패.";
 		}
 		return checkLoginMesg;
 	}
@@ -149,17 +148,15 @@ public class MbService {
 	}
 
 	// 비밀번호 변경
-	public String updatePw(String pw, String newPw) {
+	public String updatePw(UpdatePwDTO updatePwDTO) {
 		String memberId = SessionConfig.MbSessionDTO().getId();
 		Integer insertCheck = null;
-		if (pw == null || newPw == null) {
-			logger.warn("updatePw access ID : {} null vaule pw : {}, newPw : {}", memberId, pw, newPw);
-			throw new IllegalArgumentException("MbService updateMyPage null value pw : " + pw + "newPw : " + newPw);
+		if (updatePwDTO == null) {
+			logger.warn("updatePw access ID : {} null vaule updatePwDTO : {}", memberId, updatePwDTO);
+			throw new IllegalArgumentException(
+					"MbService updateMyPage null value updatePwDTO : " + updatePwDTO);
 		} else {
-			UpdatePwDTO updatePwDTO = new UpdatePwDTO();
 			updatePwDTO.setId(memberId);
-			updatePwDTO.setPw(pw);
-			updatePwDTO.setNewPw(newPw);
 			insertCheck = mbDAO.updatePw(updatePwDTO);
 		}
 
@@ -177,19 +174,16 @@ public class MbService {
 	}
 
 	// 아이디 찾기
-	public String searchId(String nm, String addr1, String addr2) {
+	public String searchId(SearchInfoDTO searchInfoDTO) {
 		String gusetIP = IPConfig.getIp(SessionConfig.getSession());
 		String serachIdCheck = null;
 
-		if (addr1 == null || addr2 == null) {
-			logger.warn("access IP : {} null vaule addr1 : {}, addr2 : {}", gusetIP, addr1, addr2);
-			throw new IllegalArgumentException("MbService searchId null value addr1 : " + addr1 + ", addr2 : " + addr2);
+		if (searchInfoDTO == null) {
+			logger.warn("access IP : {} null vaule searchInfoDTO : {}", gusetIP, searchInfoDTO);
+			throw new IllegalArgumentException(
+					"MbService searchId null value searchInfoDTO : " + searchInfoDTO );
 		} else {
-			MbDTO mbDTO = new MbDTO();
-			mbDTO.setNm(nm);
-			mbDTO.setAddr1(addr1);
-			mbDTO.setAddr2(addr2);
-			serachIdCheck = mbDAO.searchId(mbDTO);
+			serachIdCheck = mbDAO.searchId(searchInfoDTO);
 		}
 
 		String sueccesMesg = null;
@@ -206,30 +200,18 @@ public class MbService {
 	}
 
 	// 비밀번호 찾기
-	public String searchPw(String nm, String id, String addr1, String addr2) {
+	public String searchPw(SearchInfoDTO searchInfoDTO) {
 		String gusetIP = IPConfig.getIp(SessionConfig.getSession());
 		String searchPwCheck = null;
-		if (nm == null || id == null || addr1 == null || addr2 == null) {
-			logger.warn("access IP : {} null vaule nm : {}, id : {}, addr1 : {}, addr2 : {}", gusetIP, nm, id, addr1,
-					addr2);
+		if (searchInfoDTO == null) {
+			logger.warn("access IP : {} null vaule searchInfoDTO : {}", gusetIP, searchInfoDTO);
 			StringBuilder errorMesg = new StringBuilder();
 			errorMesg.append("MbService searchId null value");
-			errorMesg.append("nm");
-			errorMesg.append(nm);
-			errorMesg.append("id");
-			errorMesg.append(id);
-			errorMesg.append("addr1");
-			errorMesg.append(addr1);
-			errorMesg.append("addr2");
-			errorMesg.append(addr2);
+			errorMesg.append("searchInfoDTO : ");
+			errorMesg.append(searchInfoDTO);
 			throw new IllegalArgumentException(errorMesg.toString());
 		} else {
-			MbDTO mbDTO = new MbDTO();
-			mbDTO.setId(id);
-			mbDTO.setNm(nm);
-			mbDTO.setAddr1(addr1);
-			mbDTO.setAddr2(addr2);
-			searchPwCheck = mbDAO.searchPw(mbDTO);
+			searchPwCheck = mbDAO.searchPw(searchInfoDTO);
 		}
 
 		String sueccesMesg = null;

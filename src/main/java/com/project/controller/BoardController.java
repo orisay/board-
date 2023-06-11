@@ -38,18 +38,18 @@ public class BoardController {
 	}
 
 	// 게시판 성공
-	@GetMapping("/{catDomain}/{curPage}/{perPage}")
-	@ApiOperation("boardList")
+	@GetMapping("/{catDomain}")
+	@ApiOperation("readBoard")
 	public MyResponseEntity<List<BoardDTO>> getBoardList(@PathVariable("catDomain") String catDomain,
-			@PathVariable(name = "curPage", required = false) Integer curPage,
-			@PathVariable(name = "perPage", required = false) Integer perPage) {
+			@RequestParam(name = "curPage", required = false) Integer curPage,
+			@RequestParam(name = "perPage", required = false) Integer perPage) {
 		List<BoardDTO> boardList = boardService.getBoardList(catDomain, curPage, perPage);
 		return new MyResponseEntity<>(new MyResponseEntityDTO<>("게시판 화면", boardList));
 	}
 
 	// 게시글 작성 성공
-	@PostMapping("/insert/{catDomain}")
-	@ApiOperation("insertBoard")
+	@PostMapping("/{catDomain}")
+	@ApiOperation("createBoard")
 	public MyResponseEntity<String> insertBoard(@PathVariable("catDomain") String catDomain,
 			@RequestBody BoardDTO boardDTO) {
 		String resultMesg = boardService.insertBoard(catDomain, boardDTO);
@@ -57,7 +57,7 @@ public class BoardController {
 	}
 
 	// 게시글 수정 성공
-	@PutMapping("/update/{catDomain}/{boardNum}")
+	@PutMapping("/{catDomain}/{boardNum}")
 	@ApiOperation("updateBoard")
 	public MyResponseEntity<String> updateBoard(@PathVariable("catDomain") String catDomain,
 			@PathVariable("boardNum") Integer boardNum, @RequestBody BoardDTO boardDTO) {
@@ -66,7 +66,7 @@ public class BoardController {
 	}
 
 	// 게시글 삭제 성공
-	@DeleteMapping("/delete/{boardNum}")
+	@DeleteMapping("/{boardNum}")
 	@ApiOperation("deleteBoard")
 	public MyResponseEntity<String> deleteBoard(@PathVariable("boardNum") Integer boardNum,
 			@RequestBody BoardDTO boardDTO) {
@@ -75,23 +75,24 @@ public class BoardController {
 	}
 
 	// 게시글 검색 성공
-	@GetMapping("/search/{catDomain}/{curPage}/{perPage}")
+	@GetMapping("/{catDomain}/search/{target}")
 	@ApiOperation("searchBoard")
-	public MyResponseEntity<List<BoardDTO>> searchBoard(@PathVariable("catDomain") String catDomain,
-			@PathVariable(name = "curPage", required = false) Integer curPage,
-			@PathVariable(name = "perPage", required = false) Integer perPage,
-			@RequestParam("target") String target,@RequestParam("keyword") String keyword) {
-		List<BoardDTO> boardSearch = boardService.searchBoard(catDomain, curPage, perPage, target, keyword);
+	public MyResponseEntity<List<BoardDTO>> searchBoard(@PathVariable("catDomain") String catDomain
+			,@PathVariable("target") String target
+			,@RequestParam(name = "keyword", required = false) String keyword
+			,@RequestParam(name = "curPage", required = false) Integer curPage
+			,@RequestParam(name = "perPage", required = false) Integer perPage) {
+		List<BoardDTO> boardSearch = boardService.searchBoard(catDomain, target, keyword, curPage, perPage);
 		return new MyResponseEntity<>(new MyResponseEntityDTO<>("게시글 검색 성공", boardSearch));
 	}
 
 	// 게시글 상세 성공
 	// 댓글 계층 구조 페이징 성공
-	@GetMapping("/detail/{catDomain}/{boardNum}/{curPage}")
-	@ApiOperation("boardDetail")
+	@GetMapping("/detail/{catDomain}/{boardNum}")
+	@ApiOperation("detailBoard")
 	public MyResponseEntity<BoardDetailDTO> boardDetail(@PathVariable("catDomain") String catDomain,
 			@PathVariable("boardNum") Integer boardNum,
-			@PathVariable(name = "curPage", required = false) Integer curPage) {
+			@RequestParam(name = "curPage", required = false) Integer curPage) {
 		BoardDetailDTO board = boardService.boardDetail(catDomain, boardNum, curPage);
 		return new MyResponseEntity<>(new MyResponseEntityDTO<>("게시글 상세 내용", board));
 	}
