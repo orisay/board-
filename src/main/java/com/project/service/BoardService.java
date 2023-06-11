@@ -233,7 +233,7 @@ public class BoardService {
 		pageDTO.setCurPage(curPage);
 		pageDTO.setPerPage(perPage);
 		Integer totalCount = checkTotaldCount(catDomain);
-		Integer totalPage = (int) ((double) totalCount / (int) perPage);
+		Integer totalPage = (int)Math.ceil((double) totalCount / (int) perPage);
 		pageDTO.setTotalPage(totalPage);
 		Integer startIdx = ((pageDTO.getCurPage() - 1) * pageDTO.getPerPage()) + 1;
 		Integer endIdx = (pageDTO.getPerPage() * pageDTO.getCurPage());
