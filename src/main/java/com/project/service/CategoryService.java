@@ -22,7 +22,7 @@ import com.project.exception.UnknownException;
 public class CategoryService {
 
 	@Autowired
-	CategoryDAO categoryDAO;
+	private CategoryDAO categoryDAO;
 
 	private static final Logger logger = LogManager.getLogger(CategoryService.class);
 

@@ -28,7 +28,7 @@ import com.project.exception.UnknownException;
 public class BoardService {
 
 	@Autowired
-	BoardDAO boardDAO;
+	private BoardDAO boardDAO;
 
 	private static final Logger logger = LogManager.getLogger(BoardService.class);
 

@@ -23,7 +23,7 @@ public class MbService {
 	private static final Logger logger = LogManager.getLogger(MbService.class);
 
 	@Autowired
-	MbDAO mbDAO;
+	private MbDAO mbDAO;
 
 	// 회원 가입
 	public String insertMb(MbDTO mbDTO) {

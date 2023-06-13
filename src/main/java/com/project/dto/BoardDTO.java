@@ -76,6 +76,10 @@ public class BoardDTO {
 		this.pw = pw;
 	}
 
+	public BoardDTO() {
+		super();
+	}
+
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();

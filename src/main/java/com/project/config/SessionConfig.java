@@ -31,6 +31,7 @@ public class SessionConfig {
 
 		mbSessionDTO.setId("admin");
 		mbSessionDTO.setRole(UserRole.ADMIN.name());
+		mbSessionDTO.setRoleNum(UserRole.ADMIN.getLevel());
 		return mbSessionDTO;
 	}
 

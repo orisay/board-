@@ -3,22 +3,43 @@
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.project.dao.ManagerDAO">
-	<update id="changeSubManager" parameterType="MbSessionDTO">
-		UPDATE
-		MP_MB_ROLE
-		SET
-		ROLE_NUM = #{roleNum}
-		CAT_DOMAIN =#{catDomain}
-		WHERE
-		ID = #{id}
-	</update>
 
-	<delete id="deleteBoardNumList" parameterType="BoardDTO">
+	<select id="selectMng" parameterType="CheckRightCatDTO"
+		resultType="Integer">
+		SELECT
+		ROLE_NUM
+		FROM
+		MP_MB_ROLE
+		WHERE
+		CAT_DOMAIN = #{catDomain}
+		AND
+		ID = #{id}
+	</select>
+
+	<insert id="insertSubManager" parameterType="ChangeSubMNGDTO">
+		INSERT INTO
+		MP_MB_ROLE
+		(
+		ROLE_NUM
+		,ID
+		,CAT_DOMAIN
+		)
+		VALUES
+		(
+		#{roleNum}
+		,#{id}
+		,#{catDomain}
+		)
+	</insert>
+
+	<delete id="deleteSubManager" parameterType="ChangeSubMNGDTO">
 		DELETE
 		FROM
-		TB_BOARD
+		MP_MB_ROLE
 		WHERE
-		BOARD_NUM = #{boardNum}
+		ID = #{id}
+		AND
+		CAT_DOMAIN = #{catDomain}
 	</delete>
 
 	<insert id="deleteBoardBackup" parameterType="BoardDTO">
@@ -30,7 +51,7 @@
 		,CREATOR
 		,TTL
 		,CN
-		,VIEW
+		,VIEW_CNT
 		,RPL_CNT
 		,CRT_TM
 		,UP_TM
@@ -42,19 +63,19 @@
 		,#{creator}
 		,#{ttl}
 		,#{cn}
-		,#{view}
+		,#{viewCnt}
 		,#{rplCnt}
 		,#{crtTm}
 		,SYSDATE
 		)
 	</insert>
 
-	<delete id="deleteReplyNum" parameterType="ReplyDTO">
+	<delete id="deleteBoardNumList" parameterType="BoardDTO">
 		DELETE
 		FROM
-		TB_REPLY
+		TB_BOARD
 		WHERE
-		RPL_NUM = #{rplNum}
+		BOARD_NUM = #{boardNum}
 	</delete>
 
 	<insert id="deleteReplyBackup" parameterType="ReplyDTO">
@@ -84,23 +105,24 @@
 		)
 	</insert>
 
+	<delete id="deleteReplyNum" parameterType="ReplyDTO">
+		DELETE
+		FROM
+		TB_REPLY
+		WHERE
+		RPL_NUM = #{rplNum}
+	</delete>
+
+
+
 	<update id="setRplCnNull" parameterType="ReplyDTO">
 		UPDATE
-		TB_DEL_REPLY
+		TB_REPLY
 		SET
-		RPL_CN = {rplCn}
+		RPL_CN = #{rplCn}
 		WHERE
 		RPL_NUM = #{rplNum}
 	</update>
 
-	<select id="selectMng" parameterType="CheckRightCatDTO" resultType="Integer">
-		SELECT
-		ROLE_NUM
-		FROM
-		MP_MB_ROLE
-		WHERE
-		CAT_DOMAIN = #{catDomain}
-		AND
-		ID = #{id}
-	</select>
+
 </mapper>
