@@ -75,15 +75,18 @@
 			<artifactId>commons-lang3</artifactId>
 			<version>3.12.0</version>
 		</dependency>
-		<!--인터셉터 WebConfig 설정할 때 특정 경로 추가할 때 필요  -->
+		<!--인터셉터 WebConfig 설정할 때 특정 경로 추가할 때 필요 -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-configuration-processor</artifactId>
 			<optional>true</optional>
 		</dependency>
+		<!-- 스프링 시큐리티 디펜더시 -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-security</artifactId>
+		</dependency>
 	</dependencies>
-
-
 
 	<build>
 		<plugins>
