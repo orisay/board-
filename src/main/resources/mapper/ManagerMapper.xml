@@ -4,125 +4,122 @@
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.project.dao.ManagerDAO">
 
-	<select id="selectMng" parameterType="CheckRightCatDTO"
-		resultType="Integer">
+	<select id="selectMng" parameterType="CheckRightCatDTO" resultType="Integer">
 		SELECT
-		ROLE_NUM
+				ROLE_NUM
 		FROM
-		MP_MB_ROLE
+				MP_MB_ROLE
 		WHERE
-		CAT_DOMAIN = #{catDomain}
+				CAT_DOMAIN = #{catDomain}
 		AND
-		ID = #{id}
+				ID = #{id}
 	</select>
 
 	<insert id="insertSubManager" parameterType="ChangeSubMNGDTO">
 		INSERT INTO
-		MP_MB_ROLE
-		(
-		ROLE_NUM
-		,ID
-		,CAT_DOMAIN
-		)
+				MP_MB_ROLE
+				(
+				ROLE_NUM
+				,ID
+				,CAT_DOMAIN
+				)
 		VALUES
-		(
-		#{roleNum}
-		,#{id}
-		,#{catDomain}
-		)
+				(
+				#{roleNum}
+				,#{id}
+				,#{catDomain}
+				)
 	</insert>
 
 	<delete id="deleteSubManager" parameterType="ChangeSubMNGDTO">
 		DELETE
 		FROM
-		MP_MB_ROLE
+				MP_MB_ROLE
 		WHERE
-		ID = #{id}
+				ID = #{id}
 		AND
-		CAT_DOMAIN = #{catDomain}
+				CAT_DOMAIN = #{catDomain}
 	</delete>
 
 	<insert id="deleteBoardBackup" parameterType="BoardDTO">
 		INSERT INTO
-		TB_DEL_BOARD
-		(
-		BOARD_NUM
-		,CAT_DOMAIN
-		,CREATOR
-		,TTL
-		,CN
-		,VIEW_CNT
-		,RPL_CNT
-		,CRT_TM
-		,UP_TM
-		)
+				TB_DEL_BOARD
+				(
+				BOARD_NUM
+				,CAT_DOMAIN
+				,CREATOR
+				,TTL
+				,CN
+				,VIEW_CNT
+				,RPL_CNT
+				,CRT_TM
+				,UP_TM
+				)
 		VALUES
-		(
-		#{boardNum}
-		,#{catDomain}
-		,#{creator}
-		,#{ttl}
-		,#{cn}
-		,#{viewCnt}
-		,#{rplCnt}
-		,#{crtTm}
-		,SYSDATE
-		)
+				(
+				#{boardNum}
+				,#{catDomain}
+				,#{creator}
+				,#{ttl}
+				,#{cn}
+				,#{viewCnt}
+				,#{rplCnt}
+				,#{crtTm}
+				,SYSDATE
+				)
 	</insert>
 
 	<delete id="deleteBoardNumList" parameterType="BoardDTO">
 		DELETE
 		FROM
-		TB_BOARD
+				TB_BOARD
 		WHERE
-		BOARD_NUM = #{boardNum}
+				BOARD_NUM = #{boardNum}
 	</delete>
 
 	<insert id="deleteReplyBackup" parameterType="ReplyDTO">
 		INSERT INTO
-		TB_DEL_REPLY
-		(
-		RPL_NUM
-		,BOARD_NUM
-		,ID
-		,RPL_CN
-		,CRT_TM
-		,UP_TM
-		,PW
-		,PARENT_RPL
-		,DEPTH
-		)
+				TB_DEL_REPLY
+				(
+				RPL_NUM
+				,BOARD_NUM
+				,ID
+				,RPL_CN
+				,CRT_TM
+				,UP_TM
+				,DEPTH
+				,PW
+				,PARENT_RPL
+				)
 		VALUES
-		(
-		,#{rplNum}
-		,#{id}
-		,#{rplCn}
-		,#{crtTm}
-		,SYSDATE
-		,#{pw}
-		,#{parentRpl}
-		,#{depth}
-		)
+				(
+				#{rplNum}
+				,#{boardNum}
+				,#{id}
+				,#{rplCn}
+				,#{crtTm}
+				,SYSDATE
+				,#{depth}
+				,#{pw}
+				,#{parentRpl}
+				)
 	</insert>
 
 	<delete id="deleteReplyNum" parameterType="ReplyDTO">
 		DELETE
 		FROM
-		TB_REPLY
+				TB_REPLY
 		WHERE
-		RPL_NUM = #{rplNum}
+				RPL_NUM = #{rplNum}
 	</delete>
-
-
 
 	<update id="setRplCnNull" parameterType="ReplyDTO">
 		UPDATE
-		TB_REPLY
+				TB_REPLY
 		SET
-		RPL_CN = #{rplCn}
+				RPL_CN = NULL
 		WHERE
-		RPL_NUM = #{rplNum}
+				RPL_NUM = #{rplNum}
 	</update>
-
 
 </mapper>

@@ -1,24 +1,20 @@
 package com.project.controller;
 
-import java.lang.reflect.Array;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.project.common.MyResponseEntity;
 import com.project.dto.BoardDTO;
-import com.project.dto.BoardListDTO;
 import com.project.dto.MyResponseEntityDTO;
 import com.project.dto.ReplyDTO;
+import com.project.dto.RequestBoardDTO;
+import com.project.dto.RequestReplyDTO;
 import com.project.service.ManagerService;
 
 import io.swagger.annotations.ApiOperation;
@@ -48,21 +44,25 @@ public class ManagerController {
 		return new MyResponseEntity<>(new MyResponseEntityDTO<>("서브매니저 삭제: ", subManager));
 	}
 
-	//게시글 삭제
+	//게시글 삭제 성공
+	//트리거 작동
+	//2023-06-13T00:00:00.000+00:00
 	@DeleteMapping("/board/{catDomain}")
 	@ApiOperation("deleteBoardNumList")
 	public MyResponseEntity<List<Integer>> deleteBoardNumList(@PathVariable("catDomain")String catDomain
-			, @RequestBody BoardListDTO boardListDTO) {
-		List<BoardDTO> list = boardListDTO.getList();
+			, @RequestBody  RequestBoardDTO deleteBoardNum) {
+		List<BoardDTO> list = deleteBoardNum.getList();
 		List<Integer> deleteBoardNumList = managerService.deleteBoardNumList(catDomain, list);
 		return new MyResponseEntity<>(new MyResponseEntityDTO<>("삭제", deleteBoardNumList));
 	}
 
-	// 댓글 체크 삭제 or 1개 삭제
+	// 댓글 삭제
+	// 뎁스 따라 api 작동 확인 트리거 작동 확인
 	@DeleteMapping("/relpy/{catDomain}/{boardNum}")
 	@ApiOperation("deleteRplNumList")
 	public MyResponseEntity<List<Integer>> deleteRplNumList(@PathVariable("catDomain")String catDomain
-			, @PathVariable("boardNum") Integer boardNum, @RequestBody List<ReplyDTO> list) {
+			, @PathVariable("boardNum") Integer boardNum, @RequestBody RequestReplyDTO deleteRplNum) {
+		List<ReplyDTO> list = deleteRplNum.getList();
 		List<Integer> deleteRplNumList = managerService.deleteRplNumList(catDomain, boardNum, list);
 		return new MyResponseEntity<>(new MyResponseEntityDTO<>("삭제", deleteRplNumList));
 	}

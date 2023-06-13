@@ -2,6 +2,8 @@ package com.project.dto;
 
 import java.util.Date;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
 public class BoardDTO {
 
     private Integer boardNum;
@@ -11,7 +13,9 @@ public class BoardDTO {
     private String cn;
     private Integer viewCnt;
     private Integer rplCnt;
+    @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSX")
     private Date crtTm;
+    @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSX")
     private Date upTm;
     private String pw;
 
@@ -77,7 +81,6 @@ public class BoardDTO {
 	}
 
 	public BoardDTO() {
-		super();
 	}
 
 	@Override

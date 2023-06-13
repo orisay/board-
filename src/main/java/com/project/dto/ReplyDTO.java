@@ -2,19 +2,26 @@ package com.project.dto;
 
 import java.util.Date;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
 public class ReplyDTO {
 
     private Integer rplNum;
     private Integer boardNum;
     private String id;
     private String rplCn;
+    @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSX")
     private Date crtTm;
+    @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSX")
     private Date upTm;
     private Integer depth;
     private String pw;
     private Integer parentRpl;
 
-    public Integer getRplNum() {
+
+    public ReplyDTO() {
+	}
+	public Integer getRplNum() {
 		return rplNum;
 	}
 	public Integer getBoardNum() {
