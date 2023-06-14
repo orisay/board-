@@ -5,7 +5,6 @@ import org.apache.ibatis.annotations.Mapper;
 import com.project.dto.BoardDTO;
 import com.project.dto.ChangeSubMNGDTO;
 import com.project.dto.CheckRightCatDTO;
-import com.project.dto.MbSessionDTO;
 import com.project.dto.ReplyDTO;
 
 @Mapper

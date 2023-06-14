@@ -4,6 +4,7 @@ public class MbSessionDTO {
 
 	private Integer roleNum;
 	private String id;
+	private String pw;
 	private String catDomain;
 	private String role;
     private String als;
@@ -14,6 +15,9 @@ public class MbSessionDTO {
 	}
 	public String getId() {
 		return id;
+	}
+	public String getPw() {
+		return pw;
 	}
 	public String getCatDomain() {
 		return catDomain;
@@ -32,6 +36,9 @@ public class MbSessionDTO {
 	}
 	public void setId(String id) {
 		this.id = id;
+	}
+	public void setPw(String pw) {
+		this.pw = pw;
 	}
 	public void setCatDomain(String catDomain) {
 		this.catDomain = catDomain;
@@ -53,6 +60,8 @@ public class MbSessionDTO {
 		builder.append(roleNum);
 		builder.append(", id=");
 		builder.append(id);
+		builder.append(", pw=");
+		builder.append(pw);
 		builder.append(", catDomain=");
 		builder.append(catDomain);
 		builder.append(", role=");
