@@ -7,6 +7,7 @@ import org.apache.ibatis.annotations.Mapper;
 import com.project.dto.BoardDTO;
 import com.project.dto.BoardDetailDTO;
 import com.project.dto.BoardSearchDTO;
+import com.project.dto.InsertUserRoleDTO;
 import com.project.dto.ReplyDTO;
 import com.project.dto.MainDTO;
 
@@ -18,6 +19,8 @@ public interface BoardDAO {
 	Integer totalCountByCat(String catDomain);
 
 	Integer totalCountByBoard(Integer boardNum);
+
+	Integer checkBlockUser(InsertUserRoleDTO insertUserRoleDTO);
 
 	List<BoardDTO> getBoardList(BoardSearchDTO boardSearchDTO);
 
@@ -44,5 +47,7 @@ public interface BoardDAO {
 	void plusCountCategoryboardCnt(BoardDTO boardDTO);
 
 	void minusCountCategoryboardCnt(BoardDTO boardDTO);
+
+
 
 }

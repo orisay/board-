@@ -24,6 +24,17 @@
 				IDX <![CDATA[<=]]> 10
 	</select>
 
+	<select id="checkBlockUser" parameterType="InsertUserRoleDTO" resultType="Integer">
+		SELECT
+				ROLE_NUM
+		FROM
+				MP_MB_ROLE
+		WHERE
+				CAT_DOMAIN = #{catDomain}
+		AND
+				ID = #{id}
+	</select>
+
 	<select id="totalCountByCat" parameterType="String" resultType="Integer">
 		SELECT
 				COUNT(*)

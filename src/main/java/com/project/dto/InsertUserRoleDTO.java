@@ -1,6 +1,6 @@
 package com.project.dto;
 
-public class ChangeSubMNGDTO {
+public class InsertUserRoleDTO {
 
 	private String id;
 	private String catDomain;

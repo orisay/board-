@@ -15,7 +15,7 @@
 				ID = #{id}
 	</select>
 
-	<insert id="insertSubManager" parameterType="ChangeSubMNGDTO">
+	<insert id="insertSubManager" parameterType="InsertUserRoleDTO">
 		INSERT INTO
 				MP_MB_ROLE
 				(
@@ -31,7 +31,7 @@
 				)
 	</insert>
 
-	<delete id="deleteSubManager" parameterType="ChangeSubMNGDTO">
+	<delete id="deleteSubManager" parameterType="InsertUserRoleDTO">
 		DELETE
 		FROM
 				MP_MB_ROLE
@@ -40,6 +40,22 @@
 		AND
 				CAT_DOMAIN = #{catDomain}
 	</delete>
+
+	<insert id="insertBlockUser" parameterType="InsertUserRoleDTO">
+		INSERT INTO
+				MP_MB_ROLE
+				(
+				ROLE_NUM
+				,ID
+				,CAT_DOMAIN
+				)
+		VALUES
+				(
+				#{roleNum}
+				,#{id}
+				,#{catDomain}
+				)
+	</insert>
 
 	<insert id="deleteBoardBackup" parameterType="BoardDTO">
 		INSERT INTO

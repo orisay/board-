@@ -12,12 +12,14 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.project.config.ConstantConfig;
+import com.project.config.ConstantConfig.UserRole;
 import com.project.config.IPConfig;
 import com.project.config.SessionConfig;
 import com.project.dao.BoardDAO;
 import com.project.dto.BoardDTO;
 import com.project.dto.BoardDetailDTO;
 import com.project.dto.BoardSearchDTO;
+import com.project.dto.InsertUserRoleDTO;
 import com.project.dto.PageDTO;
 import com.project.dto.ReplyDTO;
 import com.project.dto.MainDTO;
@@ -42,6 +44,7 @@ public class BoardService {
 	// 게시판 화면
 	public List<BoardDTO> getBoardList(String catDomain, Integer curPage, Integer perPage) {
 		String user = getAccessRight();
+		checkBlockUser(catDomain, user);
 		if (catDomain == null) {
 			logger.warn("getBoardList access User : {} null value catDomain : {}", user, catDomain);
 			throw new IllegalArgumentException(
@@ -50,6 +53,21 @@ public class BoardService {
 		BoardSearchDTO boardSearchDTO = paging(catDomain, curPage, perPage);
 		List<BoardDTO> boardList = boardDAO.getBoardList(boardSearchDTO);
 		return boardList;
+	}
+
+	private boolean checkBlockUser(String catDomain, String user) {
+	InsertUserRoleDTO insertUserRoleDTO = new InsertUserRoleDTO();
+	insertUserRoleDTO.setCatDomain(catDomain);
+	insertUserRoleDTO.setId(user);
+	Integer insertCheck = boardDAO.checkBlockUser(insertUserRoleDTO);
+	if (insertCheck == UserRole.BLOCK.getLevel()) {
+		return false;
+	} else if (insertCheck > UserRole.BLOCK.getLevel()) {
+		return true;
+	} else {
+		logger.warn("insertBoard access User : {} unknown status", user);
+		throw new UnknownException("비정상적인 값이 발생했습니다.");
+	}
 	}
 
 	// 게시글 조건별 검색 기능

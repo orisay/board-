@@ -3,7 +3,7 @@ package com.project.dao;
 import org.apache.ibatis.annotations.Mapper;
 
 import com.project.dto.BoardDTO;
-import com.project.dto.ChangeSubMNGDTO;
+import com.project.dto.InsertUserRoleDTO;
 import com.project.dto.CheckRightCatDTO;
 import com.project.dto.ReplyDTO;
 
@@ -12,9 +12,11 @@ public interface ManagerDAO {
 
 	Integer selectMng(CheckRightCatDTO checkRightCatDTO);
 
-	Integer insertSubManager(ChangeSubMNGDTO changeSubMNGDTO);
+	Integer insertSubManager(InsertUserRoleDTO insertUserRoleDTO);
 
-	Integer deleteSubManager(ChangeSubMNGDTO changeSubMNGDTO);
+	Integer deleteSubManager(InsertUserRoleDTO insertUserRoleDTO);
+
+	Integer insertBlockUser(InsertUserRoleDTO insertUserRoleDTO);
 
 	void deleteBoardBackup(BoardDTO boardDTO);
 
@@ -25,5 +27,6 @@ public interface ManagerDAO {
 	Integer deleteReplyNum(ReplyDTO replyDTO);
 
 	Integer setRplCnNull(ReplyDTO replyDTO);
+
 
 }

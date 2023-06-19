@@ -67,4 +67,13 @@ public class ManagerController {
 		return new MyResponseEntity<>(new MyResponseEntityDTO<>("삭제", deleteRplNumList));
 	}
 
+	//블럭 추가
+	@PostMapping("/block/{catDomain}/{id}")
+	@ApiOperation("insertBlockUser")
+	public MyResponseEntity<String> insertBlockUser(@PathVariable("catDomain") String catDomain,
+			@PathVariable("id") String id){
+		String blockUser = managerService.insertBlockUser(catDomain, id);
+		return new MyResponseEntity<>(new MyResponseEntityDTO<>("차단 유저", blockUser));
+	}
+
 }

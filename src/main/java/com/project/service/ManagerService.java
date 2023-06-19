@@ -16,7 +16,7 @@ import com.project.config.IPConfig;
 import com.project.config.SessionConfig;
 import com.project.dao.ManagerDAO;
 import com.project.dto.BoardDTO;
-import com.project.dto.ChangeSubMNGDTO;
+import com.project.dto.InsertUserRoleDTO;
 import com.project.dto.CheckRightCatDTO;
 import com.project.dto.MbSessionDTO;
 import com.project.dto.ReplyDTO;
@@ -32,28 +32,38 @@ public class ManagerService {
 	private static final Logger logger = LoggerFactory.getLogger(ManagerService.class);
 
 	public String insertSubManager(String catDomain, String id) {
-		inputSubManagerCheck(catDomain, id);
-		ChangeSubMNGDTO changeSubMNGDTO = changeSubMNG(catDomain, id);
-		changeSubMNGDTO.setRoleNum(UserRole.SUB_MNG.getLevel());
-		Integer insertCheckCount = managerDAO.insertSubManager(changeSubMNGDTO);
+		inputUserCheck(catDomain, id);
+		InsertUserRoleDTO insertUserRoleDTO = changeUserRole(catDomain, id);
+		insertUserRoleDTO.setRoleNum(UserRole.SUB_MNG.getLevel());
+		Integer insertCheckCount = managerDAO.insertSubManager(insertUserRoleDTO);
 		insertErrorCheck(insertCheckCount);
 		return id;
 	}
 
 	public String deleteSubManager(String catDomain, String id) {
-		inputSubManagerCheck(catDomain, id);
-		ChangeSubMNGDTO changeSubMNGDTO = changeSubMNG(catDomain, id);
-		Integer insertCheckCount = managerDAO.deleteSubManager(changeSubMNGDTO);
+		inputUserCheck(catDomain, id);
+		InsertUserRoleDTO insertUserRoleDTO = changeUserRole(catDomain, id);
+		Integer insertCheckCount = managerDAO.deleteSubManager(insertUserRoleDTO);
 		insertErrorCheck(insertCheckCount);
 		return id;
 	}
 
-	private ChangeSubMNGDTO changeSubMNG(String catDomain, String id) {
-		ChangeSubMNGDTO changeSubMNGDTO = new ChangeSubMNGDTO();
-		changeSubMNGDTO.setCatDomain(catDomain);
-		changeSubMNGDTO.setId(id);
-		return changeSubMNGDTO;
+	public String insertBlockUser(String catDomain, String id) {
+		inputUserCheck(catDomain, id);
+		InsertUserRoleDTO insertUserRoleDTO = changeUserRole(catDomain, id);
+		insertUserRoleDTO.setRoleNum(UserRole.BLOCK.getLevel());
+		Integer insertCheckCount = managerDAO.insertBlockUser(insertUserRoleDTO);
+		insertErrorCheck(insertCheckCount);
+		return id;
 	}
+
+	private InsertUserRoleDTO changeUserRole(String catDomain, String id) {
+		InsertUserRoleDTO insertUserRoleDTO = new InsertUserRoleDTO();
+		insertUserRoleDTO.setCatDomain(catDomain);
+		insertUserRoleDTO.setId(id);
+		return insertUserRoleDTO;
+	}
+
 
 	public List<Integer> deleteBoardNumList(String catDomain, List<BoardDTO> list) {
 		inputDeleteBoardNumListCheck(catDomain, list);
@@ -174,7 +184,7 @@ public class ManagerService {
 	}
 
 	// 인자값 확인 or 권한 확인
-	private boolean inputSubManagerCheck(String catDomain, String id) {
+	private boolean inputUserCheck(String catDomain, String id) {
 		String accessIP = IPConfig.getIp(SessionConfig.getSession());
 		MbSessionDTO memberInfo = SessionConfig.MbSessionDTO();
 		String memberId = memberInfo.getId();
@@ -232,6 +242,9 @@ public class ManagerService {
 		} else if (isBasicLevel(accessRoleNum)) {
 			logger.warn("basic user : {} , IP : {}", memberId, accessIP);
 			throw new IllegalArgumentException("basic level access. Please check");
+		} else if (isBlockLevel(accessRoleNum)) {
+			logger.warn("block user : {} , IP : {}", memberId, accessIP);
+			throw new IllegalArgumentException("basic level access. Please check");
 		} else if (isLessLevel(accessRoleNum)) {
 			logger.error("unknown status, access user : {} , IP : {}", memberId, accessIP);
 			throw new UnknownException("비정삭적인 접근 레벨을 갖고 있습니다.");
@@ -262,12 +275,17 @@ public class ManagerService {
 	}
 
 	private boolean isBasicLevel(Integer accessRoleNum) {
-		boolean check = (UserRole.BASIC.getLevel() == accessRoleNum);
+		boolean check = (UserRole.SUB_MNG.getLevel() > accessRoleNum && accessRoleNum > UserRole.BLOCK.getLevel());
+		return check;
+	}
+
+	private boolean isBlockLevel(Integer accessRoleNum) {
+		boolean check = (UserRole.BLOCK.getLevel() == accessRoleNum);
 		return check;
 	}
 
 	private boolean isLessLevel(Integer accessRoleNum) {
-		boolean check = (UserRole.BASIC.getLevel() > accessRoleNum);
+		boolean check = (UserRole.BLOCK.getLevel() > accessRoleNum);
 		return check;
 	}
 
