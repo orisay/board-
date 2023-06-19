@@ -10,12 +10,12 @@ public interface CategoryDAO {
 
 	List<CategoryDTO> controllerCategory();
 
-	void insertCategory(CategoryDTO categoryDTO);
+	Integer insertCategory(CategoryDTO categoryDTO);
 
-	void updateMng(CategoryDTO categoryDTO);
+	Integer updateMng(CategoryDTO categoryDTO);
 
-	void updateCat(CategoryDTO categoryDTO);
+	Integer updateCat(CategoryDTO categoryDTO);
 
-	void deleteCat(String catDomain);
+	Integer deleteCat(String catDomain);
 
 }

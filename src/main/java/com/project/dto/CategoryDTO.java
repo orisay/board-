@@ -2,14 +2,20 @@ package com.project.dto;
 
 import java.util.Date;
 
+import javax.validation.constraints.NotBlank;
+
 public class CategoryDTO {
 
+	@NotBlank
 	private String catDomain;
+	@NotBlank
     private String cat;
     private Integer boardCnt;
     private Integer rplCnt;
+    @NotBlank
     private String mng;
     private Date crtTm;
+    @NotBlank
     private String crtNm;
     private Date upTm;
     private String upNm;

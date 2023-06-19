@@ -2,6 +2,7 @@ package com.project.service;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.util.Collections;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
@@ -12,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.project.config.ConstantConfig;
+import com.project.config.ConstantConfig.Target;
 import com.project.config.ConstantConfig.UserRole;
 import com.project.config.IPConfig;
 import com.project.config.SessionConfig;
@@ -24,6 +26,7 @@ import com.project.dto.PageDTO;
 import com.project.dto.ReplyDTO;
 import com.project.dto.MainDTO;
 import com.project.exception.UnknownException;
+import com.sun.java.swing.plaf.windows.WindowsTreeUI.CollapsedIcon;
 
 @Service
 @Transactional
@@ -45,46 +48,16 @@ public class BoardService {
 	public List<BoardDTO> getBoardList(String catDomain, Integer curPage, Integer perPage) {
 		String user = getAccessRight();
 		checkBlockUser(catDomain, user);
-		if (catDomain == null) {
-			logger.warn("getBoardList access User : {} null value catDomain : {}", user, catDomain);
-			throw new IllegalArgumentException(
-					"BoardService getBoardList null value catDomain " + ": " + catDomain);
-		}
 		BoardSearchDTO boardSearchDTO = paging(catDomain, curPage, perPage);
 		List<BoardDTO> boardList = boardDAO.getBoardList(boardSearchDTO);
 		return boardList;
 	}
 
-	private boolean checkBlockUser(String catDomain, String user) {
-	InsertUserRoleDTO insertUserRoleDTO = new InsertUserRoleDTO();
-	insertUserRoleDTO.setCatDomain(catDomain);
-	insertUserRoleDTO.setId(user);
-	Integer insertCheck = boardDAO.checkBlockUser(insertUserRoleDTO);
-	if (insertCheck == UserRole.BLOCK.getLevel()) {
-		return false;
-	} else if (insertCheck > UserRole.BLOCK.getLevel()) {
-		return true;
-	} else {
-		logger.warn("insertBoard access User : {} unknown status", user);
-		throw new UnknownException("비정상적인 값이 발생했습니다.");
-	}
-	}
-
 	// 게시글 조건별 검색 기능
-	public List<BoardDTO> searchBoard(String catDomain,String target, String keyword,
-			 Integer curPage, Integer perPage) {
+	public List<BoardDTO> searchBoard(String catDomain, String target, String keyword, Integer curPage,
+			Integer perPage) {
 		String user = getAccessRight();
-
-		if (catDomain == null || target == null ) {
-			logger.warn("searchBoard access User : {} null value catDomain : {}, target : "
-		+ "{}", user, catDomain, target);
-			StringBuilder errorMesg = new StringBuilder();
-			errorMesg.append("BoardService searchBoard null value catDomain : ");
-			errorMesg.append(catDomain);
-			errorMesg.append(" tartget : ");
-			errorMesg.append(target);
-			throw new IllegalArgumentException(errorMesg.toString());
-		}
+		checkBlockUser(catDomain, user);
 		BoardSearchDTO boardSearchDTO = paging(catDomain, curPage, perPage);
 		if (keyword == null) {
 			keyword = "";
@@ -93,15 +66,14 @@ public class BoardService {
 		boardSearchDTO.setKeyword(keyword);
 		List<BoardDTO> searchBoard = null;
 		Integer checkLevel = ConstantConfig.Target.valueOf(target.toUpperCase()).getLevel();
-		if (checkLevel < 4) {
+		if (checkLevel < Target.COMP.getLevel()) {
 			searchBoard = boardDAO.searchBoardBasic(boardSearchDTO);
-		} else if (checkLevel == 4) {
+		} else if (checkLevel == Target.COMP.getLevel()) {
 			searchBoard = boardDAO.searchBoardComplex(boardSearchDTO);
-		} else if (checkLevel > 4) {
+		} else if (checkLevel == Target.ALL.getLevel()) {
 			searchBoard = boardDAO.searchBoardAll(boardSearchDTO);
 		} else {
-			logger.error("boardSearch access User : {} default case target : {}, keyword : {}"
-					, user, target, keyword);
+			logger.error("boardSearch access User : {} default case target : {}, keyword : {}", user, target, keyword);
 			throw new UnknownException("BoardService boardSearch 예상치 못한 상태가 발생했습니다.");
 		}
 		return searchBoard;
@@ -110,31 +82,14 @@ public class BoardService {
 	// 게시글 등록
 	public String insertBoard(String catDomain, BoardDTO boardDTO) {
 		String user = getAccessRight();
-		if (catDomain == null || boardDTO == null) {
-			logger.warn("insertBoard access User : {} null value catDomain : {}, boardDTO "
-					+ ": {}" , user, catDomain, boardDTO);
-			StringBuilder errorMesg = new StringBuilder();
-			errorMesg.append("BoardService insertBoard null value catDomain : ");
-			errorMesg.append(catDomain);
-			errorMesg.append(" boardDTO : ");
-			errorMesg.append(boardDTO);
-			throw new IllegalArgumentException(errorMesg.toString());
-		}
+		checkBlockUser(catDomain, user);
 		boardDTO.setCatDomain(catDomain);
 		boardDTO.setCreator(user); // ip 또는 id set
 		boardDTO.setViewCnt(ConstantConfig.startView);
-		Integer insertCount = boardDAO.insertBoard(boardDTO);
-		String resultMesg = null;
-		if (insertCount == 1) {
+		Integer insertCheckCount = boardDAO.insertBoard(boardDTO);
+		String resultMesg = checkResult(insertCheckCount,user);
+		if (resultMesg.equals(ConstantConfig.SUCCESS_MESG)) {
 			boardDAO.plusCountCategoryboardCnt(boardDTO);
-			resultMesg = "성공했습니다";
-		} else if (insertCount == 0) {
-			logger.warn("insertBoard access User : {} DB is not affected. catDomain: {},"
-					+ " boardDTO: {}", user, catDomain, boardDTO);
-			resultMesg = "실패했습니다";
-		} else {
-			logger.error("insertBoard access User : {} unknown status", user);
-			throw new UnknownException("BoardService insertBoard 예상치 못한 상태가 발생했습니다.");
 		}
 		return resultMesg;
 	}
@@ -142,80 +97,34 @@ public class BoardService {
 	// 게시글 수정
 	public String updateBoard(String catDomain, BoardDTO boardDTO) {
 		String user = getAccessRight();
-		if (catDomain == null || boardDTO == null) {
-			logger.warn("updateBoard access User : {} null value catDomain : {}, "
-					+ "boardDTO : {}", user, catDomain, boardDTO);
-			StringBuilder errorMesg = new StringBuilder();
-			errorMesg.append("BoardService updateBoard null value catDomain : ");
-			errorMesg.append(catDomain);
-			errorMesg.append(" boardDTO : ");
-			errorMesg.append(boardDTO);
-			throw new IllegalArgumentException(errorMesg.toString());
-		}
+		checkBlockUser(catDomain, user);
 		boardDTO.setCatDomain(catDomain);
-		Integer updateCount = boardDAO.updateBoard(boardDTO);
-		String resultMesg = null;
-		if (updateCount == 1) {
-			resultMesg = "성공했습니다.";
-		} else if (updateCount == 0) {
-			logger.warn("updateBoard access User : {} DB is not affected. catDomain: {}, "
-					+ "boardDTO: {}", user, catDomain, boardDTO);
-			resultMesg = "실패했습니다.";
-		} else {
-			logger.error("updateBoard access User : {} unknown status", user);
-			throw new UnknownException("BoardService updateBoard 예상치 못한 상태가 발생했습니다.");
-		}
+		Integer insertCheckCount = boardDAO.updateBoard(boardDTO);
+		String resultMesg =checkResult(insertCheckCount,user);
 		return resultMesg;
 	}
 
 	// 게시글 삭제
 	public String deleteBoard(Integer boardNum, BoardDTO boardDTO) {
 		String user = getAccessRight();
-		if (boardNum == null || boardDTO == null) {
-			logger.warn("deleteBoard access User : {} null value boardNum : {},"
-							+ " boardDTO : {}", user, boardNum, boardDTO);
-			StringBuilder errorMesg = new StringBuilder();
-			errorMesg.append("BoardService deleteBoard null value boardNum : ");
-			errorMesg.append(boardNum);
-			errorMesg.append(" boardDTO : ");
-			errorMesg.append(boardDTO);
-			throw new IllegalArgumentException(errorMesg.toString());
-		}
-		Integer deleteCount = boardDAO.deleteBoard(boardDTO);
-		String resultMesg = null;
-		if (deleteCount == 1) {
-			boardDAO.backUpBoard(boardDTO);
+		checkBlockUser(boardDTO.getCatDomain(), user);
+		Integer insertCheckCount = boardDAO.deleteBoard(boardDTO);
+		String resultMesg =checkResult(insertCheckCount,user);
+		if (resultMesg.equals(ConstantConfig.SUCCESS_MESG)) {
 			boardDAO.minusCountCategoryboardCnt(boardDTO);
-			resultMesg = "성공했습니다";
-		} else if (deleteCount == 0) {
-			logger.warn("deleteBoard access User : {} DB is not affected. boardNum: {}"
-					+ ", boardDTO: {}", user, boardNum, boardDTO);
-			resultMesg = "실패했습니다";
-		} else {
-			logger.error("deleteBoard access User : {} unknown status", user);
-			throw new UnknownException("BoardService deleteBoard 예상치 못한 상태가 발생했습니다.");
 		}
-
 		return resultMesg;
 	}
 
 	// 게시글 상세보기
 	public BoardDetailDTO boardDetail(String catDomain, Integer boardNum, Integer curPage) {
 		String user = getAccessRight();
-		if (catDomain == null || boardNum == null) {
-			logger.warn("boardDetail access User : {} null value catDomain"
-						+ " : {}, boardNum : {}", user, catDomain, boardNum);
-			StringBuilder errorMesg = new StringBuilder();
-			errorMesg.append("BoardService boardDetail null value catDomain : ");
-			errorMesg.append(catDomain);
-			errorMesg.append(" boardNum : ");
-			errorMesg.append(boardNum);
-			throw new IllegalArgumentException(errorMesg.toString());
-		}
-
+		checkBlockUser(catDomain, user);
 		BoardDetailDTO boardDetailDTO = new BoardDetailDTO();
+		boardDetailDTO.setCreator(user);
 		boardDetailDTO.setCatDomain(catDomain);
 		boardDetailDTO.setBoardNum(boardNum);
+		//조회수 증가
 		viewUpdate(boardDetailDTO);
 		BoardDetailDTO board = boardDAO.boardDetail(boardDetailDTO);
 		// 리플 페이징 처리
@@ -242,7 +151,7 @@ public class BoardService {
 	// 게시글, 댓글 페이징 처리
 	private BoardSearchDTO paging(String catDomain, Integer curPage, Integer perPage) {
 		if (curPage == null) {
-			curPage = 1;
+			curPage = ConstantConfig.START_NUM;
 		}
 		if (perPage == null) {
 			perPage = ConstantConfig.perPage;
@@ -251,7 +160,7 @@ public class BoardService {
 		pageDTO.setCurPage(curPage);
 		pageDTO.setPerPage(perPage);
 		Integer totalCount = checkTotaldCount(catDomain);
-		Integer totalPage = (int)Math.ceil((double) totalCount / (int) perPage);
+		Integer totalPage = (int) Math.ceil((double) totalCount / (int) perPage);
 		pageDTO.setTotalPage(totalPage);
 		Integer startIdx = ((pageDTO.getCurPage() - 1) * pageDTO.getPerPage()) + 1;
 		Integer endIdx = (pageDTO.getPerPage() * pageDTO.getCurPage());
@@ -289,6 +198,36 @@ public class BoardService {
 		}
 		return mesg;
 
+	}
+
+	// 차단 유저 확인
+	private boolean checkBlockUser(String catDomain, String user) {
+		InsertUserRoleDTO insertUserRoleDTO = new InsertUserRoleDTO();
+		insertUserRoleDTO.setCatDomain(catDomain);
+		insertUserRoleDTO.setId(user);
+		Integer insertCheckCount = boardDAO.checkBlockUser(insertUserRoleDTO);
+		if (insertCheckCount == UserRole.BLOCK.getLevel()) {
+			return false;
+		} else if (insertCheckCount > UserRole.BLOCK.getLevel()) {
+			return true;
+		} else {
+			logger.warn("insertBoard access User : {} unknown status", user);
+			throw new UnknownException("비정상적인 값이 발생했습니다.");
+		}
+	}
+
+	private String checkResult(Integer insertCheckCount,String user) {
+		String resultMesg = null;
+		if (insertCheckCount == ConstantConfig.SUCCESS_COUNT) {
+			resultMesg = ConstantConfig.SUCCESS_MESG;
+		} else if (insertCheckCount == ConstantConfig.FALSE_COUNT) {
+			logger.warn("access User : {} DB is not affected.",user);
+			resultMesg = ConstantConfig.FALSE_MESG;
+		} else {
+			logger.error("access User : {} unknown status", user);
+			throw new UnknownException("BoardService insertBoard 예상치 못한 상태가 발생했습니다.");
+		}
+		return resultMesg;
 	}
 
 }

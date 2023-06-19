@@ -1,5 +1,7 @@
 package com.project.controller;
 
+import javax.validation.constraints.NotNull;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -25,7 +27,7 @@ public class ReplyController {
 	// 댓글 작성 성공
 	@PostMapping("/{boardNum}")
 	@ApiOperation("createReply")
-	public MyResponseEntity<Void> insertReply(@PathVariable("boardNum") Integer boardNum,
+	public MyResponseEntity<Void> insertReply(@PathVariable("boardNum") @NotNull Integer boardNum,
 			@RequestBody ReplyDTO replyDTO, @PathVariable(name = "rplNum", required = false) Integer rplNum) {
 		replyService.insertReply(boardNum, replyDTO, rplNum);
 		return new MyResponseEntity<>(new MyResponseEntityDTO<>("댓글 작성 성공"));

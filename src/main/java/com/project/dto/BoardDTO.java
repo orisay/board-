@@ -2,17 +2,28 @@ package com.project.dto;
 
 import java.util.Date;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+
 import org.springframework.format.annotation.DateTimeFormat;
 
 public class BoardDTO {
 
+	@NotNull
     private Integer boardNum;
+	@NotBlank
     private String catDomain;
+	@NotBlank
     private String creator;
+	@NotBlank
     private String ttl;
+	@NotBlank
     private String cn;
+	@NotNull
     private Integer viewCnt;
+	@NotNull
     private Integer rplCnt;
+    @NotBlank
     @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSX")
     private Date crtTm;
     @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSX")

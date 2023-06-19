@@ -7,6 +7,12 @@ public final class ConstantConfig {
 
 	public static final String Member_INFO = "mbInfo";
 
+	public static final Integer SUCCESS_COUNT = 1;
+
+	public static final Integer FALSE_COUNT = 0;
+
+	public static final String FALSE_MESG = "실패했습니다.";
+
 	public static final Integer perPage = 30;
 
 	public static final Integer startView = 0;
@@ -14,6 +20,8 @@ public final class ConstantConfig {
 	public static final Integer plusView = 1;
 
 	public static final Integer compare = 0;
+
+	public static final String SUCCESS_MESG = "성공했습니다.";
 
 	public enum Target {
 		CREATOR(1)
@@ -57,7 +65,7 @@ public final class ConstantConfig {
 
 	public static final Integer checkDepthLevel = 1;
 
-	public static final Integer startDepth = 1;
+	public static final Integer START_NUM = 1;
 
 	public static final String[] nullList = { "null", "Null", "NULL", "nuLL", "nulL", "nUll", "NUll", "NulL", "nULl",
 			"NuLL", "nUlL", "NuLl", "NUlL", "nULl", "NULl" };

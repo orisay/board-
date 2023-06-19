@@ -4,12 +4,20 @@ package com.project.dto;
 import java.util.Date;
 import java.util.List;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+
 public class BoardDetailDTO {
 
+	@NotBlank
 	private Integer boardNum;
+	@NotBlank
 	private String catDomain;
+	@NotBlank
 	private String creator;
+	@NotBlank
 	private String ttl;
+	@NotBlank
 	private String cn;
 	private Integer viewCnt;
 	private Integer rplCnt;
