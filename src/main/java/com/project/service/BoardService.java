@@ -2,7 +2,6 @@ package com.project.service;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
-import java.util.Collections;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
@@ -14,7 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.project.config.ConstantConfig;
 import com.project.config.ConstantConfig.Target;
-import com.project.config.ConstantConfig.UserRole;
+import com.project.config.ConstantUserRoleConfig.UserRole;
 import com.project.config.IPConfig;
 import com.project.config.SessionConfig;
 import com.project.dao.BoardDAO;
@@ -22,11 +21,10 @@ import com.project.dto.BoardDTO;
 import com.project.dto.BoardDetailDTO;
 import com.project.dto.BoardSearchDTO;
 import com.project.dto.InsertUserRoleDTO;
+import com.project.dto.MainDTO;
 import com.project.dto.PageDTO;
 import com.project.dto.ReplyDTO;
-import com.project.dto.MainDTO;
 import com.project.exception.UnknownException;
-import com.sun.java.swing.plaf.windows.WindowsTreeUI.CollapsedIcon;
 
 @Service
 @Transactional

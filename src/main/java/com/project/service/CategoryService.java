@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.project.config.ConstantConfig;
-import com.project.config.ConstantConfig.UserRole;
+import com.project.config.ConstantUserRoleConfig.UserRole;
 import com.project.config.IPConfig;
 import com.project.config.SessionConfig;
 import com.project.dao.CategoryDAO;

@@ -44,7 +44,7 @@
 				)
 	</insert>
 
-	<select id="getId" parameterType="String" resultType="String">
+	<select id="compareId" parameterType="String" resultType="String">
 		SELECT
 				ID
 		FROM
@@ -159,7 +159,7 @@
 				DOMAIN = #{domain}
 	</select>
 
-	<insert id="insertRole" parameterType="MbDTO">
+	<insert id="insertRole" parameterType="String">
 	INSERT INTO
 			MP_MB_ROLE
 			(
@@ -172,5 +172,19 @@
 			,#{id}
 			)
 	</insert>
+
+	<select id="getRoleList" parameterType="String" resultType="MbSessionDTO">
+	SELECT
+			ROLE_NUM
+			,ID
+			,CAT_DOMAIN
+	FROM
+			MP_MB_ROLE
+	WHERE
+			ID = #{id}
+	ORDER BY
+			ROLE_NUM
+	DESC
+	</select>
 
 </mapper>

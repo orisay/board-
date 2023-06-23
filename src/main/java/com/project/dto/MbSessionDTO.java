@@ -1,29 +1,27 @@
 package com.project.dto;
 
+import java.util.List;
+
 public class MbSessionDTO {
 
-	private Integer roleNum;
 	private String id;
 	private String pw;
-	private String catDomain;
 	private String role;
+	private List<MbRoleDTO> roleList;
     private String als;
     private String nm;
 
-    public Integer getRoleNum() {
-		return roleNum;
-	}
-	public String getId() {
+    public String getId() {
 		return id;
 	}
 	public String getPw() {
 		return pw;
 	}
-	public String getCatDomain() {
-		return catDomain;
-	}
 	public String getRole() {
 		return role;
+	}
+	public List<MbRoleDTO> getRoleList() {
+		return roleList;
 	}
 	public String getAls() {
 		return als;
@@ -31,20 +29,17 @@ public class MbSessionDTO {
 	public String getNm() {
 		return nm;
 	}
-	public void setRoleNum(Integer roleNum) {
-		this.roleNum = roleNum;
-	}
 	public void setId(String id) {
 		this.id = id;
 	}
 	public void setPw(String pw) {
 		this.pw = pw;
 	}
-	public void setCatDomain(String catDomain) {
-		this.catDomain = catDomain;
-	}
 	public void setRole(String role) {
 		this.role = role;
+	}
+	public void setRoleList(List<MbRoleDTO> roleList) {
+		this.roleList = roleList;
 	}
 	public void setAls(String als) {
 		this.als = als;
@@ -56,16 +51,14 @@ public class MbSessionDTO {
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
-		builder.append("MbSessionDTO [roleNum=");
-		builder.append(roleNum);
-		builder.append(", id=");
+		builder.append("MbSessionDTO [id=");
 		builder.append(id);
 		builder.append(", pw=");
 		builder.append(pw);
-		builder.append(", catDomain=");
-		builder.append(catDomain);
 		builder.append(", role=");
 		builder.append(role);
+		builder.append(", roleList=");
+		builder.append(roleList);
 		builder.append(", als=");
 		builder.append(als);
 		builder.append(", nm=");

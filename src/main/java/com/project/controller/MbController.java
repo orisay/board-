@@ -1,5 +1,8 @@
 package com.project.controller;
 
+import javax.validation.Valid;
+import javax.validation.constraints.NotBlank;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -29,7 +32,7 @@ public class MbController {
 	// 회원 가입 성공
 	@PostMapping("/")
 	@ApiOperation("insertMb")
-	public MyResponseEntity<String> insertMb(@RequestBody MbDTO mbDTO) {
+	public MyResponseEntity<String> insertMb(@RequestBody @Valid MbDTO mbDTO) {
 		String insertMb = mbService.insertMb(mbDTO);
 		return new MyResponseEntity<>(new MyResponseEntityDTO<>("회원 가입 여부", insertMb));
 	}
@@ -37,16 +40,16 @@ public class MbController {
 	// 아이디 중복 검사 성공
 	@GetMapping("/id-check/{id}")
 	@ApiOperation("checkId")
-	public MyResponseEntity<String> checkId(@PathVariable("id") String id) {
-		String checkId = mbService.checkId(id);
+	public MyResponseEntity<String> compareId(@PathVariable("id") @NotBlank String id) {
+		String checkId = mbService.compareId(id);
 		return new MyResponseEntity<>(new MyResponseEntityDTO<>("아이디 중복 확인", checkId));
 	}
 
 	// 로그인 성공
 	@PostMapping("/login")
 	@ApiOperation("login")
-	public MyResponseEntity<String> getLogin(@RequestBody MbDTO mbDTO) {
-		String checkLogin = mbService.getLogin(mbDTO);
+	public MyResponseEntity<MbDTO> getLogin(@RequestBody @Valid MbDTO mbDTO) {
+		MbDTO checkLogin = mbService.getLogin(mbDTO);
 		return new MyResponseEntity<>(new MyResponseEntityDTO<>("로그인 여부", checkLogin));
 	}
 

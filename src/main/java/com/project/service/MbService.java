@@ -1,5 +1,7 @@
 package com.project.service;
 
+import java.util.List;
+
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -8,10 +10,14 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.project.config.ConstantConfig;
+import com.project.config.ConstantUserRoleConfig;
+import com.project.config.ConstantUserRoleConfig.UserRole;
 import com.project.config.IPConfig;
 import com.project.config.SessionConfig;
 import com.project.dao.MbDAO;
 import com.project.dto.MbDTO;
+import com.project.dto.MbRoleDTO;
+import com.project.dto.MbSessionDTO;
 import com.project.dto.SearchInfoDTO;
 import com.project.dto.UpdatePwDTO;
 import com.project.exception.UnknownException;
@@ -28,80 +34,78 @@ public class MbService {
 	// 회원 가입
 	public String insertMb(MbDTO mbDTO) {
 		String gusetIP = IPConfig.getIp(SessionConfig.getSession());
-		String checkId = null;
-		Integer insertCheck = null;
-		String mesg = null;
-		if (mbDTO == null) {
-			logger.warn("insertMb  access IP : {} insert vaule null", gusetIP);
-			throw new IllegalArgumentException("MbService insertMb insert null value");
-		} else {
-			String insertId = mbDTO.getId();
-			checkId = insertId.trim();
-		}
+		String inputId = mbDTO.getId();
+		String checkId = inputId.trim();
+		String reusltMesg = null;
+
+		Integer insertCheckCount = compareNullCheckId(mbDTO, checkId);
+		String checkResult = checkResultByInteger(insertCheckCount, gusetIP);
+		reusltMesg = checkId + "회원가입 " + checkResult;
+		insertBasicRole(checkResult, checkId);
+		return reusltMesg;
+	}
+
+	// 아이디 NULL 대소문자 조합 방지
+	private Integer compareNullCheckId(MbDTO mbDTO, String checkId) {
+		Integer insertCheckCount = null;
 		if (!ArrayUtils.contains(ConstantConfig.nullList, checkId)) {
-			mbDTO.setId(checkId);
-			insertCheck = mbDAO.insertMb(mbDTO);
+			insertCheckCount = mbDAO.insertMb(mbDTO);
+		} else {
+			logger.error("access IP : {} unknown status, retry checkId", checkId);
+			throw new UnknownException("비정상적인 값 발생, retry checkId");
+		}
+		return insertCheckCount;
+	}
+
+	// BASIC 권한 부여
+	private void insertBasicRole(String checkResult, String checkId) {
+		if (checkResult.equals(ConstantConfig.SUCCESS_MESG)) {
+			mbDAO.insertRole(checkId);
+		} else if (checkResult.equals(ConstantConfig.FALSE_MESG)) {
+			logger.error("access ID : {}, insertMb false", checkId);
+		} else {
+			logger.error("access ID : {}, unknown status", checkId);
+			throw new UnknownException("Guard coad. Please check.");
 		}
 
-		if (insertCheck == 1) {
-			mbDAO.insertRole(mbDTO);
-			mesg = "회원 가입 성공 ID : " + checkId;
-		} else if (insertCheck == 0) {
-			mesg = "회원 가입 실패";
-		} else {
-			logger.error("insertMb access IP : {} unknown status", gusetIP);
-			throw new UnknownException("MbService insertMb에서 비정상적인 값이 발생 했습니다.");
-		}
-		return mesg;
 	}
 
 	// 아이디 중복 검사
-	public String checkId(String id) {
+	public String compareId(String id) {
 		String gusetIP = IPConfig.getIp(SessionConfig.getSession());
-		String insertId = null;
-		String checkIdMesg = null;
-
-		if (id == null) {
-			logger.warn("checkId access ID : {} null value", gusetIP);
-			throw new IllegalArgumentException("MbService checkId insert null value");
-		}
-
-		insertId = mbDAO.getId(id);
-		if (insertId != null && !insertId.isEmpty()) {
-			checkIdMesg = "이미 사용한 ID 입니다." + id;
-		} else if (insertId == null) {
-			checkIdMesg = "사용 가능한 ID 입니다." + id;
-		} else if (insertId.isEmpty()) {
-			logger.error("checkId access IP : {} return empty id", gusetIP);
-			throw new IllegalStateException("MbService checkId에서 비정상적인 값이 발생 했습니다.");
-		} else {
-			logger.error("checkId access IP : {} unknown status", gusetIP);
-			throw new UnknownException("MbService checkId 예기치 못한 상태가 발생했습니다.");
-		}
-		return checkIdMesg;
+		String insertCheckMesg = mbDAO.compareId(id);
+		String resultCheck = checkResultByString(gusetIP, insertCheckMesg);
+		String resultMesg = id + "는(은) " + resultCheck;
+		return resultMesg;
 	}
 
 	// 로그인
-	public String getLogin(MbDTO mbDTO) {
-		String gusetIP = IPConfig.getIp(SessionConfig.getSession());
-		MbDTO resultLogin = null;
-		String checkLoginMesg = null;
+	public MbSessionDTO getLogin(MbDTO mbDTO) {
+		MbDTO getLogin = mbDAO.getLogin(mbDTO);
+		MbSessionDTO resultMesg = handelMbSessionDTO(getLogin);
+		return resultMesg;
+	}
 
-		if (mbDTO == null) {
-			logger.warn("checkId access ID : {} null value", gusetIP);
-			throw new IllegalArgumentException("MbService getLogin insert null value");
-		}
-		resultLogin = mbDAO.getLogin(mbDTO);
-		if (mbDTO.getId().equals(resultLogin.getId())) {
-			checkLoginMesg = "로그인 성공." + mbDTO.getId();
-		} else if (!mbDTO.getId().equals(resultLogin.getId())) {
-			logger.error("getLogin access IP : {} unkonwn status insert value : {}, Id : {}, Pw : {}"
-					, gusetIP, mbDTO, mbDTO.getId(), mbDTO.getPw());
-			throw new UnknownException("MbService getLogin에서 비정상적인 값이 발생 했습니다.");
+	// 로그인 핸들링
+	private MbSessionDTO handelMbSessionDTO(MbDTO getLogin) {
+		String userIp = IPConfig.getIp(SessionConfig.getSession());
+		MbSessionDTO setUser = null;
+		if (getLogin != null) {
+			setUser = new MbSessionDTO();
+			List<MbRoleDTO> roleList = mbDAO.getRoleList(getLogin.getId());
+			UserRole userRole = ConstantUserRoleConfig.UserRole.getRole(roleList.get(0).getRoleNum());
+			setUser.setRole(userRole.name());
+			setUser.setRoleList(roleList);
+			setUser.setId(getLogin.getId());
+			setUser.setPw(getLogin.getPw());
+			setUser.setAls(getLogin.getAls());
+			setUser.setNm(getLogin.getNm());
+			logger.info("access ID : {}, Login", getLogin.getId());
 		} else {
-			checkLoginMesg = "로그인 실패.";
+			logger.warn("access ID : {} ,DB is not affected", userIp);
+			throw new IllegalStateException("DB is not affected check Please");
 		}
-		return checkLoginMesg;
+		return setUser;
 	}
 
 	// 로그아웃
@@ -113,38 +117,18 @@ public class MbService {
 	public MbDTO getMyPage() {
 		String mbId = SessionConfig.MbSessionDTO().getId();
 		String gusetIP = IPConfig.getIp(SessionConfig.getSession());
-		MbDTO mbDTO = new MbDTO();
-
-		if (mbId == null) {
-			logger.warn("getMyPage access ID : {} have not session IP : {}", mbId, gusetIP);
-			throw new IllegalArgumentException("MbService getMyPage hava not session");
-		}
-		mbDTO = mbDAO.getMyPage(mbId);
+		MbDTO mbDTO = mbDAO.getMyPage(mbId);
+		checkResultByDTO(mbDTO, gusetIP);
 		return mbDTO;
 	}
 
 	// 마이 페이지 수정
 	public String updateMyPage(MbDTO mbDTO) {
 		String memberId = SessionConfig.MbSessionDTO().getId();
-		Integer updateMyPage = null;
-		String updateMyPageMesg = null;
-
-		if (mbDTO == null) {
-			logger.warn("updateMyPage access ID : {} null vaule", memberId, mbDTO);
-			throw new IllegalArgumentException("MbService updateMyPage null value" + mbDTO);
-		}
-
-		updateMyPage = mbDAO.updateMyPage(mbDTO);
-
-		if (updateMyPage == 1) {
-			updateMyPageMesg = "마이 페이지 수정 성공";
-		} else if (updateMyPage == 0) {
-			updateMyPageMesg = "마이 페이지 수정 실패";
-		} else {
-			logger.error("updateMyPage access ID : {} unknown status", memberId);
-			throw new UnknownException("MbService updateMyPage에서 비정상적인 값이 발생 했습니다.");
-		}
-		return updateMyPageMesg;
+		Integer insertCheckCount = mbDAO.updateMyPage(mbDTO);
+		String checkResult = checkResultByInteger(insertCheckCount, memberId);
+		String reusltMesg = "마이페이지 수정" + checkResult;
+		return reusltMesg;
 	}
 
 	// 비밀번호 변경
@@ -153,8 +137,7 @@ public class MbService {
 		Integer insertCheck = null;
 		if (updatePwDTO == null) {
 			logger.warn("updatePw access ID : {} null vaule updatePwDTO : {}", memberId, updatePwDTO);
-			throw new IllegalArgumentException(
-					"MbService updateMyPage null value updatePwDTO : " + updatePwDTO);
+			throw new IllegalArgumentException("MbService updateMyPage null value updatePwDTO : " + updatePwDTO);
 		} else {
 			updatePwDTO.setId(memberId);
 			insertCheck = mbDAO.updatePw(updatePwDTO);
@@ -180,8 +163,7 @@ public class MbService {
 
 		if (searchInfoDTO == null) {
 			logger.warn("access IP : {} null vaule searchInfoDTO : {}", gusetIP, searchInfoDTO);
-			throw new IllegalArgumentException(
-					"MbService searchId null value searchInfoDTO : " + searchInfoDTO );
+			throw new IllegalArgumentException("MbService searchId null value searchInfoDTO : " + searchInfoDTO);
 		} else {
 			serachIdCheck = mbDAO.searchId(searchInfoDTO);
 		}
@@ -226,6 +208,44 @@ public class MbService {
 		}
 		return sueccesMesg;
 
+	}
+
+	// DB 출력값 확인
+	private String checkResultByInteger(Integer insertCheckCount, String user) {
+		String resultMesg = null;
+		if (insertCheckCount == ConstantConfig.SUCCESS_COUNT) {
+			resultMesg = ConstantConfig.SUCCESS_MESG;
+		} else if (insertCheckCount == ConstantConfig.FALSE_COUNT) {
+			resultMesg = ConstantConfig.FALSE_MESG;
+		} else {
+			logger.error("access IP : {}, unknown status", user);
+			throw new UnknownException("DB is not affected. Please check.");
+		}
+		return resultMesg;
+	}
+
+	// DB 출력값 확인 (문자열)
+	private String checkResultByString(String user, String insertId) {
+		String resultMesg = null;
+		if (!insertId.isEmpty()) {
+			resultMesg = ConstantConfig.SUCCESS_MESG_BYString;
+		} else if (!insertId.isEmpty()) {
+			resultMesg = ConstantConfig.FALSE_MESG_BYString;
+		} else {
+			logger.error("access IP : {}, unknown status", user);
+			throw new UnknownException("DB is not affected. Please check.");
+		}
+		return resultMesg;
+	}
+
+//	 DB 출력값 확인 (DTO)
+	private void checkResultByDTO(MbDTO mbDTO, String gusetIP) {
+		if (mbDTO != null) {
+			logger.info("access ID : {}, Success", mbDTO.getId());
+		} else {
+			logger.error("access ID : {}, unknown status", gusetIP);
+			throw new UnknownException("DB is not affected. Please check.");
+		}
 	}
 
 }

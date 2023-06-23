@@ -11,13 +11,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.project.config.ConstantConfig;
-import com.project.config.ConstantConfig.UserRole;
+import com.project.config.ConstantUserRoleConfig.UserRole;
 import com.project.config.IPConfig;
 import com.project.config.SessionConfig;
 import com.project.dao.ManagerDAO;
 import com.project.dto.BoardDTO;
-import com.project.dto.InsertUserRoleDTO;
 import com.project.dto.CheckRightCatDTO;
+import com.project.dto.InsertUserRoleDTO;
 import com.project.dto.MbSessionDTO;
 import com.project.dto.ReplyDTO;
 import com.project.exception.UnknownException;
@@ -36,7 +36,7 @@ public class ManagerService {
 		InsertUserRoleDTO insertUserRoleDTO = changeUserRole(catDomain, id);
 		insertUserRoleDTO.setRoleNum(UserRole.SUB_MNG.getLevel());
 		Integer insertCheckCount = managerDAO.insertSubManager(insertUserRoleDTO);
-		insertErrorCheck(insertCheckCount);
+		checkResult(insertCheckCount);
 		return id;
 	}
 
@@ -44,7 +44,7 @@ public class ManagerService {
 		inputUserCheck(catDomain, id);
 		InsertUserRoleDTO insertUserRoleDTO = changeUserRole(catDomain, id);
 		Integer insertCheckCount = managerDAO.deleteSubManager(insertUserRoleDTO);
-		insertErrorCheck(insertCheckCount);
+		checkResult(insertCheckCount);
 		return id;
 	}
 
@@ -53,7 +53,7 @@ public class ManagerService {
 		InsertUserRoleDTO insertUserRoleDTO = changeUserRole(catDomain, id);
 		insertUserRoleDTO.setRoleNum(UserRole.BLOCK.getLevel());
 		Integer insertCheckCount = managerDAO.insertBlockUser(insertUserRoleDTO);
-		insertErrorCheck(insertCheckCount);
+		checkResult(insertCheckCount);
 		return id;
 	}
 
@@ -107,7 +107,7 @@ public class ManagerService {
 		if (checkCatDomain.equals(catDomain)) {
 			managerDAO.deleteBoardBackup(boardDTO);
 			Integer insertCheckCount = managerDAO.deleteBoardNumList(boardDTO);
-			insertErrorCheck(insertCheckCount);
+			checkResult(insertCheckCount);
 			deleteBoardNum = boardDTO.getBoardNum();
 		}
 		return deleteBoardNum;
@@ -146,7 +146,7 @@ public class ManagerService {
 	// 대댓글 기준 / 기존 DTO는 백업 이후 getRplNum를 List 저장 이용 null 변경
 	private Integer checkDepthOneGreater(ReplyDTO replyDTO) {
 		Integer insertCheckCount = managerDAO.setRplCnNull(replyDTO);
-		insertErrorCheck(insertCheckCount);
+		checkResult(insertCheckCount);
 		Integer deleteNum = replyDTO.getRplNum();
 		return deleteNum;
 	}
@@ -154,7 +154,7 @@ public class ManagerService {
 	// 댓글 기준 / 기존 DTO는 백업 이후 getRplNum를 List 저장 이용 삭제
 	private Integer checkDepthOne(ReplyDTO replyDTO) {
 		Integer insertCheckCount = managerDAO.deleteReplyNum(replyDTO);
-		insertErrorCheck(insertCheckCount);
+		checkResult(insertCheckCount);
 		Integer deleteNum = replyDTO.getRplNum();
 		return deleteNum;
 	}
@@ -226,7 +226,7 @@ public class ManagerService {
 
 	// 권한 체크
 	private Integer checkLevel(String accessIP, MbSessionDTO memberInfo) {
-		Integer accessRoleNum = memberInfo.getRoleNum();
+		Integer accessRoleNum = memberInfo.getRoleList().get(0).getRoleNum();
 		String memberId = memberInfo.getId();
 		Integer checkLevel = null;
 		if (isAdminLevel(accessRoleNum)) {
@@ -290,7 +290,7 @@ public class ManagerService {
 	}
 
 	// 인서트 값이 정상이 아니면 에러
-	private boolean insertErrorCheck(Integer insertCheckCount) {
+	private boolean checkResult(Integer insertCheckCount) {
 		if (insertCheckCount == 1) {
 			return true;
 		} else if (insertCheckCount == 0) {

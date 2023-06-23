@@ -46,7 +46,7 @@ public class BoardController {
 	@GetMapping("/{catDomain}")
 	@ApiOperation("readBoard")
 	public MyResponseEntity<List<BoardDTO>> getBoardList(@PathVariable("catDomain") @NotBlank String catDomain,
-			@RequestParam(name = "curPage", required = false) Integer curPage,
+			@RequestParam(name = "curPage", required = false, defaultValue = "1") Integer curPage,
 			@RequestParam(name = "perPage", required = false) Integer perPage) {
 		List<BoardDTO> boardList = boardService.getBoardList(catDomain, curPage, perPage);
 		return new MyResponseEntity<>(new MyResponseEntityDTO<>("게시판 화면", boardList));
@@ -85,7 +85,7 @@ public class BoardController {
 	public MyResponseEntity<List<BoardDTO>> searchBoard(@PathVariable("catDomain") @NotBlank String catDomain,
 			@PathVariable("target") @NotBlank String target,
 			@RequestParam(name = "keyword", required = false) String keyword,
-			@RequestParam(name = "curPage", required = false) Integer curPage,
+			@RequestParam(name = "curPage", required = false, defaultValue = "1") Integer curPage,
 			@RequestParam(name = "perPage", required = false) @Max(value = 50, message = "15,30,50 중 선택해주세요.")
 	Integer perPage) {
 		List<BoardDTO> boardSearch = boardService.searchBoard(catDomain, target, keyword, curPage, perPage);
