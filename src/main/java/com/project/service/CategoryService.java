@@ -69,7 +69,7 @@ public class CategoryService {
 		return resultMesg;
 	}
 	//투표로인한 카테고리 추가
-	public String insertCategoryByMb(@Valid BoardDTO boardDTO) {
+	public String insertCategoryByMb(BoardDTO boardDTO) {
 		// TODO Auto-generated method stub
 		return null;
 	}
