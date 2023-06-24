@@ -18,20 +18,20 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.project.common.MyResponseEntity;
 import com.project.dto.MyResponseEntityDTO;
+import com.project.dto.board.BoardDTO;
 import com.project.dto.category.CategoryDTO;
 import com.project.service.CategoryService;
 
 import io.swagger.annotations.ApiOperation;
 
 @RestController
-@RequestMapping("/cat")
 public class CategoryController {
 
 	@Autowired
 	CategoryService categoryService;
 
 	// 메인 성공
-	@GetMapping("/")
+	@GetMapping("/cat")
 	@ApiOperation("controllerByCategory")
 	public MyResponseEntity<List<CategoryDTO>> controllerCategory() {
 		List<CategoryDTO> controllerCategory = categoryService.controllerCategory();
@@ -39,37 +39,45 @@ public class CategoryController {
 	}
 
 	// 카테고리 추가 성공
-	@PostMapping("/")
+	@PostMapping("/cat")
 	@ApiOperation("createCategory")
-	public MyResponseEntity<String> insertCategory(@RequestBody @Valid CategoryDTO categoryDTO) {
-		String insertCheck = categoryService.insertCategory(categoryDTO);
-		return new MyResponseEntity<>(new MyResponseEntityDTO<>("카테고리 추가 여부" + insertCheck));
+	public MyResponseEntity<Void> insertCategory(@RequestBody @Valid CategoryDTO categoryDTO) {
+		String resultMesg = categoryService.insertCategory(categoryDTO);
+		return new MyResponseEntity<>(new MyResponseEntityDTO<>("카테고리 추가 여부" + resultMesg));
+	}
+
+	//투표로 인한 카테고리 추가
+	@PostMapping("/insert-cat")
+	@ApiOperation("createCategoryByMember")
+	public MyResponseEntity<Void> insertCategoryByMb(@RequestBody @Valid BoardDTO boardDTO) {
+		String resultMesg = categoryService.insertCategoryByMb(boardDTO);
+		return new MyResponseEntity<>(new MyResponseEntityDTO<>("카테고리 추가 여부" + resultMesg));
 	}
 
 	// 카테고리 관리자 선택 성공
-	@PutMapping("/{catDomain}/mng/{id}")
+	@PutMapping("/cat/{catDomain}/mng/{id}")
 	@ApiOperation("updateCategoryMng")
-	public MyResponseEntity<String> updateMng(@PathVariable("catDomain")@NotBlank String catDomain,
+	public MyResponseEntity<Void> updateMng(@PathVariable("catDomain")@NotBlank String catDomain,
 			@PathVariable("id")@NotBlank String id) {
-		String updateCheckId = categoryService.updateMng(catDomain, id);
-		return new MyResponseEntity<>(new MyResponseEntityDTO<>("등록된 매니저", updateCheckId));
+		String resultMesg = categoryService.updateMng(catDomain, id);
+		return new MyResponseEntity<>(new MyResponseEntityDTO<>("매니저 등록 " + resultMesg));
 	}
 
 	// 카테고리 이름 변경 성공
-	@PutMapping("/{catDomain}/cat/{cat}")
+	@PutMapping("/cat/{catDomain}/cat/{cat}")
 	@ApiOperation("updateCategoryName")
-	public MyResponseEntity<String> updateCat(@PathVariable("catDomain")@NotBlank String catDomain,
+	public MyResponseEntity<Void> updateCat(@PathVariable("catDomain")@NotBlank String catDomain,
 			@PathVariable("cat")@NotNull String cat) {
-		String updateCheckCat = categoryService.updateCat(catDomain,cat);
-		return new MyResponseEntity<>(new MyResponseEntityDTO<>("변경된 카테고리 이름" + updateCheckCat));
+		String resultMesg = categoryService.updateCat(catDomain,cat);
+		return new MyResponseEntity<>(new MyResponseEntityDTO<>("카테고리 이름 변경 " + resultMesg));
 	}
 
 	// 카테고리 삭제 성공
 	// 관련 게시글 전부  DB 트리거로 백업 성공
-	@DeleteMapping("/{catDomain}")
+	@DeleteMapping("/cat/{catDomain}")
 	@ApiOperation("deleteCategory")
 	public MyResponseEntity<Void> deleteCat(@PathVariable("catDomain")@NotBlank String catDomain) {
-		String deleteCheckCat = categoryService.deleteCat(catDomain);
-		return new MyResponseEntity<>(new MyResponseEntityDTO<>("삭제 된 카테고리" + deleteCheckCat));
+		String resultMesg = categoryService.deleteCat(catDomain);
+		return new MyResponseEntity<>(new MyResponseEntityDTO<>("카테고리 삭제 " + resultMesg));
 	}
 }

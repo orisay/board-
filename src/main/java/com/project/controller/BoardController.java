@@ -18,10 +18,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.project.common.MyResponseEntity;
 import com.project.dto.MyResponseEntityDTO;
 import com.project.dto.board.BoardDTO;
 import com.project.dto.board.BoardDetailDTO;
+import com.project.common.MyResponseEntity;
 import com.project.dto.MainDTO;
 import com.project.service.BoardService;
 

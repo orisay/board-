@@ -3,6 +3,8 @@ package com.project.service;
 import java.util.Collections;
 import java.util.List;
 
+import javax.validation.Valid;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +16,7 @@ import com.project.common.constant.UserRoleConfig.UserRole;
 import com.project.config.IPConfig;
 import com.project.config.SessionConfig;
 import com.project.dao.CategoryDAO;
+import com.project.dto.board.BoardDTO;
 import com.project.dto.category.CategoryDTO;
 import com.project.exception.UnknownException;
 
@@ -64,6 +67,11 @@ public class CategoryService {
 			resultMesg = categoryDTO.getCat() + " 카테고리가 추가 " + resultMesg;
 		}
 		return resultMesg;
+	}
+	//투표로인한 카테고리 추가
+	public String insertCategoryByMb(@Valid BoardDTO boardDTO) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 	// 카테고리 관리자 수정
