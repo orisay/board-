@@ -1,32 +1,30 @@
-package com.project.dto;
+package com.project.dto.board;
 
 import java.util.List;
 
-public class RequestReplyDTO {
-	private List<ReplyDTO> list;
+public class RequestBoardDTO {
+	private List<BoardDTO> list;
 
-	public RequestReplyDTO() {
+	public RequestBoardDTO() {
+		super();
 	}
 
-	public List<ReplyDTO> getList() {
+	public List<BoardDTO> getList() {
 		return list;
 	}
 
-	public void setList(List<ReplyDTO> list) {
+	public void setList(List<BoardDTO> list) {
 		this.list = list;
 	}
 
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
-		builder.append("RequestReplyDTO [list=");
+		builder.append("RequestBoardDTO [list=");
 		builder.append(list);
 		builder.append("]");
 		return builder.toString();
 	}
-
-
-
 
 
 }

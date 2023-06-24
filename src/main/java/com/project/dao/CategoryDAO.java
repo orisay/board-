@@ -4,7 +4,7 @@ import java.util.List;
 
 import org.apache.ibatis.annotations.Mapper;
 
-import com.project.dto.CategoryDTO;
+import com.project.dto.category.CategoryDTO;
 @Mapper
 public interface CategoryDAO {
 

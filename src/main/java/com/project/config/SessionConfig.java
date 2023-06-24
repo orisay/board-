@@ -8,8 +8,9 @@ import javax.servlet.http.HttpSession;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
-import com.project.config.ConstantUserRoleConfig.UserRole;
-import com.project.dto.MbSessionDTO;
+import com.project.common.constant.ConstantConfig;
+import com.project.common.constant.UserRoleConfig.UserRole;
+import com.project.dto.mb.MbSessionDTO;
 
 public class SessionConfig {
 
@@ -24,7 +25,7 @@ public class SessionConfig {
 
 	// service에서 처리를 위해서 설정
 	public static MbSessionDTO MbSessionDTO() {
-		HttpSession session = getSession();
+//		HttpSession session = getSession();
 		MbSessionDTO mbSessionDTO = new MbSessionDTO();
 //				(MbSessionDTO) session.getAttribute(ConstantConfig.Member_INFO);
 

@@ -1,4 +1,4 @@
-package com.project.common.dto;
+package com.project.common.interceptordto;
 
 public class AdminCheckInterceptorDTO {
 

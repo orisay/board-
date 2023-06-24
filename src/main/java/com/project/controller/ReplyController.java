@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.project.common.MyResponseEntity;
 import com.project.dto.MyResponseEntityDTO;
-import com.project.dto.ReplyDTO;
+import com.project.dto.reply.ReplyDTO;
 import com.project.service.ReplyService;
 
 import io.swagger.annotations.ApiOperation;

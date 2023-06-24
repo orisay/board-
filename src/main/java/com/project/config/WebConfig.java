@@ -5,13 +5,13 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
-import com.project.common.dto.AdminCheckInterceptorDTO;
-import com.project.common.dto.LoginCheckInterceptorDTO;
-import com.project.common.dto.ManagerCheckInterceptorDTO;
 import com.project.common.interceptor.AdminCheckInterceptor;
 import com.project.common.interceptor.LoginCheckInterceptor;
 import com.project.common.interceptor.ManagerCheckInterceptor;
 import com.project.common.interceptor.RateLimitInterceptor;
+import com.project.common.interceptordto.AdminCheckInterceptorDTO;
+import com.project.common.interceptordto.LoginCheckInterceptorDTO;
+import com.project.common.interceptordto.ManagerCheckInterceptorDTO;
 
 public class WebConfig implements WebMvcConfigurer {
 

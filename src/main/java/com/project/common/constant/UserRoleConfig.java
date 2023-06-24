@@ -1,9 +1,9 @@
-package com.project.config;
+package com.project.common.constant;
 import java.util.Arrays;
 
 import com.project.exception.UnknownException;
 
-public final class ConstantUserRoleConfig {
+public final class UserRoleConfig {
 
 	public enum UserRole {
 		BLOCK(1), BASIC(2), SUB_MNG(3), MNG(4), ADMIN(5);

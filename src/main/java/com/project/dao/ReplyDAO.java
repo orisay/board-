@@ -2,7 +2,7 @@ package com.project.dao;
 
 import org.apache.ibatis.annotations.Mapper;
 
-import com.project.dto.ReplyDTO;
+import com.project.dto.reply.ReplyDTO;
 @Mapper
 public interface ReplyDAO {
 

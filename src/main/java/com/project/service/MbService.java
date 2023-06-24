@@ -9,17 +9,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.project.config.ConstantConfig;
-import com.project.config.ConstantUserRoleConfig;
-import com.project.config.ConstantUserRoleConfig.UserRole;
+import com.project.common.constant.ConstantConfig;
+import com.project.common.constant.UserRoleConfig;
+import com.project.common.constant.UserRoleConfig.UserRole;
 import com.project.config.IPConfig;
 import com.project.config.SessionConfig;
 import com.project.dao.MbDAO;
-import com.project.dto.MbDTO;
-import com.project.dto.MbRoleDTO;
-import com.project.dto.MbSessionDTO;
-import com.project.dto.SearchInfoDTO;
-import com.project.dto.UpdatePwDTO;
+import com.project.dto.mb.MbDTO;
+import com.project.dto.mb.MbRoleDTO;
+import com.project.dto.mb.MbSessionDTO;
+import com.project.dto.mb.SearchInfoDTO;
+import com.project.dto.mb.UpdatePwDTO;
 import com.project.exception.UnknownException;
 
 @Service
@@ -93,7 +93,7 @@ public class MbService {
 		if (getLogin != null) {
 			setUser = new MbSessionDTO();
 			List<MbRoleDTO> roleList = mbDAO.getRoleList(getLogin.getId());
-			UserRole userRole = ConstantUserRoleConfig.UserRole.getRole(roleList.get(0).getRoleNum());
+			UserRole userRole = UserRoleConfig.UserRole.getRole(roleList.get(0).getRoleNum());
 			setUser.setRole(userRole.name());
 			setUser.setRoleList(roleList);
 			setUser.setId(getLogin.getId());

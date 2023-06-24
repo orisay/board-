@@ -9,12 +9,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.project.config.ConstantConfig;
-import com.project.config.ConstantUserRoleConfig.UserRole;
+import com.project.common.constant.ConstantConfig;
+import com.project.common.constant.UserRoleConfig.UserRole;
 import com.project.config.IPConfig;
 import com.project.config.SessionConfig;
 import com.project.dao.CategoryDAO;
-import com.project.dto.CategoryDTO;
+import com.project.dto.category.CategoryDTO;
 import com.project.exception.UnknownException;
 
 @Service

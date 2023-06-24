@@ -6,11 +6,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.project.config.ConstantConfig;
+import com.project.common.constant.ConstantConfig;
 import com.project.config.IPConfig;
 import com.project.config.SessionConfig;
 import com.project.dao.ReplyDAO;
-import com.project.dto.ReplyDTO;
+import com.project.dto.reply.ReplyDTO;
 import com.project.exception.UnknownException;
 
 @Service

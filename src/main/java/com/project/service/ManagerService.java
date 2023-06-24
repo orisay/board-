@@ -10,16 +10,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.project.config.ConstantConfig;
-import com.project.config.ConstantUserRoleConfig.UserRole;
+import com.project.common.constant.ConstantConfig;
+import com.project.common.constant.UserRoleConfig.UserRole;
 import com.project.config.IPConfig;
 import com.project.config.SessionConfig;
 import com.project.dao.ManagerDAO;
-import com.project.dto.BoardDTO;
-import com.project.dto.CheckRightCatDTO;
-import com.project.dto.InsertUserRoleDTO;
-import com.project.dto.MbSessionDTO;
-import com.project.dto.ReplyDTO;
+import com.project.dto.board.BoardDTO;
+import com.project.dto.category.CheckRightCatDTO;
+import com.project.dto.mb.InsertUserRoleDTO;
+import com.project.dto.mb.MbSessionDTO;
+import com.project.dto.reply.ReplyDTO;
 import com.project.exception.UnknownException;
 
 @Service

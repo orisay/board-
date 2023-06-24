@@ -10,11 +10,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.project.common.MyResponseEntity;
-import com.project.dto.BoardDTO;
 import com.project.dto.MyResponseEntityDTO;
-import com.project.dto.ReplyDTO;
-import com.project.dto.RequestBoardDTO;
-import com.project.dto.RequestReplyDTO;
+import com.project.dto.board.BoardDTO;
+import com.project.dto.board.RequestBoardDTO;
+import com.project.dto.reply.ReplyDTO;
+import com.project.dto.reply.RequestReplyDTO;
 import com.project.service.ManagerService;
 
 import io.swagger.annotations.ApiOperation;

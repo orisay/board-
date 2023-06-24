@@ -2,10 +2,10 @@ package com.project.dao;
 
 import org.apache.ibatis.annotations.Mapper;
 
-import com.project.dto.BoardDTO;
-import com.project.dto.InsertUserRoleDTO;
-import com.project.dto.CheckRightCatDTO;
-import com.project.dto.ReplyDTO;
+import com.project.dto.board.BoardDTO;
+import com.project.dto.category.CheckRightCatDTO;
+import com.project.dto.mb.InsertUserRoleDTO;
+import com.project.dto.reply.ReplyDTO;
 
 @Mapper
 public interface ManagerDAO {

@@ -17,8 +17,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.project.common.MyResponseEntity;
-import com.project.dto.CategoryDTO;
 import com.project.dto.MyResponseEntityDTO;
+import com.project.dto.category.CategoryDTO;
 import com.project.service.CategoryService;
 
 import io.swagger.annotations.ApiOperation;

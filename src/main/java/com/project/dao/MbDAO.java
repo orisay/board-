@@ -4,11 +4,10 @@ import java.util.List;
 
 import org.apache.ibatis.annotations.Mapper;
 
-import com.project.dto.MbDTO;
-import com.project.dto.MbRoleDTO;
-import com.project.dto.MbSessionDTO;
-import com.project.dto.SearchInfoDTO;
-import com.project.dto.UpdatePwDTO;
+import com.project.dto.mb.MbDTO;
+import com.project.dto.mb.MbRoleDTO;
+import com.project.dto.mb.SearchInfoDTO;
+import com.project.dto.mb.UpdatePwDTO;
 @Mapper
 public interface MbDAO {
 

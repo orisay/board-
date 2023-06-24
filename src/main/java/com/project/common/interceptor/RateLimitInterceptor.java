@@ -11,7 +11,7 @@ import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.google.common.util.concurrent.RateLimiter;
-import com.project.config.ConstantConfig;
+import com.project.common.constant.ConstantConfig;
 import com.project.config.IPConfig;
 import com.project.config.SessionConfig;
 

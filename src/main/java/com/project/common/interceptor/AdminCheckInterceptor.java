@@ -8,8 +8,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.project.config.ConstantConfig;
-import com.project.config.ConstantUserRoleConfig;
+import com.project.common.constant.UserRoleConfig;
 import com.project.config.IPConfig;
 import com.project.config.SessionConfig;
 import com.project.exception.UnknownException;
@@ -23,7 +22,7 @@ public class AdminCheckInterceptor implements HandlerInterceptor {
 			throws Exception {
 		String roleCheckAdmin = SessionConfig.MbSessionDTO().getRole();
 		String iDCheckAdmin = SessionConfig.getSession().getId();
-		String rightCheckAdmin = ConstantUserRoleConfig.UserRole.ADMIN.name();
+		String rightCheckAdmin = UserRoleConfig.UserRole.ADMIN.name();
 		String adminIP = IPConfig.getIp(SessionConfig.getSession());
 		if (roleCheckAdmin == null) {
 			logger.warn("non-role user access and view windows that need session ID : {}, IP : {} "

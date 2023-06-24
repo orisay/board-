@@ -4,13 +4,13 @@ import java.util.List;
 
 import org.apache.ibatis.annotations.Mapper;
 
-import com.project.dto.BoardDTO;
-import com.project.dto.BoardDetailDTO;
-import com.project.dto.BoardSearchDTO;
-import com.project.dto.InsertUserRoleDTO;
-import com.project.dto.ReplyDTO;
+import com.project.dto.board.BoardDTO;
+import com.project.dto.board.BoardDetailDTO;
+import com.project.dto.board.BoardSearchDTO;
+import com.project.dto.board.PlusPointBoardDTO;
+import com.project.dto.mb.InsertUserRoleDTO;
+import com.project.dto.reply.ReplyDTO;
 import com.project.dto.MainDTO;
-import com.project.dto.PlusPointBoardDTO;
 
 @Mapper
 public interface BoardDAO {

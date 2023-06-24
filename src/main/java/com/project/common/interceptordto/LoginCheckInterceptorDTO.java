@@ -1,6 +1,6 @@
-package com.project.common.dto;
+package com.project.common.interceptordto;
 
-public class ManagerCheckInterceptorDTO {
+public class LoginCheckInterceptorDTO {
 
 	private String[] list;
 

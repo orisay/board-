@@ -11,20 +11,21 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.project.config.ConstantConfig;
-import com.project.config.ConstantConfig.Target;
-import com.project.config.ConstantUserRoleConfig.UserRole;
+import com.project.common.constant.ConstantConfig;
+import com.project.common.constant.SearchLevelConfig;
+import com.project.common.constant.SearchLevelConfig.Target;
+import com.project.common.constant.UserRoleConfig.UserRole;
 import com.project.config.IPConfig;
 import com.project.config.SessionConfig;
 import com.project.dao.BoardDAO;
-import com.project.dto.BoardDTO;
-import com.project.dto.BoardDetailDTO;
-import com.project.dto.BoardSearchDTO;
-import com.project.dto.InsertUserRoleDTO;
 import com.project.dto.MainDTO;
 import com.project.dto.PageDTO;
-import com.project.dto.PlusPointBoardDTO;
-import com.project.dto.ReplyDTO;
+import com.project.dto.board.BoardDTO;
+import com.project.dto.board.BoardDetailDTO;
+import com.project.dto.board.BoardSearchDTO;
+import com.project.dto.board.PlusPointBoardDTO;
+import com.project.dto.mb.InsertUserRoleDTO;
+import com.project.dto.reply.ReplyDTO;
 import com.project.exception.UnknownException;
 
 @Service
@@ -64,7 +65,7 @@ public class BoardService {
 		boardSearchDTO.setTarget(target);
 		boardSearchDTO.setKeyword(keyword);
 		List<BoardDTO> searchBoard = null;
-		Integer checkLevel = ConstantConfig.Target.valueOf(target.toUpperCase()).getLevel();
+		Integer checkLevel = SearchLevelConfig.Target.valueOf(target.toUpperCase()).getLevel();
 		if (checkLevel < Target.COMP.getLevel()) {
 			searchBoard = boardDAO.searchBoardBasic(boardSearchDTO);
 		} else if (checkLevel == Target.COMP.getLevel()) {
@@ -264,6 +265,7 @@ public class BoardService {
 		}
 	}
 
+	//DB 영향 확인
 	private String checkResultByInteger(Integer insertCheckCount, String user) {
 		String resultMesg = null;
 		if (insertCheckCount == ConstantConfig.SUCCESS_COUNT) {

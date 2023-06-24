@@ -1,32 +1,36 @@
-
-package com.project.dto;
+package com.project.dto.board;
 
 import java.util.Date;
-import java.util.List;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
-public class BoardDetailDTO {
+import org.springframework.format.annotation.DateTimeFormat;
 
-	@NotBlank
-	private Integer boardNum;
-	@NotBlank
-	private String catDomain;
-	@NotBlank
-	private String creator;
-	@NotBlank
-	private String ttl;
-	@NotBlank
-	private String cn;
-	private Integer viewCnt;
-	private Integer rplCnt;
-	private Date crtTm;
-	private Date upTm;
-	private String upNm;
-	private List<ReplyDTO>list;
+public class BoardDTO {
 
-	public Integer getBoardNum() {
+	@NotNull
+    private Integer boardNum;
+	@NotBlank
+    private String catDomain;
+	@NotBlank
+    private String creator;
+	@NotBlank
+    private String ttl;
+	@NotBlank
+    private String cn;
+	@NotNull
+    private Integer viewCnt;
+	@NotNull
+    private Integer rplCnt;
+    @NotBlank
+    @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSX")
+    private Date crtTm;
+    @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSX")
+    private Date upTm;
+    private String pw;
+
+    public Integer getBoardNum() {
 		return boardNum;
 	}
 	public String getCatDomain() {
@@ -53,11 +57,8 @@ public class BoardDetailDTO {
 	public Date getUpTm() {
 		return upTm;
 	}
-	public String getUpNm() {
-		return upNm;
-	}
-	public List<ReplyDTO> getList() {
-		return list;
+	public String getPw() {
+		return pw;
 	}
 	public void setBoardNum(Integer boardNum) {
 		this.boardNum = boardNum;
@@ -86,17 +87,17 @@ public class BoardDetailDTO {
 	public void setUpTm(Date upTm) {
 		this.upTm = upTm;
 	}
-	public void setUpNm(String upNm) {
-		this.upNm = upNm;
+	public void setPw(String pw) {
+		this.pw = pw;
 	}
-	public void setList(List<ReplyDTO> list) {
-		this.list = list;
+
+	public BoardDTO() {
 	}
 
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
-		builder.append("BoardDetailDTO [boardNum=");
+		builder.append("BoardDTO [boardNum=");
 		builder.append(boardNum);
 		builder.append(", catDomain=");
 		builder.append(catDomain);
@@ -114,10 +115,8 @@ public class BoardDetailDTO {
 		builder.append(crtTm);
 		builder.append(", upTm=");
 		builder.append(upTm);
-		builder.append(", upNm=");
-		builder.append(upNm);
-		builder.append(", list=");
-		builder.append(list);
+		builder.append(", pw=");
+		builder.append(pw);
 		builder.append("]");
 		return builder.toString();
 	}

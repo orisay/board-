@@ -14,11 +14,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.project.common.MyResponseEntity;
-import com.project.dto.MbDTO;
-import com.project.dto.MbSessionDTO;
 import com.project.dto.MyResponseEntityDTO;
-import com.project.dto.SearchInfoDTO;
-import com.project.dto.UpdatePwDTO;
+import com.project.dto.mb.MbDTO;
+import com.project.dto.mb.MbSessionDTO;
+import com.project.dto.mb.SearchInfoDTO;
+import com.project.dto.mb.UpdatePwDTO;
 import com.project.service.MbService;
 
 import io.swagger.annotations.ApiOperation;
