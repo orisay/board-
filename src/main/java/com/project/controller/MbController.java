@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.project.common.MyResponseEntity;
 import com.project.dto.MbDTO;
+import com.project.dto.MbSessionDTO;
 import com.project.dto.MyResponseEntityDTO;
 import com.project.dto.SearchInfoDTO;
 import com.project.dto.UpdatePwDTO;
@@ -48,8 +49,8 @@ public class MbController {
 	// 로그인 성공
 	@PostMapping("/login")
 	@ApiOperation("login")
-	public MyResponseEntity<MbDTO> getLogin(@RequestBody @Valid MbDTO mbDTO) {
-		MbDTO checkLogin = mbService.getLogin(mbDTO);
+	public MyResponseEntity<MbSessionDTO> getLogin(@RequestBody @Valid MbDTO mbDTO) {
+		MbSessionDTO checkLogin = mbService.getLogin(mbDTO);
 		return new MyResponseEntity<>(new MyResponseEntityDTO<>("로그인 여부", checkLogin));
 	}
 

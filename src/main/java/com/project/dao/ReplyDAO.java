@@ -8,7 +8,9 @@ public interface ReplyDAO {
 
 	Integer countPlusBoard(Integer boardNum);
 
-	Integer insertReply(ReplyDTO replyDTO);
+	Integer insertParentReply(ReplyDTO replyDTO);
+
+	Integer insertChildReReply(ReplyDTO replyDTO);
 
 	Integer updateGuestReply(ReplyDTO replyDTO);
 
@@ -25,6 +27,8 @@ public interface ReplyDAO {
 	Integer deleteMemberReply(ReplyDTO replyDTO);
 
 	Integer deleteMemberRplCnNUll(ReplyDTO replyDTO);
+
+
 
 
 

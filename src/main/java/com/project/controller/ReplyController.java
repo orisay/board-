@@ -1,5 +1,6 @@
 package com.project.controller;
 
+import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,28 +27,37 @@ public class ReplyController {
 
 	// 댓글 작성 성공
 	@PostMapping("/{boardNum}")
-	@ApiOperation("createReply")
-	public MyResponseEntity<Void> insertReply(@PathVariable("boardNum") @NotNull Integer boardNum,
-			@RequestBody ReplyDTO replyDTO, @PathVariable(name = "rplNum", required = false) Integer rplNum) {
-		replyService.insertReply(boardNum, replyDTO, rplNum);
-		return new MyResponseEntity<>(new MyResponseEntityDTO<>("댓글 작성 성공"));
+	@ApiOperation("createarentReply")
+	public MyResponseEntity<Void> insertParentReply(@PathVariable("boardNum") @NotNull Integer boardNum,
+			@RequestBody @Valid ReplyDTO replyDTO) {
+		String resultMesg = replyService.insertParentReply(boardNum, replyDTO);
+		return new MyResponseEntity<>(new MyResponseEntityDTO<>("댓글 작성" + resultMesg));
+	}
+
+	// 대댓글 작성
+	@PostMapping("/{boardNum}/{rplNum}")
+	@ApiOperation("createChildReReply")
+	public MyResponseEntity<Void> insertChildReReply(@PathVariable("boardNum") @NotNull Integer boardNum,
+			@PathVariable("rplNum") @NotNull Integer rplNum, @RequestBody @Valid ReplyDTO replyDTO) {
+		String resultMesg = replyService.insertChildReReply(boardNum, rplNum, replyDTO);
+		return new MyResponseEntity<>(new MyResponseEntityDTO<>("대댓글 작성" + resultMesg));
 	}
 
 	// 댓글 수정 성공
 	@PutMapping("/{rplNum}")
 	@ApiOperation("updateReply")
 	public MyResponseEntity<Void> updateReply(@RequestBody ReplyDTO replyDTO) {
-		replyService.updateReply(replyDTO);
-		return new MyResponseEntity<>(new MyResponseEntityDTO<>("댓글 수정 성공"));
+		String resultMesg = replyService.updateReply(replyDTO);
+		return new MyResponseEntity<>(new MyResponseEntityDTO<>("댓글 수정" + resultMesg));
 	}
 
 	// 댓글 삭제 성공
-	//대댓글 null 변경 없는 것은 삭제 성공
-	//spring boot 내장 tomcat은 deletemapping requestbody 지원해준다.
+	// 대댓글 null 변경 없는 것은 삭제 성공
+	// spring boot 내장 tomcat은 deletemapping requestbody 지원해준다.
 	@DeleteMapping("/{rplNum}")
 	@ApiOperation("deleteReply")
 	public MyResponseEntity<Void> deleteReply(@RequestBody ReplyDTO replyDTO) {
-		replyService.deleteReply(replyDTO);
-		return new MyResponseEntity<>(new MyResponseEntityDTO<>("댓글 삭제 성공"));
+		String resultMesg = replyService.deleteReply(replyDTO);
+		return new MyResponseEntity<>(new MyResponseEntityDTO<>("댓글 삭제" + resultMesg));
 	}
 }

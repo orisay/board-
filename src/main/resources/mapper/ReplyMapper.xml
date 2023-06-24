@@ -13,7 +13,7 @@
 				BOARD_NUM = #{boardNum}
 	</update>
 
-	<insert id="insertReply" parameterType="ReplyDTO">
+	<insert id="insertParentReply" parameterType="ReplyDTO">
 		INSERT INTO
 				TB_REPLY
 				(
@@ -36,6 +36,41 @@
 				,SYSDATE
 				,SYSDATE
 				,#{depth}
+				,#{pw}
+				,#{parentRpl}
+				)
+	</insert>
+
+		<insert id="insertChildReReply" parameterType="ReplyDTO">
+		INSERT INTO
+				TB_REPLY
+				(
+				RPL_NUM
+				,BOARD_NUM
+				,ID
+				,RPL_CN
+				,CRT_TM
+				,UP_TM
+				,DEPTH
+				,PW
+				,PARENT_RPL
+				)
+		VALUES
+				(
+				TB_REPLY_SEQ.NEXTVAL
+				,#{boardNum}
+				,#{id}
+				,#{rplCn}
+				,SYSDATE
+				,SYSDATE
+				,(
+		SELECT
+				DEPTH + 1
+		FROM
+				TB_REPLY
+		WHERE
+				RPL_NUM = #{parentRpl}
+				)
 				,#{pw}
 				,#{parentRpl}
 				)

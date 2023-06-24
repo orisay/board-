@@ -134,80 +134,28 @@ public class MbService {
 	// 비밀번호 변경
 	public String updatePw(UpdatePwDTO updatePwDTO) {
 		String memberId = SessionConfig.MbSessionDTO().getId();
-		Integer insertCheck = null;
-		if (updatePwDTO == null) {
-			logger.warn("updatePw access ID : {} null vaule updatePwDTO : {}", memberId, updatePwDTO);
-			throw new IllegalArgumentException("MbService updateMyPage null value updatePwDTO : " + updatePwDTO);
-		} else {
-			updatePwDTO.setId(memberId);
-			insertCheck = mbDAO.updatePw(updatePwDTO);
-		}
-
-		String sueccesMesg = null;
-		if (insertCheck == 1) {
-			sueccesMesg = "변경 성공했습니다.";
-		} else if (insertCheck == 0) {
-			sueccesMesg = "변경 실패했습니다.";
-			logger.warn("updatePw checkId access ID : {} ,DB is not affected", memberId);
-		} else {
-			logger.error("updatePw access ID : {} unknown status", memberId);
-			throw new UnknownException("updatePw 예기치 못한 상황이 발생했습니다.");
-		}
-		return sueccesMesg;
+		Integer insertCheckCount = mbDAO.updatePw(updatePwDTO);
+		String checkResult = checkResultByInteger(insertCheckCount, memberId);
+		String reusltMesg = "비밀번호 변경" + checkResult;
+		return reusltMesg;
 	}
 
 	// 아이디 찾기
 	public String searchId(SearchInfoDTO searchInfoDTO) {
 		String gusetIP = IPConfig.getIp(SessionConfig.getSession());
-		String serachIdCheck = null;
-
-		if (searchInfoDTO == null) {
-			logger.warn("access IP : {} null vaule searchInfoDTO : {}", gusetIP, searchInfoDTO);
-			throw new IllegalArgumentException("MbService searchId null value searchInfoDTO : " + searchInfoDTO);
-		} else {
-			serachIdCheck = mbDAO.searchId(searchInfoDTO);
-		}
-
-		String sueccesMesg = null;
-		if (serachIdCheck != null && !serachIdCheck.isEmpty()) {
-			sueccesMesg = "성공했습니다.." + serachIdCheck;
-		} else if (serachIdCheck.isEmpty()) {
-			sueccesMesg = "실패했습니다..";
-			logger.warn("checkId access IP : {} ,DB is not affected", gusetIP);
-		} else {
-			logger.error("checkId access IP : {} unknown status", gusetIP);
-			throw new UnknownException("updatePw 예기치 못한 상황이 발생했습니다.");
-		}
+		String insertCheckMesg = mbDAO.searchId(searchInfoDTO);
+		String resultCheck = checkResultByString(gusetIP, insertCheckMesg);
+		String sueccesMesg = "ID : " + insertCheckMesg + ", 아이디  찾기 "+ resultCheck;
 		return sueccesMesg;
 	}
 
 	// 비밀번호 찾기
 	public String searchPw(SearchInfoDTO searchInfoDTO) {
 		String gusetIP = IPConfig.getIp(SessionConfig.getSession());
-		String searchPwCheck = null;
-		if (searchInfoDTO == null) {
-			logger.warn("access IP : {} null vaule searchInfoDTO : {}", gusetIP, searchInfoDTO);
-			StringBuilder errorMesg = new StringBuilder();
-			errorMesg.append("MbService searchId null value");
-			errorMesg.append("searchInfoDTO : ");
-			errorMesg.append(searchInfoDTO);
-			throw new IllegalArgumentException(errorMesg.toString());
-		} else {
-			searchPwCheck = mbDAO.searchPw(searchInfoDTO);
-		}
-
-		String sueccesMesg = null;
-		if (searchPwCheck != null && !searchPwCheck.isEmpty()) {
-			sueccesMesg = "성공했습니다." + searchPwCheck;
-		} else if (searchPwCheck.isEmpty()) {
-			sueccesMesg = "실패했습니다.";
-			logger.warn("checkId access IP : {} ,DB is not affected", gusetIP);
-		} else {
-			logger.error("searchPw access IP : {} unknown status", gusetIP);
-			throw new UnknownException("searchPw에서 예기치 못한 상황이 발생했습니다.");
-		}
+		String insertCheckMesg = mbDAO.searchPw(searchInfoDTO);
+		String resultCheck = checkResultByString(gusetIP, insertCheckMesg);
+		String sueccesMesg = "PassWord : " + insertCheckMesg + ", 비밀번호  찾기 "+ resultCheck;
 		return sueccesMesg;
-
 	}
 
 	// DB 출력값 확인

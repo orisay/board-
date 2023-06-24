@@ -8,7 +8,7 @@ import javax.servlet.http.HttpSession;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
-import com.project.config.ConstantConfig.UserRole;
+import com.project.config.ConstantUserRoleConfig.UserRole;
 import com.project.dto.MbSessionDTO;
 
 public class SessionConfig {
@@ -30,7 +30,7 @@ public class SessionConfig {
 
 		mbSessionDTO.setId("admin");
 		mbSessionDTO.setRole(UserRole.ADMIN.name());
-		mbSessionDTO.setRoleNum(UserRole.ADMIN.getLevel());
+//		mbSessionDTO.setRoleNum(UserRole.ADMIN.getLevel());
 		return mbSessionDTO;
 	}
 

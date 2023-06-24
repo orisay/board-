@@ -21,11 +21,15 @@ public final class ConstantConfig {
 
 	public static final Integer plusView = 1;
 
-	public static final Integer compare = 0;
+	public static final Integer COMPARE = 0;
 
 	public static final String SUCCESS_MESG = "성공했습니다.";
 
 	public static final String SUCCESS_MESG_BYString = "사용가능합니다..";
+
+	public static final String GUEST= "guest";
+
+	public static final String MEMBER = "member";
 
 	public enum Target {
 		CREATOR(1)
