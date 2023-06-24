@@ -391,4 +391,47 @@
 				CAT_DOMAIN = #{catDomain}
 	</update>
 
+	<insert id="updateGoodPoint" parameterType="PlusPointBoardDTO">
+		INSERT INTO
+				TB_POINT
+				(
+				BOARD_NUM
+				,ID
+				,GOOD_POINT
+				)
+		VALUES
+				(
+				#{boardNum}
+				,#{id}
+				,#{point}
+				)
+	</insert>
+
+	<insert id="updateBadPoint" parameterType="PlusPointBoardDTO">
+		INSERT INTO
+				TB_POINT
+				(
+				BOARD_NUM
+				,ID
+				,BAD_POINT
+				)
+		VALUES
+				(
+				#{boardNum}
+				,#{id}
+				,#{point}
+				)
+	</insert>
+
+	<select id="insertIdCheck" parameterType="PlusPointBoardDTO" resultType="Integer">
+		SELECT
+				COUNT(*)
+		FROM
+				TB_POINT
+		WHERE
+				BOARD_NUM = #{boardNum}
+		AND
+				ID = #{id}
+	</select>
+
 </mapper>

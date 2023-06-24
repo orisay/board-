@@ -86,10 +86,9 @@ public class BoardController {
 			@PathVariable("target") @NotBlank String target,
 			@RequestParam(name = "keyword", required = false) String keyword,
 			@RequestParam(name = "curPage", required = false, defaultValue = "1") Integer curPage,
-			@RequestParam(name = "perPage", required = false) @Max(value = 50, message = "15,30,50 중 선택해주세요.")
-	Integer perPage) {
+			@RequestParam(name = "perPage", required = false) @Max(value = 50, message = "15,30,50 중 선택해주세요.") Integer perPage) {
 		List<BoardDTO> boardSearch = boardService.searchBoard(catDomain, target, keyword, curPage, perPage);
-		return new MyResponseEntity<>(new MyResponseEntityDTO<>("게시글 검색 성공", boardSearch));
+		return new MyResponseEntity<>(new MyResponseEntityDTO<>("게시글 검색 ", boardSearch));
 	}
 
 	// 게시글 상세 성공
@@ -99,8 +98,25 @@ public class BoardController {
 	public MyResponseEntity<BoardDetailDTO> boardDetail(@PathVariable("catDomain") @NotBlank String catDomain,
 			@PathVariable("boardNum") @NotNull Integer boardNum,
 			@RequestParam(name = "curPage", required = false) Integer curPage) {
-		BoardDetailDTO board = boardService.boardDetail(catDomain, boardNum, curPage);
-		return new MyResponseEntity<>(new MyResponseEntityDTO<>("게시글 상세 내용", board));
+		BoardDetailDTO boardDetail = boardService.boardDetail(catDomain, boardNum, curPage);
+		return new MyResponseEntity<>(new MyResponseEntityDTO<>("게시글 상세 내용", boardDetail));
 	}
 
+	// 좋아요 버튼
+	@PostMapping("/good-point/{catDomain}/{boardNum}")
+	@ApiOperation("GoodPoint")
+	public MyResponseEntity<Void> updateGoodPoint(@PathVariable("catDomain")String catDomain,
+			@PathVariable("boardNum")Integer boardNum) {
+		String resultMesg = boardService.updateGoodPoint(catDomain, boardNum);
+		return new MyResponseEntity<>(new MyResponseEntityDTO<>(""+ resultMesg));
+	}
+
+	// 나빠요 버튼
+	@PostMapping("/bad-point/{catDomain}/{boardNum}")
+	@ApiOperation("GoodPoint")
+	public MyResponseEntity<Void> updateBadPoint(@PathVariable("catDomain")String catDomain,
+			@PathVariable("boardNum")Integer boardNum) {
+		String resultMesg = boardService.updateBadPoint(catDomain, boardNum);
+		return new MyResponseEntity<>(new MyResponseEntityDTO<>(""+resultMesg));
+	}
 }

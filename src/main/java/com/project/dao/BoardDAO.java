@@ -10,6 +10,7 @@ import com.project.dto.BoardSearchDTO;
 import com.project.dto.InsertUserRoleDTO;
 import com.project.dto.ReplyDTO;
 import com.project.dto.MainDTO;
+import com.project.dto.PlusPointBoardDTO;
 
 @Mapper
 public interface BoardDAO {
@@ -47,6 +48,14 @@ public interface BoardDAO {
 	void plusCountCategoryboardCnt(BoardDTO boardDTO);
 
 	void minusCountCategoryboardCnt(BoardDTO boardDTO);
+
+	Integer insertIdCheck(PlusPointBoardDTO plusPointBoardDTO);
+
+	Integer updateGoodPoint(PlusPointBoardDTO plusPointBoardDTO);
+
+	Integer updateBadPoint(PlusPointBoardDTO plusPointBoardDTO);
+
+
 
 
 
