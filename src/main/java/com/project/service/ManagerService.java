@@ -20,6 +20,7 @@ import com.project.dto.category.CheckRightCatDTO;
 import com.project.dto.mb.InsertUserRoleDTO;
 import com.project.dto.mb.MbSessionDTO;
 import com.project.dto.reply.ReplyDTO;
+import com.project.exception.NotFoundException;
 import com.project.exception.UnknownException;
 
 @Service
@@ -295,7 +296,7 @@ public class ManagerService {
 			return true;
 		} else if (insertCheckCount == 0) {
 			logger.warn("DB is not affected");
-			throw new RuntimeException("DB is not affected. Please check");
+			throw new NotFoundException("DB is not affected. Please check");
 		} else {
 			logger.error("DB error or Fatal error");
 			throw new UnknownException("예기치 못한 상황이 발생했습니다.");

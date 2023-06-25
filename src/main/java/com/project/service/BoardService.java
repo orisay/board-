@@ -26,6 +26,7 @@ import com.project.dto.board.BoardSearchDTO;
 import com.project.dto.board.PlusPointBoardDTO;
 import com.project.dto.mb.InsertUserRoleDTO;
 import com.project.dto.reply.ReplyDTO;
+import com.project.exception.NotFoundException;
 import com.project.exception.UnknownException;
 
 @Service
@@ -272,7 +273,7 @@ public class BoardService {
 			resultMesg = ConstantConfig.SUCCESS_MESG;
 		} else if (insertCheckCount == ConstantConfig.FALSE_COUNT) {
 			logger.warn("access User : {} DB is not affected.", user);
-			resultMesg = ConstantConfig.FALSE_MESG;
+			throw new NotFoundException("결과 값이 정확하지 않습니다.");
 		} else {
 			logger.error("access User : {} unknown status", user);
 			throw new UnknownException("BoardService insertBoard 예상치 못한 상태가 발생했습니다.");

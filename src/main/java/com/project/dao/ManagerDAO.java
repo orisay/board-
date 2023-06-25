@@ -28,5 +28,4 @@ public interface ManagerDAO {
 
 	Integer setRplCnNull(ReplyDTO replyDTO);
 
-
 }

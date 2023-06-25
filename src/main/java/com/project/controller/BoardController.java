@@ -105,18 +105,18 @@ public class BoardController {
 	// 좋아요 버튼
 	@PostMapping("/good-point/{catDomain}/{boardNum}")
 	@ApiOperation("GoodPoint")
-	public MyResponseEntity<Void> updateGoodPoint(@PathVariable("catDomain")String catDomain,
-			@PathVariable("boardNum")Integer boardNum) {
+	public MyResponseEntity<Void> updateGoodPoint(@PathVariable("catDomain") @NotBlank String catDomain,
+			@PathVariable("boardNum")  @NotNull Integer boardNum) {
 		String resultMesg = boardService.updateGoodPoint(catDomain, boardNum);
-		return new MyResponseEntity<>(new MyResponseEntityDTO<>(""+ resultMesg));
+		return new MyResponseEntity<>(new MyResponseEntityDTO<>("굿 포인트 추가" + resultMesg));
 	}
 
 	// 나빠요 버튼
 	@PostMapping("/bad-point/{catDomain}/{boardNum}")
-	@ApiOperation("GoodPoint")
-	public MyResponseEntity<Void> updateBadPoint(@PathVariable("catDomain")String catDomain,
-			@PathVariable("boardNum")Integer boardNum) {
+	@ApiOperation("BadPoint")
+	public MyResponseEntity<Void> updateBadPoint(@PathVariable("catDomain")@NotBlank String catDomain,
+			@PathVariable("boardNum") @NotNull Integer boardNum) {
 		String resultMesg = boardService.updateBadPoint(catDomain, boardNum);
-		return new MyResponseEntity<>(new MyResponseEntityDTO<>(""+resultMesg));
+		return new MyResponseEntity<>(new MyResponseEntityDTO<>("워스트 포인트 추가" + resultMesg));
 	}
 }

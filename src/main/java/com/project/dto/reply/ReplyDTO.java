@@ -2,14 +2,22 @@ package com.project.dto.reply;
 
 import java.util.Date;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+
 import org.springframework.format.annotation.DateTimeFormat;
 
 public class ReplyDTO {
 
+	@NotBlank
     private Integer rplNum;
+	@NotBlank
     private Integer boardNum;
+	@NotBlank
     private String id;
+	@NotBlank
     private String rplCn;
+	@NotNull
     @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSX")
     private Date crtTm;
     @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSX")

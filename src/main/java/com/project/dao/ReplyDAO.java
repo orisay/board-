@@ -28,9 +28,4 @@ public interface ReplyDAO {
 
 	Integer deleteMemberRplCnNUll(ReplyDTO replyDTO);
 
-
-
-
-
-
 }

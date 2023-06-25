@@ -2,6 +2,8 @@ package com.project.common.constant;
 
 public final class ConstantConfig {
 
+	public static final Integer CREAT_CAT_POINT = 10;
+
 	public static final Integer START_NUM = 1;
 
 	public static final Integer insertStartNum = 0;

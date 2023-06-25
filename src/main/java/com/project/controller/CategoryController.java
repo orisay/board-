@@ -46,19 +46,20 @@ public class CategoryController {
 		return new MyResponseEntity<>(new MyResponseEntityDTO<>("카테고리 추가 여부" + resultMesg));
 	}
 
-	//투표로 인한 카테고리 추가
-	@PostMapping("/insert-cat")
+	// 투표로 인한 카테고리 추가
+	@PostMapping("/vote-cat/{point}")
 	@ApiOperation("createCategoryByMember")
-	public MyResponseEntity<Void> insertCategoryByMb(@RequestBody @Valid BoardDTO boardDTO) {
-		String resultMesg = categoryService.insertCategoryByMb(boardDTO);
+	public MyResponseEntity<Void> insertCategoryByMb(@RequestBody @Valid BoardDTO boardDTO,
+			@PathVariable("point") @NotNull Integer creationPoint) {
+		String resultMesg = categoryService.insertCategoryByMb(boardDTO, creationPoint);
 		return new MyResponseEntity<>(new MyResponseEntityDTO<>("카테고리 추가 여부" + resultMesg));
 	}
 
 	// 카테고리 관리자 선택 성공
 	@PutMapping("/cat/{catDomain}/mng/{id}")
 	@ApiOperation("updateCategoryMng")
-	public MyResponseEntity<Void> updateMng(@PathVariable("catDomain")@NotBlank String catDomain,
-			@PathVariable("id")@NotBlank String id) {
+	public MyResponseEntity<Void> updateMng(@PathVariable("catDomain") @NotBlank String catDomain,
+			@PathVariable("id") @NotBlank String id) {
 		String resultMesg = categoryService.updateMng(catDomain, id);
 		return new MyResponseEntity<>(new MyResponseEntityDTO<>("매니저 등록 " + resultMesg));
 	}
@@ -66,17 +67,17 @@ public class CategoryController {
 	// 카테고리 이름 변경 성공
 	@PutMapping("/cat/{catDomain}/cat/{cat}")
 	@ApiOperation("updateCategoryName")
-	public MyResponseEntity<Void> updateCat(@PathVariable("catDomain")@NotBlank String catDomain,
-			@PathVariable("cat")@NotNull String cat) {
-		String resultMesg = categoryService.updateCat(catDomain,cat);
+	public MyResponseEntity<Void> updateCat(@PathVariable("catDomain") @NotBlank String catDomain,
+			@PathVariable("cat") @NotBlank String cat) {
+		String resultMesg = categoryService.updateCat(catDomain, cat);
 		return new MyResponseEntity<>(new MyResponseEntityDTO<>("카테고리 이름 변경 " + resultMesg));
 	}
 
 	// 카테고리 삭제 성공
-	// 관련 게시글 전부  DB 트리거로 백업 성공
+	// 관련 게시글 전부 DB 트리거로 백업 성공
 	@DeleteMapping("/cat/{catDomain}")
 	@ApiOperation("deleteCategory")
-	public MyResponseEntity<Void> deleteCat(@PathVariable("catDomain")@NotBlank String catDomain) {
+	public MyResponseEntity<Void> deleteCat(@PathVariable("catDomain") @NotBlank String catDomain) {
 		String resultMesg = categoryService.deleteCat(catDomain);
 		return new MyResponseEntity<>(new MyResponseEntityDTO<>("카테고리 삭제 " + resultMesg));
 	}

@@ -2,19 +2,34 @@ package com.project.dto.mb;
 
 import java.util.Date;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+
 public class MbDTO {
 
+	@NotBlank
 	private String id;
+	@NotBlank
     private String als;
+	@NotBlank
     private String pw;
+	@NotBlank
     private String nm;
+	@NotBlank
     private String email;
+	@NotBlank
     private String domain;
+	@NotBlank
     private String addr1;
+	@NotBlank
     private String addr2;
+	@NotBlank
     private String phon1;
+	@NotBlank
     private String phon2;
+	@NotBlank
     private String phon3;
+	@NotNull
     private Date crtTm;
     private String tel1;
     private String tel2;

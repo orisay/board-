@@ -55,8 +55,4 @@ public interface BoardDAO {
 
 	Integer updateBadPoint(PlusPointBoardDTO plusPointBoardDTO);
 
-
-
-
-
 }

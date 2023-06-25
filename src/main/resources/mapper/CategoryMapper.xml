@@ -47,6 +47,34 @@
 				)
 	</insert>
 
+	<insert id="insertCategoryByMb" parameterType="CategoryDTO">
+		INSERT INTO
+				TB_CATEGORY
+				(
+				CAT_DOMAIN
+				,CAT
+				,BOARD_CNT
+				,RPL_CNT
+				,MNG
+				,CRT_TM
+				,UP_TM
+				,CRT_NM
+				,UP_NM
+				)
+		VALUES
+				(
+				#{catDomain}
+				,#{cat}
+				,#{boardCnt}
+				,#{rplCnt}
+				,#{mng}
+				,SYSDATE
+				,SYSDATE
+				,#{crtNm}
+				,#{crtNm}
+				)
+	</insert>
+
 	<update id="updateMng" parameterType="CategoryDTO">
 		UPDATE
 				TB_CATEGORY
@@ -76,4 +104,20 @@
 		WHERE
 				CAT_DOMAIN = #{catDomain}
 	</delete>
+
+	<insert id="insertMngRole" parameterType="InsertUserRoleDTO">
+		INSERT INTO
+				MP_MB_ROLE
+				(
+				ROLE_NUM
+				,ID
+				,CAT_DOMAIN
+				)
+		VALUES
+				(
+				#{roleNum}
+				,#{id}
+				,#{catDomain}
+				)
+	</insert>
 </mapper>
