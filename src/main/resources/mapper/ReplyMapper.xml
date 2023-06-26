@@ -19,25 +19,25 @@
 				(
 				RPL_NUM
 				,BOARD_NUM
-				,ID
+				,CREATOR
 				,RPL_CN
 				,CRT_TM
 				,UP_TM
 				,DEPTH
-				,PW
 				,PARENT_RPL
+				,PW
 				)
 		VALUES
 				(
 				TB_REPLY_SEQ.NEXTVAL
 				,#{boardNum}
-				,#{id}
+				,#{creator}
 				,#{rplCn}
 				,SYSDATE
 				,SYSDATE
 				,#{depth}
-				,#{pw}
 				,#{parentRpl}
+				,#{pw}
 				)
 	</insert>
 
@@ -47,19 +47,19 @@
 				(
 				RPL_NUM
 				,BOARD_NUM
-				,ID
+				,CREATOR
 				,RPL_CN
 				,CRT_TM
 				,UP_TM
 				,DEPTH
-				,PW
 				,PARENT_RPL
+				,PW
 				)
 		VALUES
 				(
 				TB_REPLY_SEQ.NEXTVAL
 				,#{boardNum}
-				,#{id}
+				,#{creator}
 				,#{rplCn}
 				,SYSDATE
 				,SYSDATE
@@ -71,8 +71,8 @@
 		WHERE
 				RPL_NUM = #{parentRpl}
 				)
-				,#{pw}
 				,#{parentRpl}
+				,#{pw}
 				)
 	</insert>
 
@@ -83,7 +83,7 @@
 				RPL_CN = #{rplCn}
 				,UP_TM = SYSDATE
 		WHERE
-				ID = #{id}
+				CREATOR = #{creator}
 		AND
 				PW = #{pw}
 		AND
@@ -97,7 +97,7 @@
 				RPL_CN = #{rplCn}
 				,UP_TM = SYSDATE
 		WHERE
-				ID = #{id}
+				CREATOR = #{creator}
 		AND
 				RPL_NUM = #{rplNum}
 	</update>
@@ -117,25 +117,25 @@
 				(
 				RPL_NUM
 				,BOARD_NUM
-				,ID
+				,CREATOR
 				,RPL_CN
 				,CRT_TM
 				,UP_TM
 				,DEPTH
-				,PW
 				,PARENT_RPL
+				,PW
 				)
 		VALUES
 				(
 				#{rplNum}
 				,#{boardNum}
-				,#{id}
+				,#{creator}
 				,#{rplCn}
 				,#{crtTm}
 				,SYSDATE
 				,#{depth}
-				,#{pw}
 				,#{parentRpl}
+				,#{pw}
 				)
 	</insert>
 
@@ -144,7 +144,7 @@
 		FROM
 				TB_REPLY
 		WHERE
-				ID = #{id}
+				CREATOR = #{creator}
 		AND
 				PW = #{pw}
 		AND
@@ -167,7 +167,7 @@
 		FROM
 				TB_REPLY
 		WHERE
-				ID = #{id}
+				CREATOR = #{creator}
 		AND
 				RPL_NUM = #{rplNum}
 	</delete>

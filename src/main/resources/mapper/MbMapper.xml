@@ -168,7 +168,7 @@
 			)
 	VALUES
 			(
-			1
+			2
 			,#{id}
 			)
 	</insert>

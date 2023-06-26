@@ -14,41 +14,36 @@ public class ReplyDTO {
 	@NotBlank
     private Integer boardNum;
 	@NotBlank
-    private String id;
-	@NotBlank
+    private String creator;
     private String rplCn;
+    private Integer depth;
 	@NotNull
     @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSX")
     private Date crtTm;
     @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSX")
     private Date upTm;
-    private Integer depth;
     private String pw;
     private Integer parentRpl;
-
-
-    public ReplyDTO() {
-	}
 	public Integer getRplNum() {
 		return rplNum;
 	}
 	public Integer getBoardNum() {
 		return boardNum;
 	}
-	public String getId() {
-		return id;
+	public String getCreator() {
+		return creator;
 	}
 	public String getRplCn() {
 		return rplCn;
+	}
+	public Integer getDepth() {
+		return depth;
 	}
 	public Date getCrtTm() {
 		return crtTm;
 	}
 	public Date getUpTm() {
 		return upTm;
-	}
-	public Integer getDepth() {
-		return depth;
 	}
 	public String getPw() {
 		return pw;
@@ -62,20 +57,20 @@ public class ReplyDTO {
 	public void setBoardNum(Integer boardNum) {
 		this.boardNum = boardNum;
 	}
-	public void setId(String id) {
-		this.id = id;
+	public void setCreator(String creator) {
+		this.creator = creator;
 	}
 	public void setRplCn(String rplCn) {
 		this.rplCn = rplCn;
+	}
+	public void setDepth(Integer depth) {
+		this.depth = depth;
 	}
 	public void setCrtTm(Date crtTm) {
 		this.crtTm = crtTm;
 	}
 	public void setUpTm(Date upTm) {
 		this.upTm = upTm;
-	}
-	public void setDepth(Integer depth) {
-		this.depth = depth;
 	}
 	public void setPw(String pw) {
 		this.pw = pw;
@@ -91,16 +86,16 @@ public class ReplyDTO {
 		builder.append(rplNum);
 		builder.append(", boardNum=");
 		builder.append(boardNum);
-		builder.append(", id=");
-		builder.append(id);
+		builder.append(", creator=");
+		builder.append(creator);
 		builder.append(", rplCn=");
 		builder.append(rplCn);
+		builder.append(", depth=");
+		builder.append(depth);
 		builder.append(", crtTm=");
 		builder.append(crtTm);
 		builder.append(", upTm=");
 		builder.append(upTm);
-		builder.append(", depth=");
-		builder.append(depth);
 		builder.append(", pw=");
 		builder.append(pw);
 		builder.append(", parentRpl=");

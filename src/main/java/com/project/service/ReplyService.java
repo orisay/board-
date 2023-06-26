@@ -11,6 +11,7 @@ import com.project.config.IPConfig;
 import com.project.config.SessionConfig;
 import com.project.dao.ReplyDAO;
 import com.project.dto.reply.ReplyDTO;
+import com.project.exception.NotFoundException;
 import com.project.exception.UnknownException;
 
 @Service
@@ -69,7 +70,7 @@ public class ReplyService {
 	// 댓글 핸들링.
 	private ReplyDTO handleReplyDTOByinsertParentReply(Integer boardNum, String memberInfo, ReplyDTO replyDTO) {
 		replyDTO.setParentRpl(ConstantConfig.insertStartNum);
-		replyDTO.setId(memberInfo);
+		replyDTO.setCreator(memberInfo);
 		replyDTO.setBoardNum(boardNum);
 		replyDTO.setDepth(ConstantConfig.START_NUM);
 		return replyDTO;
@@ -79,7 +80,7 @@ public class ReplyService {
 	private ReplyDTO handleReplyDTOByinsertChildReReply(Integer boardNum, Integer rplNum, String memberInfo,
 			ReplyDTO replyDTO) {
 		replyDTO.setParentRpl(rplNum);
-		replyDTO.setId(memberInfo);
+		replyDTO.setCreator(memberInfo);
 		replyDTO.setBoardNum(boardNum);
 		return replyDTO;
 	}
@@ -154,7 +155,7 @@ public class ReplyService {
 			resultMesg = ConstantConfig.FALSE_MESG;
 		} else {
 			logger.error("access IP : {}, unknown status", user);
-			throw new UnknownException("DB is not affected. Please check.");
+			throw new NotFoundException("DB is not affected. Please check.");
 		}
 		return resultMesg;
 	}

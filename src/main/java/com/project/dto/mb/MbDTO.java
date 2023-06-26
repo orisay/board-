@@ -3,7 +3,6 @@ package com.project.dto.mb;
 import java.util.Date;
 
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 
 public class MbDTO {
 
@@ -29,7 +28,6 @@ public class MbDTO {
     private String phon2;
 	@NotBlank
     private String phon3;
-	@NotNull
     private Date crtTm;
     private String tel1;
     private String tel2;

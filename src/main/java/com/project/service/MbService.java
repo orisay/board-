@@ -20,6 +20,7 @@ import com.project.dto.mb.MbRoleDTO;
 import com.project.dto.mb.MbSessionDTO;
 import com.project.dto.mb.SearchInfoDTO;
 import com.project.dto.mb.UpdatePwDTO;
+import com.project.exception.NotFoundException;
 import com.project.exception.UnknownException;
 
 @Service
@@ -103,7 +104,7 @@ public class MbService {
 			logger.info("access ID : {}, Login", getLogin.getId());
 		} else {
 			logger.warn("access ID : {} ,DB is not affected", userIp);
-			throw new IllegalStateException("DB is not affected check Please");
+			throw new NotFoundException("DB is not affected. Please check.");
 		}
 		return setUser;
 	}
@@ -167,7 +168,7 @@ public class MbService {
 			resultMesg = ConstantConfig.FALSE_MESG;
 		} else {
 			logger.error("access IP : {}, unknown status", user);
-			throw new UnknownException("DB is not affected. Please check.");
+			throw new NotFoundException("DB is not affected. Please check.");
 		}
 		return resultMesg;
 	}
@@ -181,7 +182,7 @@ public class MbService {
 			resultMesg = ConstantConfig.FALSE_MESG_BYString;
 		} else {
 			logger.error("access IP : {}, unknown status", user);
-			throw new UnknownException("DB is not affected. Please check.");
+			throw new NotFoundException("DB is not affected. Please check.");
 		}
 		return resultMesg;
 	}
@@ -192,7 +193,7 @@ public class MbService {
 			logger.info("access ID : {}, Success", mbDTO.getId());
 		} else {
 			logger.error("access ID : {}, unknown status", gusetIP);
-			throw new UnknownException("DB is not affected. Please check.");
+			throw new NotFoundException("DB is not affected. Please check.");
 		}
 	}
 

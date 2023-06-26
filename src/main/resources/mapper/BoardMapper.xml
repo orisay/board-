@@ -105,8 +105,8 @@
 				,#{creator}
 				,#{ttl}
 				,#{cn}
-				,#{viewCnt}
-				,#{rplCnt}
+				,DEFAULT
+				,DEFAULT
 				,SYSDATE
 				,SYSDATE
 				,#{pw}
@@ -302,9 +302,9 @@
 				RPL_NUM
 				,ID
 				,RPL_CN
+				,DEPTH
 				,CRT_TM
 				,UP_TM
-				,DEPTH
 				,PARENT_RPL
 		FROM
 				(
@@ -318,10 +318,9 @@
 				,BOARD_NUM
 				,ID
 				,RPL_CN
+				,DEPTH
 				,CRT_TM
 				,UP_TM
-				,DEPTH
-				,PW
 				,PARENT_RPL
 		FROM
 				TB_REPLY
@@ -358,6 +357,7 @@
 				,RPL_CNT
 				,CRT_TM
 				,UP_TM
+				,PW
 				)
 		VALUES
 				(
@@ -370,6 +370,7 @@
 				,#{rplCnt}
 				,#{crtTm}
 				,SYSDATE
+				,#{pw}
 				)
 	</insert>
 
@@ -395,15 +396,23 @@
 		INSERT INTO
 				TB_POINT
 				(
-				BOARD_NUM
+				POINT_NUM
+				,BOARD_NUM
 				,ID
-				,GOOD_POINT
+				,GOOD_CNT
+				,BAD_CNT
+				,CRT_TM
+				,UP_TM
 				)
 		VALUES
 				(
-				#{boardNum}
+				TB_POINT_SEQ.NEXTVAL
+				,#{boardNum}
 				,#{id}
 				,#{point}
+				,DEFAULT
+				,SYSDATE
+				,SYSDATE
 				)
 	</insert>
 
@@ -411,15 +420,23 @@
 		INSERT INTO
 				TB_POINT
 				(
-				BOARD_NUM
+				POINT_NUM
+				,BOARD_NUM
 				,ID
-				,BAD_POINT
+				,GOOD_CNT
+				,BAD_CNT
+				,CRT_TM
+				,UP_TM
 				)
 		VALUES
 				(
-				#{boardNum}
+				TB_POINT_SEQ.NEXTVAL
+				,#{boardNum}
 				,#{id}
 				,#{point}
+				,DEFAULT
+				,SYSDATE
+				,SYSDATE
 				)
 	</insert>
 

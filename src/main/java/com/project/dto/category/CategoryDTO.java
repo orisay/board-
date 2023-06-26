@@ -14,11 +14,12 @@ public class CategoryDTO {
     private Integer rplCnt;
     @NotBlank
     private String mng;
-    private Date crtTm;
     @NotBlank
     private String crtNm;
-    private Date upTm;
     private String upNm;
+    private Date crtTm;
+    private Date upTm;
+
 
     public String getCatDomain() {
 		return catDomain;

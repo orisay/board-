@@ -19,9 +19,7 @@ public class BoardDTO {
     private String ttl;
 	@NotBlank
     private String cn;
-	@NotNull
     private Integer viewCnt;
-	@NotNull
     private Integer rplCnt;
     @NotBlank
     @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSX")
