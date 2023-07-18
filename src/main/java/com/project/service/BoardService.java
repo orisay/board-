@@ -40,26 +40,26 @@ public class BoardService {
 
 	// main입니다.
 	// oracle에서 autocommit 비활성화 했습니다.
-	public List<MainDTO> getMainList() {
-		List<MainDTO> mainList = boardDAO.getMainList();
+	public List<MainDTO> getFirstWindow() {
+		List<MainDTO> mainList = boardDAO.getFirstWindow();
 		return mainList;
 	}
 
 	// 게시판 화면
 	public List<BoardDTO> getBoardList(String catDomain, Integer curPage, Integer perPage) {
-		String user = getAccessRight();
-		checkBlockUser(catDomain, user);
-		BoardSearchDTO boardSearchDTO = paging(catDomain, curPage, perPage);
+		String userType = getUserType();
+		hasBlockUser(catDomain, userType);
+		BoardSearchDTO boardSearchDTO = doPaging(catDomain, curPage, perPage);
 		List<BoardDTO> boardList = boardDAO.getBoardList(boardSearchDTO);
 		return boardList;
 	}
 
 	// 게시글 조건별 검색 기능
-	public List<BoardDTO> searchBoard(String catDomain, String target, String keyword, Integer curPage,
+	public List<BoardDTO> getDetailBoardList(String catDomain, String target, String keyword, Integer curPage,
 			Integer perPage) {
-		String user = getAccessRight();
-		checkBlockUser(catDomain, user);
-		BoardSearchDTO boardSearchDTO = paging(catDomain, curPage, perPage);
+		String userType = getUserType();
+		hasBlockUser(catDomain, userType);
+		BoardSearchDTO boardSearchDTO = doPaging(catDomain, curPage, perPage);
 		if (keyword == null) {
 			keyword = "";
 		}
@@ -74,111 +74,113 @@ public class BoardService {
 		} else if (checkLevel == Target.ALL.getLevel()) {
 			searchBoard = boardDAO.searchBoardAll(boardSearchDTO);
 		} else {
-			logger.error("boardSearch access User : {} default case target : {}, keyword : {}", user, target, keyword);
+			logger.error("boardSearch access User : {} default case target : {}, keyword : {}", userType, target, keyword);
 			throw new UnknownException("BoardService boardSearch 예상치 못한 상태가 발생했습니다.");
 		}
 		return searchBoard;
 	}
 
 	// 게시글 등록
-	public String insertBoard(String catDomain, BoardDTO boardDTO) {
-		String user = getAccessRight();
-		checkBlockUser(catDomain, user);
+	public String createBoard(String catDomain, BoardDTO boardDTO) {
+		String userType = getUserType();
+		hasBlockUser(catDomain, userType);
 		boardDTO.setCatDomain(catDomain);
-		boardDTO.setCreator(user); // ip 또는 id set
+		boardDTO.setCreator(userType); // ip 또는 id set
 		boardDTO.setViewCnt(ConstantConfig.startView);
-		Integer insertCheckCount = boardDAO.insertBoard(boardDTO);
-		String resultMesg = checkResultByInteger(insertCheckCount, user);
+		Integer createCheckCount = boardDAO.createBoard(boardDTO);
+		String resultMesg = checkDataBaseUpdateStatus(createCheckCount, userType);
 		if (resultMesg.equals(ConstantConfig.SUCCESS_MESG)) {
-			boardDAO.plusCountCategoryboardCnt(boardDTO);
+			boardDAO.increaseBoardCount(boardDTO);
 		}
 		return resultMesg;
 	}
 
 	// 게시글 수정
 	public String updateBoard(String catDomain, BoardDTO boardDTO) {
-		String user = getAccessRight();
-		checkBlockUser(catDomain, user);
+		String userType = getUserType();
+		hasBlockUser(catDomain, userType);
 		boardDTO.setCatDomain(catDomain);
-		Integer insertCheckCount = boardDAO.updateBoard(boardDTO);
-		String resultMesg = checkResultByInteger(insertCheckCount, user);
+		Integer updateCheckCount = boardDAO.updateBoard(boardDTO);
+		String resultMesg = checkDataBaseUpdateStatus(updateCheckCount, userType);
 		return resultMesg;
 	}
 
 	// 게시글 삭제
 	public String deleteBoard(Integer boardNum, BoardDTO boardDTO) {
-		String user = getAccessRight();
-		checkBlockUser(boardDTO.getCatDomain(), user);
-		Integer insertCheckCount = boardDAO.deleteBoard(boardDTO);
-		String resultMesg = checkResultByInteger(insertCheckCount, user);
+		String userType = getUserType();
+		hasBlockUser(boardDTO.getCatDomain(), userType);
+		Integer deleteCheckCount = boardDAO.deleteBoard(boardDTO);
+		String resultMesg = checkDataBaseUpdateStatus(deleteCheckCount, userType);
 		if (resultMesg.equals(ConstantConfig.SUCCESS_MESG)) {
-			boardDAO.minusCountCategoryboardCnt(boardDTO);
+			boardDAO.decreaseBoardCount(boardDTO);
 		}
 		return resultMesg;
 	}
 
 	// 게시글 상세보기
-	public BoardDetailDTO boardDetail(String catDomain, Integer boardNum, Integer curPage) {
-		String user = getAccessRight();
-		checkBlockUser(catDomain, user);
+	public BoardDetailDTO showBoard(String catDomain, Integer boardNum, Integer curPage) {
+		String userType = getUserType();
+		hasBlockUser(catDomain, userType);
 		BoardDetailDTO boardDetailDTO = new BoardDetailDTO();
-		boardDetailDTO.setCreator(user);
+		boardDetailDTO.setCreator(userType);
 		boardDetailDTO.setCatDomain(catDomain);
 		boardDetailDTO.setBoardNum(boardNum);
 		// 조회수 증가
-		viewUpdate(boardDetailDTO);
-		BoardDetailDTO board = boardDAO.boardDetail(boardDetailDTO);
+		updateViewCount(boardDetailDTO);
+		BoardDetailDTO board = boardDAO.showBoard(boardDetailDTO);
 		// 리플 페이징 처리
-		String selectNum = Integer.toString(boardNum);
-		BoardSearchDTO boardSearchDTO = paging(selectNum, curPage, ConstantConfig.perPage);
-		List<ReplyDTO> replyList = boardDAO.replyList(boardSearchDTO);
+		String choiceBoardNum = Integer.toString(boardNum);
+		BoardSearchDTO boardSearchDTO = doPaging(choiceBoardNum, curPage, ConstantConfig.perPage);
+		List<ReplyDTO> replyList = boardDAO.getReplyList(boardSearchDTO);
 		board.setList(replyList);
 		return board;
 	}
 
 	// 좋아요 증가
-	public String updateGoodPoint(String catDomain, Integer boardNum) {
-		String memberId = getAccessRight();
-		checkBlockUser(catDomain, memberId);
-		PlusPointBoardDTO plusPointBoardDTO = HandlePlusPointBoardDTO(catDomain, boardNum, memberId);
-		Integer checkCompareId = insertIdCheck(plusPointBoardDTO);
-		Integer insertCheckCount = ConstantConfig.FALSE_COUNT;
-		if (checkCompareId == ConstantConfig.SUCCESS_COUNT) {
-			insertCheckCount = boardDAO.updateGoodPoint(plusPointBoardDTO);
+	public String getGoodPoint(String catDomain, Integer boardNum) {
+		String memberId = getUserType();
+		hasBlockUser(catDomain, memberId);
+		PlusPointBoardDTO plusPointBoardDTO = handlePlusPointBoardDTO(catDomain, boardNum, memberId);
+		boolean isUpdatePointAllowed = canUpdatePoint(plusPointBoardDTO); //좋아요나 나빠요 버튼 눌렀는지 확인
+		Integer getPointCount = ConstantConfig.FALSE_COUNT;
+		if (isUpdatePointAllowed) {
+			getPointCount = boardDAO.getGoodPoint(plusPointBoardDTO);
 		}
-		String resultMesg = checkResultByInteger(insertCheckCount, memberId);
+
+		String resultMesg = checkDataBaseUpdateStatus(getPointCount, memberId);
 		return resultMesg;
 	}
 
 	// 나빠요 증가
-	public String updateBadPoint(String catDomain, Integer boardNum) {
-		String memberId = getAccessRight();
-		checkBlockUser(catDomain, memberId);
-		PlusPointBoardDTO plusPointBoardDTO = HandlePlusPointBoardDTO(catDomain, boardNum, memberId);
-		Integer checkCompareId = insertIdCheck(plusPointBoardDTO);
-		Integer insertCheckCount = ConstantConfig.FALSE_COUNT;
-		if (checkCompareId == ConstantConfig.SUCCESS_COUNT) {
-			insertCheckCount = boardDAO.updateBadPoint(plusPointBoardDTO);
+	public String getBadPoint(String catDomain, Integer boardNum) {
+		String memberId = getUserType();
+		hasBlockUser(catDomain, memberId);
+		PlusPointBoardDTO plusPointBoardDTO = handlePlusPointBoardDTO(catDomain, boardNum, memberId);
+		boolean isUpdatePointAllowed = canUpdatePoint(plusPointBoardDTO);
+		Integer getPointCount = ConstantConfig.FALSE_COUNT;
+
+		if (isUpdatePointAllowed) {
+			getPointCount = boardDAO.getBadPoint(plusPointBoardDTO);
 		}
-		String resultMesg = checkResultByInteger(insertCheckCount, memberId);
+
+		String resultMesg = checkDataBaseUpdateStatus(getPointCount, memberId);
 		return resultMesg;
 	}
 
 	// 게시글 조회 수 증가 (시간 제한 걸어서 초당 제한)
-	private void viewUpdate(BoardDetailDTO boardDetailDTO) {
+	private void updateViewCount(BoardDetailDTO boardDetailDTO) {
 		LocalDateTime lastClickTime = SessionConfig.getLastClick();
 		Boolean check = Duration.between(lastClickTime, LocalDateTime.now()).getSeconds() >= 1;
 		if (lastClickTime == null || check) {
 			boardDetailDTO.setViewCnt(boardDetailDTO.getViewCnt() + ConstantConfig.plusView);
-			boardDAO.updateView(boardDetailDTO);
+			boardDAO.updateViewCount(boardDetailDTO);
 		} else {
 			logger.info("Too many clicked id" + SessionConfig.MbSessionDTO().getId());
 		}
-
 	}
 
 	// 게시글, 댓글 페이징 처리
-	private BoardSearchDTO paging(String catDomain, Integer curPage, Integer perPage) {
+	private BoardSearchDTO doPaging(String catDomain, Integer curPage, Integer perPage) {
 		if (curPage == null) {
 			curPage = ConstantConfig.START_NUM;
 		}
@@ -213,7 +215,7 @@ public class BoardService {
 	}
 
 	// HandlePlusPointBoardDTO 핸들링
-	private PlusPointBoardDTO HandlePlusPointBoardDTO(String catDomain, Integer boardNum, String memberId) {
+	private PlusPointBoardDTO handlePlusPointBoardDTO(String catDomain, Integer boardNum, String memberId) {
 		PlusPointBoardDTO plusPointBoardDTO = new PlusPointBoardDTO();
 		plusPointBoardDTO.setPoint(ConstantConfig.START_NUM);
 		plusPointBoardDTO.setBoardNum(boardNum);
@@ -223,17 +225,18 @@ public class BoardService {
 	}
 
 	// 갤러리 생성 좋아요나 나빠요 딱 한번 클릭 가능
-	private Integer insertIdCheck(PlusPointBoardDTO plusPointBoardDTO) {
-		Integer insertCheckCount =boardDAO.insertIdCheck(plusPointBoardDTO);
-		if (insertCheckCount == ConstantConfig.SUCCESS_COUNT) {
+	private boolean canUpdatePoint(PlusPointBoardDTO plusPointBoardDTO) {
+		boolean idExists = boardDAO.canGetPoint(plusPointBoardDTO);
+		if (!idExists) {
 			logger.warn("You have already clicked.");
 			throw new IllegalArgumentException("이미 클릭 하셨습니다.");
 		}
-		return insertCheckCount;
+		return idExists;
 	}
 
+
 	// guest인지 회원인지 확인
-	private String getAccessRight() {
+	private String getUserType() {
 		String guestId = IPConfig.getIp(SessionConfig.getSession());
 		String memberId = SessionConfig.MbSessionDTO().getId();
 		String mesg = null;
@@ -251,14 +254,14 @@ public class BoardService {
 	}
 
 	// 차단 유저 확인
-	private boolean checkBlockUser(String catDomain, String user) {
+	private boolean hasBlockUser(String catDomain, String user) {
 		InsertUserRoleDTO insertUserRoleDTO = new InsertUserRoleDTO();
 		insertUserRoleDTO.setCatDomain(catDomain);
 		insertUserRoleDTO.setId(user);
-		Integer insertCheckCount = boardDAO.checkBlockUser(insertUserRoleDTO);
-		if (insertCheckCount == UserRole.BLOCK.getLevel()) {
+		Integer userRoleNum = boardDAO.checkUserBlockStatus(insertUserRoleDTO);
+		if (userRoleNum == UserRole.BLOCK.getLevel()) {
 			return false;
-		} else if (insertCheckCount > UserRole.BLOCK.getLevel()) {
+		} else if (userRoleNum > UserRole.BLOCK.getLevel()) {
 			return true;
 		} else {
 			logger.warn("insertBoard access User : {} unknown status", user);
@@ -267,7 +270,7 @@ public class BoardService {
 	}
 
 	//DB 영향 확인
-	private String checkResultByInteger(Integer insertCheckCount, String user) {
+	private String checkDataBaseUpdateStatus(Integer insertCheckCount, String user) {
 		String resultMesg = null;
 		if (insertCheckCount == ConstantConfig.SUCCESS_COUNT) {
 			resultMesg = ConstantConfig.SUCCESS_MESG;

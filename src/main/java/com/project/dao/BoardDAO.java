@@ -15,17 +15,17 @@ import com.project.dto.MainDTO;
 @Mapper
 public interface BoardDAO {
 
-	List<MainDTO> getMainList();
+	List<MainDTO> getFirstWindow();
 
 	Integer totalCountByCat(String catDomain);
 
 	Integer totalCountByBoard(Integer boardNum);
 
-	Integer checkBlockUser(InsertUserRoleDTO insertUserRoleDTO);
+	Integer checkUserBlockStatus(InsertUserRoleDTO insertUserRoleDTO);
 
 	List<BoardDTO> getBoardList(BoardSearchDTO boardSearchDTO);
 
-	Integer insertBoard(BoardDTO boardDTO);
+	Integer createBoard(BoardDTO boardDTO);
 
 	Integer updateBoard(BoardDTO boardDTO);
 
@@ -37,22 +37,22 @@ public interface BoardDAO {
 
 	List<BoardDTO> searchBoardAll(BoardSearchDTO boardSearchDTO);
 
-	void updateView(BoardDetailDTO boardDetailDTO);
+	void updateViewCount(BoardDetailDTO boardDetailDTO);
 
-	BoardDetailDTO boardDetail(BoardDetailDTO boardDetailDTO);
+	BoardDetailDTO showBoard(BoardDetailDTO boardDetailDTO);
 
-	List<ReplyDTO> replyList(BoardSearchDTO boardSearchDTO);
+	List<ReplyDTO> getReplyList(BoardSearchDTO boardSearchDTO);
 
-	void backUpBoard(BoardDTO boardDTO);
+	void backupBoard(BoardDTO boardDTO);
 
-	void plusCountCategoryboardCnt(BoardDTO boardDTO);
+	void increaseBoardCount(BoardDTO boardDTO);
 
-	void minusCountCategoryboardCnt(BoardDTO boardDTO);
+	void decreaseBoardCount(BoardDTO boardDTO);
 
-	Integer insertIdCheck(PlusPointBoardDTO plusPointBoardDTO);
+	boolean canGetPoint(PlusPointBoardDTO plusPointBoardDTO);
 
-	Integer updateGoodPoint(PlusPointBoardDTO plusPointBoardDTO);
+	Integer getGoodPoint(PlusPointBoardDTO plusPointBoardDTO);
 
-	Integer updateBadPoint(PlusPointBoardDTO plusPointBoardDTO);
+	Integer getBadPoint(PlusPointBoardDTO plusPointBoardDTO);
 
 }

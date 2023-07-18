@@ -9,11 +9,11 @@ import com.project.dto.mb.InsertUserRoleDTO;
 @Mapper
 public interface CategoryDAO {
 
-	List<CategoryDTO> controllerCategory();
+	List<CategoryDTO> viewMainCategory();
 
-	Integer insertCategory(CategoryDTO categoryDTO);
+	Integer createCategory(CategoryDTO categoryDTO);
 
-	Integer insertCategoryByMb(CategoryDTO categoryDTO);
+	Integer createCategoryByVote(CategoryDTO categoryDTO);
 
 	Integer updateMng(CategoryDTO categoryDTO);
 

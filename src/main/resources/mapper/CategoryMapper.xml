@@ -4,7 +4,7 @@
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.project.dao.CategoryDAO">
 
-	<select id="controllerCategory" resultType="CategoryDTO">
+	<select id="viewMainCategory" resultType="CategoryDTO">
 		SELECT
 				CAT_DOMAIN
 				,CAT
@@ -19,7 +19,7 @@
 				TB_CATEGORY
 	</select>
 
-	<insert id="insertCategory" parameterType="CategoryDTO">
+	<insert id="createCategory" parameterType="CategoryDTO">
 		INSERT INTO
 				TB_CATEGORY
 				(
@@ -47,7 +47,7 @@
 				)
 	</insert>
 
-	<insert id="insertCategoryByMb" parameterType="CategoryDTO">
+	<insert id="createCategoryByVote" parameterType="CategoryDTO">
 		INSERT INTO
 				TB_CATEGORY
 				(

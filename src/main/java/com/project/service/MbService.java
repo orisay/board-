@@ -33,33 +33,33 @@ public class MbService {
 	private MbDAO mbDAO;
 
 	// 회원 가입
-	public String insertMb(MbDTO mbDTO) {
+	public String createMember(MbDTO mbDTO) {
 		String gusetIP = IPConfig.getIp(SessionConfig.getSession());
 		String inputId = mbDTO.getId();
 		String checkId = inputId.trim();
 		String reusltMesg = null;
 
-		Integer insertCheckCount = compareNullCheckId(mbDTO, checkId);
-		String checkResult = checkResultByInteger(insertCheckCount, gusetIP);
+		Integer createCheckCount = compareNullCheckId(mbDTO, checkId);
+		String checkResult = checkResultByInteger(createCheckCount, gusetIP);
 		reusltMesg = checkId + "회원가입 " + checkResult;
-		insertBasicRole(checkResult, checkId);
+		grantBasicRole(checkResult, checkId);
 		return reusltMesg;
 	}
 
 	// 아이디 NULL 대소문자 조합 방지
 	private Integer compareNullCheckId(MbDTO mbDTO, String checkId) {
-		Integer insertCheckCount = null;
+		Integer createCheckCount = null;
 		if (!ArrayUtils.contains(ConstantConfig.nullList, checkId)) {
-			insertCheckCount = mbDAO.insertMb(mbDTO);
+			createCheckCount = mbDAO.createMember(mbDTO);
 		} else {
 			logger.error("access IP : {} unknown status, retry checkId", checkId);
 			throw new UnknownException("비정상적인 값 발생, retry checkId");
 		}
-		return insertCheckCount;
+		return createCheckCount;
 	}
 
 	// BASIC 권한 부여
-	private void insertBasicRole(String checkResult, String checkId) {
+	private void grantBasicRole(String checkResult, String checkId) {
 		if (checkResult.equals(ConstantConfig.SUCCESS_MESG)) {
 			mbDAO.insertRole(checkId);
 		} else if (checkResult.equals(ConstantConfig.FALSE_MESG)) {
@@ -72,7 +72,7 @@ public class MbService {
 	}
 
 	// 아이디 중복 검사
-	public String compareId(String id) {
+	public String checkIdDuplication(String id) {
 		String gusetIP = IPConfig.getIp(SessionConfig.getSession());
 		String insertCheckMesg = mbDAO.compareId(id);
 		String resultCheck = checkResultByString(gusetIP, insertCheckMesg);
@@ -126,8 +126,8 @@ public class MbService {
 	// 마이 페이지 수정
 	public String updateMyPage(MbDTO mbDTO) {
 		String memberId = SessionConfig.MbSessionDTO().getId();
-		Integer insertCheckCount = mbDAO.updateMyPage(mbDTO);
-		String checkResult = checkResultByInteger(insertCheckCount, memberId);
+		Integer updateCheckCount = mbDAO.updateMyPage(mbDTO);
+		String checkResult = checkResultByInteger(updateCheckCount, memberId);
 		String reusltMesg = "마이페이지 수정" + checkResult;
 		return reusltMesg;
 	}
@@ -135,8 +135,8 @@ public class MbService {
 	// 비밀번호 변경
 	public String updatePw(UpdatePwDTO updatePwDTO) {
 		String memberId = SessionConfig.MbSessionDTO().getId();
-		Integer insertCheckCount = mbDAO.updatePw(updatePwDTO);
-		String checkResult = checkResultByInteger(insertCheckCount, memberId);
+		Integer updateCheckCount = mbDAO.updatePw(updatePwDTO);
+		String checkResult = checkResultByInteger(updateCheckCount, memberId);
 		String reusltMesg = "비밀번호 변경" + checkResult;
 		return reusltMesg;
 	}
@@ -144,18 +144,18 @@ public class MbService {
 	// 아이디 찾기
 	public String searchId(SearchInfoDTO searchInfoDTO) {
 		String gusetIP = IPConfig.getIp(SessionConfig.getSession());
-		String insertCheckMesg = mbDAO.searchId(searchInfoDTO);
-		String resultCheck = checkResultByString(gusetIP, insertCheckMesg);
-		String sueccesMesg = "ID : " + insertCheckMesg + ", 아이디  찾기 "+ resultCheck;
-		return sueccesMesg;
+		String searchId = mbDAO.searchId(searchInfoDTO);
+		String resultCheck = checkResultByString(gusetIP, searchId);
+		String resultMesg = "ID : " + searchId + ", 아이디  찾기 "+ resultCheck;
+		return resultMesg;
 	}
 
 	// 비밀번호 찾기
 	public String searchPw(SearchInfoDTO searchInfoDTO) {
 		String gusetIP = IPConfig.getIp(SessionConfig.getSession());
-		String insertCheckMesg = mbDAO.searchPw(searchInfoDTO);
-		String resultCheck = checkResultByString(gusetIP, insertCheckMesg);
-		String sueccesMesg = "PassWord : " + insertCheckMesg + ", 비밀번호  찾기 "+ resultCheck;
+		String searchPw = mbDAO.searchPw(searchInfoDTO);
+		String resultCheck = checkResultByString(gusetIP, searchPw);
+		String sueccesMesg = "PassWord : " + searchPw + ", 비밀번호  찾기 "+ resultCheck;
 		return sueccesMesg;
 	}
 

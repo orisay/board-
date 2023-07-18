@@ -12,7 +12,7 @@ public interface ManagerDAO {
 
 	Integer selectMng(CheckRightCatDTO checkRightCatDTO);
 
-	Integer insertSubManager(InsertUserRoleDTO insertUserRoleDTO);
+	Integer createSubManager(InsertUserRoleDTO insertUserRoleDTO);
 
 	Integer deleteSubManager(InsertUserRoleDTO insertUserRoleDTO);
 

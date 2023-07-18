@@ -11,7 +11,7 @@ import com.project.dto.mb.UpdatePwDTO;
 @Mapper
 public interface MbDAO {
 
-	Integer insertMb(MbDTO mbDTO);
+	Integer createMember(MbDTO mbDTO);
 
 	void insertRole(String checkId);
 

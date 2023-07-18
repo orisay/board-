@@ -30,57 +30,56 @@ public class CategoryService {
 	private static final Logger logger = LogManager.getLogger(CategoryService.class);
 
 	// 카테고리 메인화면
-	public List<CategoryDTO> controllerCategory() {
+	public List<CategoryDTO> viewMainCategory() {
 		String guestIP = IPConfig.getIp(SessionConfig.getSession());
 		String checkId = SessionConfig.MbSessionDTO().getId();
 		String checkRole = SessionConfig.MbSessionDTO().getRole();
 		String checkAdmin = UserRole.ADMIN.name();
-		List<CategoryDTO> controllerCategory = Collections.emptyList();
-
+		List<CategoryDTO> viewMainCategory = Collections.emptyList();
 		if (checkId == null || checkRole == null) {
 			logger.warn("controllerCategory  access IP : {} have not right user", guestIP);
 			throw new IllegalArgumentException("CategoryService controllerCategory have not right user");
 		}
 
 		if (checkAdmin.equals(checkRole)) {
-			controllerCategory = categoryDAO.controllerCategory();
+			viewMainCategory = categoryDAO.viewMainCategory();
 		} else {
 			logger.error("controllerCategory  access ID : {} unknown status", checkId);
 			throw new UnknownException("CategoryService controllerCategory에서 에상치 못한 상태가 발생했습니다..");
 		}
-		return controllerCategory;
+		return viewMainCategory;
 	}
 
 	// 카테고리 추가
-	public String insertCategory(CategoryDTO categoryDTO) {
+	public String createCategory(CategoryDTO categoryDTO) {
 		String checkId = SessionConfig.MbSessionDTO().getId();
-		boolean rightCheck = hasAccessRight(checkId);
+		boolean canCreateCategory = hasAccessRight(checkId);
 		String resultMesg = ConstantConfig.FALSE_MESG;
-		Integer insertCheckCount;
-		if (rightCheck) {
-			categoryDTO = handleInsertCategory(categoryDTO, checkId);
-			insertCheckCount = categoryDAO.insertCategory(categoryDTO);
-			resultMesg = checkResult(insertCheckCount, checkId);
+		Integer createCheckCount;
+		if (canCreateCategory) {
+			categoryDTO = handleCreateCategoryWithManager(categoryDTO, checkId);
+			createCheckCount = categoryDAO.createCategory(categoryDTO);
+			resultMesg = checkResult(createCheckCount, checkId);
 			resultMesg = categoryDTO.getCat() + " 카테고리가 추가 " + resultMesg;
 		}
 		return resultMesg;
 	}
 
 	// 투표로인한 카테고리 추가
-	public String insertCategoryByMb(BoardDTO boardDTO, Integer creationPoint) {
+	public String createCategoryByVote(BoardDTO boardDTO, Integer creationPoint) {
 		String checkId = SessionConfig.MbSessionDTO().getId();
-		if (creationPoint >= ConstantConfig.CREAT_CAT_POINT) {
+		if (ConstantConfig.CREAT_CAT_POINT <=creationPoint) {
 			logger.warn("access User : {} have not rihgt.", checkId);
 			throw new IllegalArgumentException("You did not enough points.");
 		}
-		boolean rightCheck = getAccessRightByCreatCat(checkId);
+		boolean canCreateCategory = hasAccessRightByCreatCat(checkId);
 		String resultMesg = ConstantConfig.FALSE_MESG;
-		Integer insertCheckCount;
-		if (rightCheck) {
-			CategoryDTO categoryDTO = handleInsertCategoryByMb(boardDTO);
-			insertCheckCount = categoryDAO.insertCategoryByMb(categoryDTO);
+		Integer createCheckCount;
+		if (canCreateCategory) {
+			CategoryDTO categoryDTO = handleCreateCategoryWithMember(boardDTO);
+			createCheckCount = categoryDAO.createCategoryByVote(categoryDTO);
 			handleInsertRole(boardDTO, checkId);
-			resultMesg = checkResult(insertCheckCount, checkId);
+			resultMesg = checkResult(createCheckCount, checkId);
 		}
 		return resultMesg;
 	}
@@ -88,13 +87,13 @@ public class CategoryService {
 	// 카테고리 관리자 수정
 	public String updateMng(String catDomain, String id) {
 		String checkId = SessionConfig.MbSessionDTO().getId();
-		boolean rightCheck = hasAccessRight(checkId);
+		boolean canUpdaeManager = hasAccessRight(checkId);
 		String resultMesg = ConstantConfig.FALSE_MESG;
-		Integer insertCheckCount;
-		if (rightCheck) {
+		Integer updateCheckCount;
+		if (canUpdaeManager) {
 			CategoryDTO categoryDTO = handleUpdateMng(catDomain, id, checkId);
-			insertCheckCount = categoryDAO.updateMng(categoryDTO);
-			resultMesg = id + "매니저로 변경 " + checkResult(insertCheckCount, checkId);
+			updateCheckCount = categoryDAO.updateMng(categoryDTO);
+			resultMesg = id + "매니저로 변경 " + checkResult(updateCheckCount, checkId);
 		}
 		return resultMesg;
 	}
@@ -102,13 +101,13 @@ public class CategoryService {
 	// 카테고리 이름 변경
 	public String updateCat(String catDomain, String cat) {
 		String checkId = SessionConfig.MbSessionDTO().getId();
-		boolean rightCheck = hasAccessRight(checkId);
+		boolean canUpdateCategory = hasAccessRight(checkId);
 		String resultMesg = ConstantConfig.FALSE_MESG;
-		Integer insertCheckCount;
-		if (rightCheck) {
+		Integer updateCheckCount;
+		if (canUpdateCategory) {
 			CategoryDTO categoryDTO = handleUpdateCat(catDomain, cat, checkId);
-			insertCheckCount = categoryDAO.updateCat(categoryDTO);
-			resultMesg = cat + "으로 변경 " + checkResult(insertCheckCount, checkId);
+			updateCheckCount = categoryDAO.updateCat(categoryDTO);
+			resultMesg = cat + "으로 변경 " + checkResult(updateCheckCount, checkId);
 		}
 		return resultMesg;
 	}
@@ -117,10 +116,10 @@ public class CategoryService {
 	// 카테고리 로그 테이블 따로 존재 트리거 작동
 	public String deleteCat(String catDomain) {
 		String checkId = SessionConfig.MbSessionDTO().getId();
-		boolean rightCheck = hasAccessRight(checkId);
+		boolean canDeleteCategory = hasAccessRight(checkId);
 		String resultMesg = ConstantConfig.FALSE_MESG;
 		Integer insertCheckCount;
-		if (rightCheck) {
+		if (canDeleteCategory) {
 			insertCheckCount = categoryDAO.deleteCat(catDomain);
 			resultMesg = checkResult(insertCheckCount, checkId);
 			resultMesg = catDomain + " 삭제 " + resultMesg;
@@ -128,8 +127,8 @@ public class CategoryService {
 		return resultMesg;
 	}
 
-	// handleInsertCategory 핸들링
-	private CategoryDTO handleInsertCategory(CategoryDTO categoryDTO, String checkId) {
+	// handleCreateCategory 핸들링
+	private CategoryDTO handleCreateCategoryWithManager(CategoryDTO categoryDTO, String checkId) {
 		categoryDTO.setCrtNm(checkId);
 		categoryDTO.setMng(checkId);
 		categoryDTO.setBoardCnt(ConstantConfig.insertStartNum);
@@ -138,7 +137,7 @@ public class CategoryService {
 	}
 
 	// handleInsertCategoryByMb 핸들링.
-	private CategoryDTO handleInsertCategoryByMb(BoardDTO boardDTO) {
+	private CategoryDTO handleCreateCategoryWithMember(BoardDTO boardDTO) {
 		CategoryDTO categoryDTO = new CategoryDTO();
 		categoryDTO.setMng(boardDTO.getCreator());
 		categoryDTO.setCatDomain(boardDTO.getTtl());
@@ -200,7 +199,7 @@ public class CategoryService {
 	}
 
 	// 생성 권한 확인.
-	private boolean getAccessRightByCreatCat(String checkId) {
+	private boolean hasAccessRightByCreatCat(String checkId) {
 		Integer checkRole = SessionConfig.MbSessionDTO().getRoleList().get(0).getRoleNum();
 		Integer checkRoleLevel = UserRole.BASIC.getLevel();
 		boolean resultMesg = false;

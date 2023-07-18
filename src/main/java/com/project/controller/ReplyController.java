@@ -28,18 +28,18 @@ public class ReplyController {
 	// 댓글 작성 성공
 	@PostMapping("/{boardNum}")
 	@ApiOperation("createarentReply")
-	public MyResponseEntity<Void> insertParentReply(@PathVariable("boardNum") @NotNull Integer boardNum,
+	public MyResponseEntity<Void> createParentReply(@PathVariable("boardNum") @NotNull Integer boardNum,
 			@RequestBody @Valid ReplyDTO replyDTO) {
-		String resultMesg = replyService.insertParentReply(boardNum, replyDTO);
+		String resultMesg = replyService.createParentReply(boardNum, replyDTO);
 		return new MyResponseEntity<>(new MyResponseEntityDTO<>("댓글 작성" + resultMesg));
 	}
 
 	// 대댓글 작성
 	@PostMapping("/{boardNum}/{rplNum}")
 	@ApiOperation("createChildReReply")
-	public MyResponseEntity<Void> insertChildReReply(@PathVariable("boardNum") @NotNull Integer boardNum,
+	public MyResponseEntity<Void> createChildReReply(@PathVariable("boardNum") @NotNull Integer boardNum,
 			@PathVariable("rplNum") @NotNull Integer rplNum, @RequestBody @Valid ReplyDTO replyDTO) {
-		String resultMesg = replyService.insertChildReReply(boardNum, rplNum, replyDTO);
+		String resultMesg = replyService.createChildReReply(boardNum, rplNum, replyDTO);
 		return new MyResponseEntity<>(new MyResponseEntityDTO<>("대댓글 작성" + resultMesg));
 	}
 

@@ -4,7 +4,7 @@
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.project.dao.BoardDAO">
 
-	<select id="getMainList" resultType="MainDTO">
+	<select id="getFirstWindow" resultType="MainDTO">
 		SELECT
 				CAT_DOMAIN
 				,TTL
@@ -24,7 +24,7 @@
 				IDX <![CDATA[<=]]> 10
 	</select>
 
-	<select id="checkBlockUser" parameterType="InsertUserRoleDTO" resultType="Integer">
+	<select id="checkUserBlockStatus" parameterType="InsertUserRoleDTO" resultType="Integer">
 		SELECT
 				ROLE_NUM
 		FROM
@@ -83,7 +83,7 @@
 				#{endIdx}
 	</select>
 
-	<insert id="insertBoard" parameterType="BoardDTO">
+	<insert id="createBoard" parameterType="BoardDTO">
 		INSERT INTO
 				TB_BOARD
 				(
@@ -271,7 +271,7 @@
 				#{endIdx}
 	</select>
 
-	<update id="updateView" parameterType="BoardDetailDTO">
+	<update id="updateViewCount" parameterType="BoardDetailDTO">
 		UPDATE
 				TB_BOARD
 		SET
@@ -280,7 +280,7 @@
 				BOARD_NUM = #{boardNum}
 	</update>
 
-	<select id="boardDetail" parameterType="BoardDetailDTO" resultType="BoardDetailDTO">
+	<select id="showBoard" parameterType="BoardDetailDTO" resultType="BoardDetailDTO">
 		SELECT
 				BOARD_NUM
 				,CAT_DOMAIN
@@ -297,7 +297,7 @@
 				BOARD_NUM = #{boardNum}
 	</select>
 
-	<select id="replyList" parameterType="BoardSearchDTO" resultType="ReplyDTO">
+	<select id="getReplyList" parameterType="BoardSearchDTO" resultType="ReplyDTO">
 		SELECT
 				RPL_NUM
 				,ID
@@ -344,7 +344,7 @@
 				#{endIdx}
 	</select>
 
-	<insert id="backUpBoard" parameterType="BoardDTO">
+	<insert id="backupBoard" parameterType="BoardDTO">
 		INSERT INTO
 				TB_DEL_BOARD
 				(
@@ -374,7 +374,7 @@
 				)
 	</insert>
 
-	<update id="plusCountCategoryboardCnt" parameterType="BoardDTO">
+	<update id="increaseBoardCount" parameterType="BoardDTO">
 		UPDATE
 				TB_CATEGORY
 		SET
@@ -383,7 +383,7 @@
 				CAT_DOMAIN = #{catDomain}
 	</update>
 
-	<update id="minusCountCategoryboardCnt" parameterType="BoardDTO">
+	<update id="decreaseBoardCount" parameterType="BoardDTO">
 		UPDATE
 				TB_CATEGORY
 		SET
@@ -392,7 +392,7 @@
 				CAT_DOMAIN = #{catDomain}
 	</update>
 
-	<insert id="updateGoodPoint" parameterType="PlusPointBoardDTO">
+	<insert id="getGoodPoint" parameterType="PlusPointBoardDTO">
 		INSERT INTO
 				TB_POINT
 				(
@@ -416,7 +416,7 @@
 				)
 	</insert>
 
-	<insert id="updateBadPoint" parameterType="PlusPointBoardDTO">
+	<insert id="getBadPoint" parameterType="PlusPointBoardDTO">
 		INSERT INTO
 				TB_POINT
 				(
@@ -440,7 +440,7 @@
 				)
 	</insert>
 
-	<select id="insertIdCheck" parameterType="PlusPointBoardDTO" resultType="Integer">
+	<select id="canGetPoint" parameterType="PlusPointBoardDTO" resultType="boolean">
 		SELECT
 				COUNT(*)
 		FROM

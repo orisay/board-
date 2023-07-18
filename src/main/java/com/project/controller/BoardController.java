@@ -37,14 +37,14 @@ public class BoardController {
 	// 메인화면 성공
 	@GetMapping("/")
 	@ApiOperation("boardMain")
-	public MyResponseEntity<List<MainDTO>> main() {
-		List<MainDTO> mainList = boardService.getMainList();
-		return new MyResponseEntity<>(new MyResponseEntityDTO<>("main 화면", mainList));
+	public MyResponseEntity<List<MainDTO>> getFirstWindow() {
+		List<MainDTO> viewMainList = boardService.getFirstWindow();
+		return new MyResponseEntity<>(new MyResponseEntityDTO<>("main 화면", viewMainList));
 	}
 
 	// 게시판 성공
 	@GetMapping("/{catDomain}")
-	@ApiOperation("readBoard")
+	@ApiOperation("getBoard")
 	public MyResponseEntity<List<BoardDTO>> getBoardList(@PathVariable("catDomain") @NotBlank String catDomain,
 			@RequestParam(name = "curPage", required = false, defaultValue = "1") Integer curPage,
 			@RequestParam(name = "perPage", required = false) Integer perPage) {
@@ -55,9 +55,9 @@ public class BoardController {
 	// 게시글 작성 성공
 	@PostMapping("/{catDomain}")
 	@ApiOperation("createBoard")
-	public MyResponseEntity<Void> insertBoard(@PathVariable("catDomain") @NotBlank String catDomain,
+	public MyResponseEntity<Void> createBoard(@PathVariable("catDomain") @NotBlank String catDomain,
 			@RequestBody @Valid BoardDTO boardDTO) {
-		String resultMesg = boardService.insertBoard(catDomain, boardDTO);
+		String resultMesg = boardService.createBoard(catDomain, boardDTO);
 		return new MyResponseEntity<>(new MyResponseEntityDTO<>("게시글 작성 여부" + resultMesg));
 	}
 
@@ -81,13 +81,13 @@ public class BoardController {
 
 	// 게시글 검색 성공
 	@GetMapping("/{catDomain}/search/{target}")
-	@ApiOperation("searchBoard")
-	public MyResponseEntity<List<BoardDTO>> searchBoard(@PathVariable("catDomain") @NotBlank String catDomain,
+	@ApiOperation("getDetailBoard")
+	public MyResponseEntity<List<BoardDTO>> getDetailBoardList(@PathVariable("catDomain") @NotBlank String catDomain,
 			@PathVariable("target") @NotBlank String target,
 			@RequestParam(name = "keyword", required = false) String keyword,
 			@RequestParam(name = "curPage", required = false, defaultValue = "1") Integer curPage,
 			@RequestParam(name = "perPage", required = false) @Max(value = 50, message = "15,30,50 중 선택해주세요.") Integer perPage) {
-		List<BoardDTO> boardSearch = boardService.searchBoard(catDomain, target, keyword, curPage, perPage);
+		List<BoardDTO> boardSearch = boardService.getDetailBoardList(catDomain, target, keyword, curPage, perPage);
 		return new MyResponseEntity<>(new MyResponseEntityDTO<>("게시글 검색 ", boardSearch));
 	}
 
@@ -95,28 +95,28 @@ public class BoardController {
 	// 댓글 계층 구조 페이징 성공
 	@GetMapping("/detail/{catDomain}/{boardNum}")
 	@ApiOperation("detailBoard")
-	public MyResponseEntity<BoardDetailDTO> boardDetail(@PathVariable("catDomain") @NotBlank String catDomain,
+	public MyResponseEntity<BoardDetailDTO> showBoard(@PathVariable("catDomain") @NotBlank String catDomain,
 			@PathVariable("boardNum") @NotNull Integer boardNum,
 			@RequestParam(name = "curPage", required = false) Integer curPage) {
-		BoardDetailDTO boardDetail = boardService.boardDetail(catDomain, boardNum, curPage);
-		return new MyResponseEntity<>(new MyResponseEntityDTO<>("게시글 상세 내용", boardDetail));
+		BoardDetailDTO showBoard = boardService.showBoard(catDomain, boardNum, curPage);
+		return new MyResponseEntity<>(new MyResponseEntityDTO<>("게시글 상세 내용", showBoard));
 	}
 
 	// 좋아요 버튼
 	@PostMapping("/good-point/{catDomain}/{boardNum}")
 	@ApiOperation("GoodPoint")
-	public MyResponseEntity<Void> updateGoodPoint(@PathVariable("catDomain") @NotBlank String catDomain,
+	public MyResponseEntity<Void> getGoodPoint(@PathVariable("catDomain") @NotBlank String catDomain,
 			@PathVariable("boardNum")  @NotNull Integer boardNum) {
-		String resultMesg = boardService.updateGoodPoint(catDomain, boardNum);
+		String resultMesg = boardService.getGoodPoint(catDomain, boardNum);
 		return new MyResponseEntity<>(new MyResponseEntityDTO<>("굿 포인트 추가" + resultMesg));
 	}
 
 	// 나빠요 버튼
 	@PostMapping("/bad-point/{catDomain}/{boardNum}")
 	@ApiOperation("BadPoint")
-	public MyResponseEntity<Void> updateBadPoint(@PathVariable("catDomain")@NotBlank String catDomain,
+	public MyResponseEntity<Void> getBadPoint(@PathVariable("catDomain")@NotBlank String catDomain,
 			@PathVariable("boardNum") @NotNull Integer boardNum) {
-		String resultMesg = boardService.updateBadPoint(catDomain, boardNum);
+		String resultMesg = boardService.getBadPoint(catDomain, boardNum);
 		return new MyResponseEntity<>(new MyResponseEntityDTO<>("워스트 포인트 추가" + resultMesg));
 	}
 }

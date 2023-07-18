@@ -15,7 +15,7 @@
 				ID = #{id}
 	</select>
 
-	<insert id="insertSubManager" parameterType="InsertUserRoleDTO">
+	<insert id="createSubManager" parameterType="InsertUserRoleDTO">
 		INSERT INTO
 				MP_MB_ROLE
 				(

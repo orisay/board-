@@ -13,7 +13,7 @@
 				BOARD_NUM = #{boardNum}
 	</update>
 
-	<insert id="insertParentReply" parameterType="ReplyDTO">
+	<insert id="createParentReply" parameterType="ReplyDTO">
 		INSERT INTO
 				TB_REPLY
 				(
@@ -41,7 +41,7 @@
 				)
 	</insert>
 
-		<insert id="insertChildReReply" parameterType="ReplyDTO">
+		<insert id="createChildReReply" parameterType="ReplyDTO">
 		INSERT INTO
 				TB_REPLY
 				(
@@ -111,7 +111,7 @@
 				BOARD_NUM = #{boardNum}
 	</update>
 
-	<insert id="backUpReply" parameterType="ReplyDTO">
+	<insert id="backupReply" parameterType="ReplyDTO">
 		INSERT INTO
 				TB_DEL_REPLY
 				(

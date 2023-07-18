@@ -1,3 +1,4 @@
+
 package com.project.controller;
 
 import java.util.List;
@@ -29,19 +30,19 @@ public class ManagerController {
 
 	// subMng 권한 부여 성공
 	@PostMapping("/subMng/{catDomain}/{id}")
-	@ApiOperation("insertSubManager")
-	public MyResponseEntity<String> insertSubManager(@PathVariable("catDomain") String catDomain,
+	@ApiOperation("createSubManager")
+	public MyResponseEntity<String> createSubManager(@PathVariable("catDomain") String catDomain,
 			@PathVariable("id") String id) {
-		String subManager = managerService.insertSubManager(catDomain, id);
-		return new MyResponseEntity<>(new MyResponseEntityDTO<>("서브매니저 추가 : ", subManager));
+		String createSubManager = managerService.createSubManager(catDomain, id);
+		return new MyResponseEntity<>(new MyResponseEntityDTO<>("서브매니저 추가 : ", createSubManager));
 	}
 	// subMng 삭제 성공
 	@DeleteMapping("/subMng/{catDomain}/{id}")
 	@ApiOperation("deleteSubManager")
 	public MyResponseEntity<String> deleteSubManager(@PathVariable("catDomain") String catDomain,
 			@PathVariable("id") String id) {
-		String subManager = managerService.deleteSubManager(catDomain, id);
-		return new MyResponseEntity<>(new MyResponseEntityDTO<>("서브매니저 삭제: ", subManager));
+		String deleteSubManager = managerService.deleteSubManager(catDomain, id);
+		return new MyResponseEntity<>(new MyResponseEntityDTO<>("서브매니저 삭제: ", deleteSubManager));
 	}
 
 	//게시글 삭제 성공

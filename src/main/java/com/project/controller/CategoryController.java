@@ -31,32 +31,32 @@ public class CategoryController {
 
 	// 메인 성공
 	@GetMapping("/cat")
-	@ApiOperation("controllerByCategory")
-	public MyResponseEntity<List<CategoryDTO>> controllerCategory() {
-		List<CategoryDTO> controllerCategory = categoryService.controllerCategory();
+	@ApiOperation("viewMainCategory")
+	public MyResponseEntity<List<CategoryDTO>> viewMainCategory() {
+		List<CategoryDTO> controllerCategory = categoryService.viewMainCategory();
 		return new MyResponseEntity<>(new MyResponseEntityDTO<>("관리자 권한", controllerCategory));
 	}
 
 	// 카테고리 추가 성공
 	@PostMapping("/cat")
 	@ApiOperation("createCategory")
-	public MyResponseEntity<Void> insertCategory(@RequestBody @Valid CategoryDTO categoryDTO) {
-		String resultMesg = categoryService.insertCategory(categoryDTO);
+	public MyResponseEntity<Void> createCategory(@RequestBody @Valid CategoryDTO categoryDTO) {
+		String resultMesg = categoryService.createCategory(categoryDTO);
 		return new MyResponseEntity<>(new MyResponseEntityDTO<>("카테고리 추가 여부" + resultMesg));
 	}
 
 	// 투표로 인한 카테고리 추가
 	@PostMapping("/vote-cat/{point}")
 	@ApiOperation("createCategoryByMember")
-	public MyResponseEntity<Void> insertCategoryByMb(@RequestBody @Valid BoardDTO boardDTO,
+	public MyResponseEntity<Void> createCategoryByVote(@RequestBody @Valid BoardDTO boardDTO,
 			@PathVariable("point") @NotNull Integer creationPoint) {
-		String resultMesg = categoryService.insertCategoryByMb(boardDTO, creationPoint);
+		String resultMesg = categoryService.createCategoryByVote(boardDTO, creationPoint);
 		return new MyResponseEntity<>(new MyResponseEntityDTO<>("카테고리 추가 여부" + resultMesg));
 	}
 
 	// 카테고리 관리자 선택 성공
 	@PutMapping("/cat/{catDomain}/mng/{id}")
-	@ApiOperation("updateCategoryMng")
+	@ApiOperation("updateCategoryManager")
 	public MyResponseEntity<Void> updateMng(@PathVariable("catDomain") @NotBlank String catDomain,
 			@PathVariable("id") @NotBlank String id) {
 		String resultMesg = categoryService.updateMng(catDomain, id);

@@ -24,11 +24,11 @@ public class ReplyService {
 	private static final Logger logger = LogManager.getLogger(ReplyService.class);
 
 	// 댓글 작성
-	public String insertParentReply(Integer boardNum, ReplyDTO replyDTO) {
-		String userInfo = getAccessInfo();
-		ReplyDTO handleReplyDTO = handleReplyDTOByinsertParentReply(boardNum, userInfo, replyDTO);
-		Integer insertCheckCount = replyDAO.insertParentReply(handleReplyDTO);
-		String resultMesg = checkResultByInteger(insertCheckCount, userInfo);
+	public String createParentReply(Integer boardNum, ReplyDTO replyDTO) {
+		String userType = getAccessType();
+		ReplyDTO handleReplyDTO = prepareParentReply(boardNum, userType, replyDTO);
+		Integer createCheckCount = replyDAO.createParentReply(handleReplyDTO);
+		String resultMesg = checkResultByInteger(createCheckCount, userType);
 		if (ConstantConfig.SUCCESS_MESG.equals(resultMesg)) {
 			replyDAO.countPlusBoard(boardNum);
 		}
@@ -36,11 +36,11 @@ public class ReplyService {
 	}
 
 	// 대댓글 작성
-	public String insertChildReReply(Integer boardNum, Integer rplNum, ReplyDTO replyDTO) {
-		String userInfo = getAccessInfo();
-		ReplyDTO handleReplyDTO = handleReplyDTOByinsertChildReReply(boardNum, rplNum, userInfo, replyDTO);
-		Integer insertCheckCount = replyDAO.insertChildReReply(handleReplyDTO);
-		String resultMesg = checkResultByInteger(insertCheckCount, userInfo);
+	public String createChildReReply(Integer boardNum, Integer rplNum, ReplyDTO replyDTO) {
+		String userType = getAccessType();
+		ReplyDTO handleReplyDTO = prepareChildReply(boardNum, rplNum, userType, replyDTO);
+		Integer createCheckCount = replyDAO.createChildReReply(handleReplyDTO);
+		String resultMesg = checkResultByInteger(createCheckCount, userType);
 		if (ConstantConfig.SUCCESS_MESG.equals(resultMesg)) {
 			replyDAO.countPlusBoard(boardNum);
 		}
@@ -49,26 +49,26 @@ public class ReplyService {
 
 	// 댓글 수정
 	public String updateReply(ReplyDTO replyDTO) {
-		String userInfo = getAccessInfo();
-		Integer insertCheckCount = handleUpdateReply(userInfo, replyDTO);
-		String resultMesg = checkResultByInteger(insertCheckCount, userInfo);
+		String userType = getAccessType();
+		Integer updateCheckCount = handleUpdateReply(userType, replyDTO);
+		String resultMesg = checkResultByInteger(updateCheckCount, userType);
 		return resultMesg;
 	}
 
 	// 댓글 삭제
 	public String deleteReply(ReplyDTO replyDTO) {
-		String userInfo = getAccessInfo();
-		Integer insertCheckCount = handleDeleteReply(replyDTO);
-		String resultMesg = checkResultByInteger(insertCheckCount, userInfo);
+		String userType = getAccessType();
+		Integer deleteCheckCount = handleDeleteReply(replyDTO);
+		String resultMesg = checkResultByInteger(deleteCheckCount, userType);
 		if (ConstantConfig.SUCCESS_MESG.equals(resultMesg)) {
 			replyDAO.countMinusBoard(replyDTO.getBoardNum());
-			replyDAO.backUpReply(replyDTO);
+			replyDAO.backupReply(replyDTO);
 		}
 		return resultMesg;
 	}
 
 	// 댓글 핸들링.
-	private ReplyDTO handleReplyDTOByinsertParentReply(Integer boardNum, String memberInfo, ReplyDTO replyDTO) {
+	private ReplyDTO prepareParentReply(Integer boardNum, String memberInfo, ReplyDTO replyDTO) {
 		replyDTO.setParentRpl(ConstantConfig.insertStartNum);
 		replyDTO.setCreator(memberInfo);
 		replyDTO.setBoardNum(boardNum);
@@ -77,7 +77,7 @@ public class ReplyService {
 	}
 
 	// 대댓글 핸들링
-	private ReplyDTO handleReplyDTOByinsertChildReReply(Integer boardNum, Integer rplNum, String memberInfo,
+	private ReplyDTO prepareChildReply(Integer boardNum, Integer rplNum, String memberInfo,
 			ReplyDTO replyDTO) {
 		replyDTO.setParentRpl(rplNum);
 		replyDTO.setCreator(memberInfo);
@@ -117,7 +117,7 @@ public class ReplyService {
 	}
 
 	// guest인지 회원인지 확인
-	private String getAccessInfo() {
+	private String getAccessType() {
 		String guestId = IPConfig.getIp(SessionConfig.getSession());
 		String memberId = SessionConfig.MbSessionDTO().getId();
 		String info = null;

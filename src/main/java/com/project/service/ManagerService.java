@@ -32,25 +32,25 @@ public class ManagerService {
 
 	private static final Logger logger = LoggerFactory.getLogger(ManagerService.class);
 
-	public String insertSubManager(String catDomain, String id) {
-		inputUserCheck(catDomain, id);
+	public String createSubManager(String catDomain, String id) {
+		canUserType(catDomain, id);
 		InsertUserRoleDTO insertUserRoleDTO = changeUserRole(catDomain, id);
 		insertUserRoleDTO.setRoleNum(UserRole.SUB_MNG.getLevel());
-		Integer insertCheckCount = managerDAO.insertSubManager(insertUserRoleDTO);
-		checkResult(insertCheckCount);
+		Integer createCheckCount = managerDAO.createSubManager(insertUserRoleDTO);
+		checkResult(createCheckCount);
 		return id;
 	}
 
 	public String deleteSubManager(String catDomain, String id) {
-		inputUserCheck(catDomain, id);
+		canUserType(catDomain, id);
 		InsertUserRoleDTO insertUserRoleDTO = changeUserRole(catDomain, id);
-		Integer insertCheckCount = managerDAO.deleteSubManager(insertUserRoleDTO);
-		checkResult(insertCheckCount);
+		Integer deleteCheckCount = managerDAO.deleteSubManager(insertUserRoleDTO);
+		checkResult(deleteCheckCount);
 		return id;
 	}
 
 	public String insertBlockUser(String catDomain, String id) {
-		inputUserCheck(catDomain, id);
+		canUserType(catDomain, id);
 		InsertUserRoleDTO insertUserRoleDTO = changeUserRole(catDomain, id);
 		insertUserRoleDTO.setRoleNum(UserRole.BLOCK.getLevel());
 		Integer insertCheckCount = managerDAO.insertBlockUser(insertUserRoleDTO);
@@ -67,7 +67,7 @@ public class ManagerService {
 
 
 	public List<Integer> deleteBoardNumList(String catDomain, List<BoardDTO> list) {
-		inputDeleteBoardNumListCheck(catDomain, list);
+		canDeleteBoardNumList(catDomain, list);
 		List<Integer> deleteList = new ArrayList<>();
 		Integer deleteBoardNum;
 		for (BoardDTO boardDTO : list) {
@@ -78,7 +78,7 @@ public class ManagerService {
 	}
 
 	// 인자값 nullCheck , 레벨 체크 , 카테고리 권한 체크
-	private boolean inputDeleteBoardNumListCheck(String catDomain, List<BoardDTO> list) {
+	private boolean canDeleteBoardNumList(String catDomain, List<BoardDTO> list) {
 		String accessIP = IPConfig.getIp(SessionConfig.getSession());
 		MbSessionDTO memberInfo = SessionConfig.MbSessionDTO();
 		String memberId = memberInfo.getId();
@@ -88,14 +88,14 @@ public class ManagerService {
 			throw new IllegalArgumentException("inputDeleteBoardNumListCheck insert null value memberId : " + memberId
 					+ ", accessIP : " + accessIP);
 		}
-		Integer checkInsert = checkLevel(accessIP, memberInfo);
+		Integer checkUserRoleLevel = checkAccessRoleLevel(accessIP, memberInfo);
 		boolean checkRightCat = false;
-		if (isAdminLevel(checkInsert)) {
+		if (isAdminLevel(checkUserRoleLevel)) {
 			checkRightCat = true;
-		} else if (isMngLevel(checkInsert) || isSubMngLevel(checkInsert)) {
-			checkRightCat = checkRightCat(catDomain, memberId);
+		} else if (isMngLevel(checkUserRoleLevel) || isSubMngLevel(checkUserRoleLevel)) {
+			checkRightCat = isCheckManagerLevel(catDomain, memberId);
 		} else {
-			logger.warn("inputDeleteBoardNumListCheck in aberrant value checkInsert : {}", checkInsert);
+			logger.warn("inputDeleteBoardNumListCheck in aberrant value checkInsert : {}", checkUserRoleLevel);
 			checkRightCat = false;
 		}
 		return checkRightCat;
@@ -107,15 +107,15 @@ public class ManagerService {
 		String checkCatDomain = boardDTO.getCatDomain();
 		if (checkCatDomain.equals(catDomain)) {
 			managerDAO.deleteBoardBackup(boardDTO);
-			Integer insertCheckCount = managerDAO.deleteBoardNumList(boardDTO);
-			checkResult(insertCheckCount);
+			Integer deleteCheckCount = managerDAO.deleteBoardNumList(boardDTO);
+			checkResult(deleteCheckCount);
 			deleteBoardNum = boardDTO.getBoardNum();
 		}
 		return deleteBoardNum;
 	}
 
 	public List<Integer> deleteRplNumList(String catDomain, Integer boardNum, List<ReplyDTO> list) {
-		inputDeleteRplNumListCheck(catDomain, boardNum, list);
+		canDeleteRplNumList(catDomain, boardNum, list);
 		List<Integer> deleteList = new ArrayList<>();
 		Integer deleteRplNum;
 		for (ReplyDTO deleteReplyDTO : list) {
@@ -130,15 +130,15 @@ public class ManagerService {
 	// ReplyDTO 뎁스 확인 후 삭제 또는 rplCn == null 변경 프론트에서 안보이게 처리
 	private Integer handleReplyDTO(Integer boardNum, ReplyDTO deleteReplyDTO) {
 		deleteReplyDTO.setBoardNum(boardNum);
-		Integer depth = deleteReplyDTO.getDepth();
+		Integer checkDepth = deleteReplyDTO.getDepth();
 		Integer deleteNum = null;
 
-		if (depth == ConstantConfig.checkDepthLevel) {
+		if (checkDepth == ConstantConfig.checkDepthLevel) {
 			deleteNum = checkDepthOne(deleteReplyDTO);
-		} else if (depth > ConstantConfig.checkDepthLevel) {
+		} else if (checkDepth > ConstantConfig.checkDepthLevel) {
 			deleteNum = checkDepthOneGreater(deleteReplyDTO);
 		} else {
-			logger.error("deleteRplNumList exact depth : {}", depth);
+			logger.error("deleteRplNumList exact depth : {}", checkDepth);
 			throw new UnknownException("예기치 못한 상태");
 		}
 		return deleteNum;
@@ -146,22 +146,22 @@ public class ManagerService {
 
 	// 대댓글 기준 / 기존 DTO는 백업 이후 getRplNum를 List 저장 이용 null 변경
 	private Integer checkDepthOneGreater(ReplyDTO replyDTO) {
-		Integer insertCheckCount = managerDAO.setRplCnNull(replyDTO);
-		checkResult(insertCheckCount);
-		Integer deleteNum = replyDTO.getRplNum();
-		return deleteNum;
+		Integer deleteCheckCount = managerDAO.setRplCnNull(replyDTO);
+		checkResult(deleteCheckCount);
+		Integer deleteRplNum = replyDTO.getRplNum();
+		return deleteRplNum;
 	}
 
 	// 댓글 기준 / 기존 DTO는 백업 이후 getRplNum를 List 저장 이용 삭제
 	private Integer checkDepthOne(ReplyDTO replyDTO) {
-		Integer insertCheckCount = managerDAO.deleteReplyNum(replyDTO);
-		checkResult(insertCheckCount);
+		Integer deleteCheckCount = managerDAO.deleteReplyNum(replyDTO);
+		checkResult(deleteCheckCount);
 		Integer deleteNum = replyDTO.getRplNum();
 		return deleteNum;
 	}
 
 	// rplnum 인자값 확인 권한 확인
-	private boolean inputDeleteRplNumListCheck(String catDomain, Integer boardNum, List<ReplyDTO> list) {
+	private boolean canDeleteRplNumList(String catDomain, Integer boardNum, List<ReplyDTO> list) {
 		String accessIP = IPConfig.getIp(SessionConfig.getSession());
 		MbSessionDTO memberInfo = SessionConfig.MbSessionDTO();
 		String memberId = memberInfo.getId();
@@ -171,12 +171,12 @@ public class ManagerService {
 			throw new IllegalArgumentException(
 					"inputdeleteRplNumListCheck insert null value memberId : " + memberId + ", accessIP : " + accessIP);
 		}
-		Integer checkInsert = checkLevel(accessIP, memberInfo);
+		Integer checkInsert = checkAccessRoleLevel(accessIP, memberInfo);
 		boolean checkRightCat = false;
 		if (isAdminLevel(checkInsert)) {
 			checkRightCat = true;
 		} else if (isMngLevel(checkInsert) || isSubMngLevel(checkInsert)) {
-			checkRightCat = checkRightCat(catDomain, memberId);
+			checkRightCat = isCheckManagerLevel(catDomain, memberId);
 		} else {
 			logger.warn("inputDeleteRplNumListCheck in aberrant value checkInsert : {}", checkInsert);
 			checkRightCat = false;
@@ -185,7 +185,7 @@ public class ManagerService {
 	}
 
 	// 인자값 확인 or 권한 확인
-	private boolean inputUserCheck(String catDomain, String id) {
+	private boolean canUserType(String catDomain, String id) {
 		String accessIP = IPConfig.getIp(SessionConfig.getSession());
 		MbSessionDTO memberInfo = SessionConfig.MbSessionDTO();
 		String memberId = memberInfo.getId();
@@ -197,14 +197,14 @@ public class ManagerService {
 					"inputChangeSubManagerCheck insert null value memberId : " + memberId + ", accessIP : " + accessIP);
 		}
 
-		Integer checkInsert = checkLevel(accessIP, memberInfo);
+		Integer checkUserRoleLevel = checkAccessRoleLevel(accessIP, memberInfo);
 		boolean checkRightCat = false;
-		if (isAdminLevel(checkInsert)) {
+		if (isAdminLevel(checkUserRoleLevel)) {
 			checkRightCat = true;
-		} else if (isMngLevel(checkInsert)) {
-			checkRightCat = checkRightCat(catDomain, memberId);
+		} else if (isMngLevel(checkUserRoleLevel)) {
+			checkRightCat = isCheckManagerLevel(catDomain, memberId);
 		} else {
-			logger.warn("inputChangeSubManagerCheck in aberrant value checkInsert : {}", checkInsert);
+			logger.warn("inputChangeSubManagerCheck in aberrant value checkInsert : {}", checkUserRoleLevel);
 			checkRightCat = false;
 		}
 		return checkRightCat;
@@ -212,7 +212,7 @@ public class ManagerService {
 	}
 
 	// MNG catDomain 체크
-	private Boolean checkRightCat(String catDomain, String memberId) {
+	private Boolean isCheckManagerLevel(String catDomain, String memberId) {
 		CheckRightCatDTO checkRightCatDTO = new CheckRightCatDTO();
 		checkRightCatDTO.setCatDomain(catDomain);
 		checkRightCatDTO.setId(memberId);
@@ -226,7 +226,7 @@ public class ManagerService {
 	}
 
 	// 권한 체크
-	private Integer checkLevel(String accessIP, MbSessionDTO memberInfo) {
+	private Integer checkAccessRoleLevel(String accessIP, MbSessionDTO memberInfo) {
 		Integer accessRoleNum = memberInfo.getRoleList().get(0).getRoleNum();
 		String memberId = memberInfo.getId();
 		Integer checkLevel = null;
