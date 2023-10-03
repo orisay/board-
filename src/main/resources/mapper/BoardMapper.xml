@@ -1,0 +1,454 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.project.dao.BoardDAO">
+
+	<select id="getFirstWindow" resultType="MainDTO">
+		SELECT
+				CAT_DOMAIN
+				,TTL
+				,CRT_TM
+		FROM
+				(
+		SELECT
+				CAT_DOMAIN
+				,TTL
+				,CRT_TM
+				,ROW_NUMBER() OVER(PARTITION BY
+				CAT_DOMAIN ORDER BY CRT_TM DESC) IDX
+		FROM
+				TB_BOARD
+				) MAIN
+		WHERE
+				IDX <![CDATA[<=]]> 10
+	</select>
+
+	<select id="checkUserBlockStatus" parameterType="InsertUserRoleDTO" resultType="Integer">
+		SELECT
+				ROLE_NUM
+		FROM
+				MP_MB_ROLE
+		WHERE
+				CAT_DOMAIN = #{catDomain}
+		AND
+				ID = #{id}
+	</select>
+
+	<select id="totalCountByCat" parameterType="String" resultType="Integer">
+		SELECT
+				COUNT(*)
+		FROM
+				TB_BOARD
+		WHERE
+				CAT_DOMAIN = #{catDomain}
+	</select>
+
+	<select id="totalCountByBoard" parameterType="Integer" resultType="Integer">
+		SELECT
+				COUNT(*)
+		FROM
+				TB_REPLY
+		WHERE
+				BOARD_NUM = #{boardNum}
+	</select>
+
+	<select id="getBoardList" parameterType="BoardSearchDTO" resultType="BoardDTO">
+		SELECT
+				BOARD.*
+		FROM
+				(
+				SELECT
+				BOARD_NUM
+				,CAT_DOMAIN
+				,CREATOR
+				,TTL
+				,CN
+				,VIEW_CNT
+				,RPL_CNT
+				,CRT_TM
+				,UP_TM
+				,ROW_NUMBER() OVER(ORDER BY CRT_TM DESC)
+				IDX
+		FROM
+				TB_BOARD
+		WHERE
+				CAT_DOMAIN = #{catDomain}
+				) BOARD
+		WHERE
+				IDX
+		BETWEEN
+				#{startIdx}
+		AND
+				#{endIdx}
+	</select>
+
+	<insert id="createBoard" parameterType="BoardDTO">
+		INSERT INTO
+				TB_BOARD
+				(
+				BOARD_NUM
+				,CAT_DOMAIN
+				,CREATOR
+				,TTL
+				,CN
+				,VIEW_CNT
+				,RPL_CNT
+				,CRT_TM
+				,UP_TM
+				,PW
+				)
+		VALUES
+				(
+				TB_BOARD_SEQ.NEXTVAL
+				,#{catDomain}
+				,#{creator}
+				,#{ttl}
+				,#{cn}
+				,DEFAULT
+				,DEFAULT
+				,SYSDATE
+				,SYSDATE
+				,#{pw}
+				)
+	</insert>
+
+	<update id="updateBoard" parameterType="BoardDTO">
+		UPDATE
+				TB_BOARD
+		SET
+				CN = #{cn}
+				,UP_TM = SYSDATE
+		WHERE
+				BOARD_NUM = #{boardNum}
+		AND
+				PW = #{pw}
+	</update>
+
+	<delete id="deleteBoard" parameterType="BoardDTO">
+		DELETE
+		FROM
+				TB_BOARD
+		WHERE
+				BOARD_NUM = #{boardNum}
+		AND
+				PW = #{pw}
+	</delete>
+
+	<select id="searchBoardBasic" parameterType="BoardSearchDTO" resultType="BoardDTO">
+		SELECT
+				BOARD.*
+		FROM
+				(
+		SELECT
+				BOARD_NUM
+				,CAT_DOMAIN
+				,CREATOR
+				,TTL
+				,CN
+				,VIEW_CNT
+				,RPL_CNT
+				,CRT_TM
+				,UP_TM
+				,ROW_NUMBER() OVER(ORDER BY CRT_TM DESC) AS IDX
+		FROM
+				TB_BOARD
+		WHERE
+				CAT_DOMAIN = #{catDomain}
+		AND
+				#{target}
+		LIKE
+		CONCAT
+		(CONCAT
+				('%', #{keyword}),
+				 '%')
+				)
+				BOARD
+		WHERE
+				IDX
+		BETWEEN
+				#{startIdx}
+		AND
+				#{endIdx}
+	</select>
+
+	<select id="searchBoardComplex" parameterType="BoardSearchDTO" resultType="BoardDTO">
+		SELECT
+				BOARD.*
+		FROM
+				(
+		SELECT
+				BOARD_NUM
+				,CAT_DOMAIN
+				,CREATOR
+				,TTL
+				,CN
+				,VIEW_CNT
+				,RPL_CNT
+				,CRT_TM
+				,UP_TM
+				,ROW_NUMBER() OVER(ORDER BY CRT_TM DESC) AS IDX
+		FROM
+				TB_BOARD
+		WHERE
+				CAT_DOMAIN = #{catDomain}
+		AND
+				(
+		TTL
+		LIKE
+		CONCAT
+		(CONCAT
+				('%', #{keyword}),
+				 '%')
+		OR
+		CN
+		LIKE
+		CONCAT
+		(CONCAT
+				('%', #{keyword}),
+				 '%')
+				)
+				)
+				BOARD
+		WHERE
+				IDX
+		BETWEEN
+				#{startIdx}
+		AND
+				#{endIdx}
+	</select>
+
+	<select id="searchBoardAll" parameterType="BoardSearchDTO" resultType="BoardDTO">
+		SELECT
+				BOARD.*
+		FROM
+				(
+		SELECT
+				BOARD_NUM
+				,CAT_DOMAIN
+				,CREATOR
+				,TTL
+				,CN
+				,VIEW_CNT
+				,RPL_CNT
+				,CRT_TM
+				,UP_TM
+				,ROW_NUMBER() OVER(ORDER BY CRT_TM DESC) AS IDX
+		FROM
+				TB_BOARD
+		WHERE
+				CAT_DOMAIN = #{catDomain}
+		AND
+				(
+				CREATOR
+		LIKE
+		CONCAT
+		(CONCAT
+				('%', #{keyword}),
+				 '%')
+		OR
+				TTL
+		LIKE
+		CONCAT
+		(CONCAT
+				('%', #{keyword}),
+				 '%')
+		OR
+				CN
+		LIKE
+		CONCAT
+		(CONCAT
+				('%', #{keyword}),
+				 '%')
+				)
+				)
+				BOARD
+		WHERE
+				IDX
+		BETWEEN
+				#{startIdx}
+		AND
+				#{endIdx}
+	</select>
+
+	<update id="updateViewCount" parameterType="BoardDetailDTO">
+		UPDATE
+				TB_BOARD
+		SET
+				VIEW_CNT = VIEW_CNT + 1
+		WHERE
+				BOARD_NUM = #{boardNum}
+	</update>
+
+	<select id="showBoard" parameterType="BoardDetailDTO" resultType="BoardDetailDTO">
+		SELECT
+				BOARD_NUM
+				,CAT_DOMAIN
+				,CREATOR
+				,TTL
+				,CN
+				,VIEW_CNT
+				,RPL_CNT
+				,CRT_TM
+				,UP_TM
+		FROM
+				TB_BOARD
+		WHERE
+				BOARD_NUM = #{boardNum}
+	</select>
+
+	<select id="getReplyList" parameterType="BoardSearchDTO" resultType="ReplyDTO">
+		SELECT
+				RPL_NUM
+				,ID
+				,RPL_CN
+				,DEPTH
+				,CRT_TM
+				,UP_TM
+				,PARENT_RPL
+		FROM
+				(
+		SELECT
+				ROWNUM AS "IX"
+				,IDX.*
+		FROM
+				(
+		SELECT
+				RPL_NUM
+				,BOARD_NUM
+				,ID
+				,RPL_CN
+				,DEPTH
+				,CRT_TM
+				,UP_TM
+				,PARENT_RPL
+		FROM
+				TB_REPLY
+		WHERE
+				BOARD_NUM = #{catDomain}
+		START WITH
+				PARENT_RPL = 0
+		CONNECT BY PRIOR
+				RPL_NUM = PARENT_RPL
+		ORDER SIBLINGS BY
+				DEPTH ASC
+				,CRT_TM ASC
+				)
+				IDX
+				)
+		WHERE
+				IX
+		BETWEEN
+				#{startIdx}
+		AND
+				#{endIdx}
+	</select>
+
+	<insert id="backupBoard" parameterType="BoardDTO">
+		INSERT INTO
+				TB_DEL_BOARD
+				(
+				BOARD_NUM
+				,CAT_DOMAIN
+				,CREATOR
+				,TTL
+				,CN
+				,VIEW_CNT
+				,RPL_CNT
+				,CRT_TM
+				,UP_TM
+				,PW
+				)
+		VALUES
+				(
+				#{boardNum}
+				,#{catDomain}
+				,#{creator}
+				,#{ttl}
+				,#{cn}
+				,#{viewCnt}
+				,#{rplCnt}
+				,#{crtTm}
+				,SYSDATE
+				,#{pw}
+				)
+	</insert>
+
+	<update id="increaseBoardCount" parameterType="BoardDTO">
+		UPDATE
+				TB_CATEGORY
+		SET
+				RPL_CNT = RPL_CNT + 1
+		WHERE
+				CAT_DOMAIN = #{catDomain}
+	</update>
+
+	<update id="decreaseBoardCount" parameterType="BoardDTO">
+		UPDATE
+				TB_CATEGORY
+		SET
+				RPL_CNT = RPL_CNT - 1
+		WHERE
+				CAT_DOMAIN = #{catDomain}
+	</update>
+
+	<insert id="getGoodPoint" parameterType="PlusPointBoardDTO">
+		INSERT INTO
+				TB_POINT
+				(
+				POINT_NUM
+				,BOARD_NUM
+				,ID
+				,GOOD_CNT
+				,BAD_CNT
+				,CRT_TM
+				,UP_TM
+				)
+		VALUES
+				(
+				TB_POINT_SEQ.NEXTVAL
+				,#{boardNum}
+				,#{id}
+				,#{point}
+				,DEFAULT
+				,SYSDATE
+				,SYSDATE
+				)
+	</insert>
+
+	<insert id="getBadPoint" parameterType="PlusPointBoardDTO">
+		INSERT INTO
+				TB_POINT
+				(
+				POINT_NUM
+				,BOARD_NUM
+				,ID
+				,GOOD_CNT
+				,BAD_CNT
+				,CRT_TM
+				,UP_TM
+				)
+		VALUES
+				(
+				TB_POINT_SEQ.NEXTVAL
+				,#{boardNum}
+				,#{id}
+				,#{point}
+				,DEFAULT
+				,SYSDATE
+				,SYSDATE
+				)
+	</insert>
+
+	<select id="canGetPoint" parameterType="PlusPointBoardDTO" resultType="boolean">
+		SELECT
+				COUNT(*)
+		FROM
+				TB_POINT
+		WHERE
+				BOARD_NUM = #{boardNum}
+		AND
+				ID = #{id}
+	</select>
+
+</mapper>

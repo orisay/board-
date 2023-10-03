@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.project.dao.CategoryDAO">
+
+	<select id="viewMainCategory" resultType="CategoryDTO">
+		SELECT
+				CAT_DOMAIN
+				,CAT
+				,BOARD_CNT
+				,RPL_CNT
+				,MNG
+				,CRT_TM
+				,UP_TM
+				,CRT_NM
+				,UP_NM
+		FROM
+				TB_CATEGORY
+	</select>
+
+	<insert id="createCategory" parameterType="CategoryDTO">
+		INSERT INTO
+				TB_CATEGORY
+				(
+				CAT_DOMAIN
+				,CAT
+				,BOARD_CNT
+				,RPL_CNT
+				,MNG
+				,CRT_NM
+				,UP_NM
+				,CRT_TM
+				,UP_TM
+				)
+		VALUES
+				(
+				#{catDomain}
+				,#{cat}
+				,DEFAULT
+				,DEFAULT
+				,#{mng}
+				,#{crtNm}
+				,#{crtNm}
+				,SYSDATE
+				,SYSDATE
+				)
+	</insert>
+
+	<insert id="createCategoryByVote" parameterType="CategoryDTO">
+		INSERT INTO
+				TB_CATEGORY
+				(
+				CAT_DOMAIN
+				,CAT
+				,BOARD_CNT
+				,RPL_CNT
+				,MNG
+				,CRT_NM
+				,UP_NM
+				,CRT_TM
+				,UP_TM
+				)
+		VALUES
+				(
+				#{catDomain}
+				,#{cat}
+				,DEFAULT
+				,DEFAULT
+				,#{mng}
+				,#{crtNm}
+				,#{crtNm}
+				,SYSDATE
+				,SYSDATE
+				)
+	</insert>
+
+	<update id="updateMng" parameterType="CategoryDTO">
+		UPDATE
+				TB_CATEGORY
+		SET
+				MNG = #{mng}
+				,UP_NM = #{upNm}
+				,UP_TM = SYSDATE
+		WHERE
+				CAT_DOMAIN = #{catDomain}
+	</update>
+
+	<update id="updateCat" parameterType="CategoryDTO">
+		UPDATE
+				TB_CATEGORY
+		SET
+				CAT = #{cat}
+				,UP_NM = #{upNm}
+				,UP_TM = SYSDATE
+		WHERE
+				CAT_DOMAIN = #{catDomain}
+	</update>
+
+	<delete id="deleteCat" parameterType="String">
+		DELETE
+		FROM
+				TB_CATEGORY
+		WHERE
+				CAT_DOMAIN = #{catDomain}
+	</delete>
+
+	<insert id="insertMngRole" parameterType="InsertUserRoleDTO">
+		INSERT INTO
+				MP_MB_ROLE
+				(
+				ROLE_NUM
+				,ID
+				,CAT_DOMAIN
+				)
+		VALUES
+				(
+				#{roleNum}
+				,#{id}
+				,#{catDomain}
+				)
+	</insert>
+</mapper>

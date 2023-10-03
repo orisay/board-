@@ -1,0 +1,5 @@
+INSERT INTO TB_CATEGORY (CAT_DOMAIN, CAT, BOARD_CNT, RPL_CNT, MNG, CRT_NM, UP_NM, CRT_TM, UP_TM) VALUES
+('javaDomain', 'JaVa', 0, 6, 'string', 'admin', 'admin', TO_DATE('2023/23/06 08:30:00', 'YYYY/DD/MM HH24:MI:SS'), TO_DATE('2023/24/06 09:45:00', 'YYYY/DD/MM HH24:MI:SS')),
+('javaDomain1', 'java1', 0, 0, 'admin', 'admin', 'admin', TO_DATE('2023/25/06 10:15:00', 'YYYY/DD/MM HH24:MI:SS'), TO_DATE('2023/26/06 11:30:00', 'YYYY/DD/MM HH24:MI:SS')),
+('javaDomain6', 'java6', 0, 4, 'admin', 'admin', 'admin', TO_DATE('2023/27/06 13:45:00', 'YYYY/DD/MM HH24:MI:SS'), TO_DATE('2023/28/06 15:00:00', 'YYYY/DD/MM HH24:MI:SS')),
+('javaDomain5', 'java5', 0, 0, 'admin', 'admin', 'admin', TO_DATE('2023/29/06 16:30:00', 'YYYY/DD/MM HH24:MI:SS'), TO_DATE('2023/30/06 17:45:00', 'YYYY/DD/MM HH24:MI:SS'));

@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.project.dao.MbDAO">
+
+	<insert id="createMember" parameterType="MbDTO">
+		INSERT INTO
+				TB_MB
+				(
+				ID
+				,ALS
+				,PW
+				,NM
+				,EMAIL
+				,DOMAIN
+				,ADDR1
+				,ADDR2
+				,PHON1
+				,PHON2
+				,PHON3
+				,CRT_TM
+				,TEL1
+				,TEL2
+				,TEL3
+				)
+		VALUES
+				(
+				#{id}
+				,#{als}
+				,#{pw}
+				,#{nm}
+				,#{email}
+				,#{domain}
+				,#{addr1}
+				,#{addr2}
+				,#{phon1}
+				,#{phon2}
+				,#{phon3}
+				,SYSDATE
+				,#{tel1}
+				,#{tel2}
+				,#{tel3}
+				)
+	</insert>
+
+	<select id="compareId" parameterType="String" resultType="String">
+		SELECT
+				ID
+		FROM
+				TB_MB
+		WHERE
+				ID = #{id}
+	</select>
+
+	<select id="getLogin" parameterType="MbDTO" resultType="MbDTO">
+		SELECT
+				ID
+				,ALS
+				,PW
+				,NM
+				,EMAIL
+				,DOMAIN
+				,ADDR1
+				,ADDR2
+				,PHON1
+				,PHON2
+				,PHON3
+				,CRT_TM
+				,TEL1
+				,TEL2
+				,TEL3
+		FROM
+				TB_MB
+		WHERE
+				ID = #{id}
+		AND
+				PW = #{pw}
+	</select>
+
+	<select id="getMyPage" parameterType="String" resultType="MbDTO">
+		SELECT
+				ID
+				,ALS
+				,PW
+				,NM
+				,EMAIL
+				,DOMAIN
+				,ADDR1
+				,ADDR2
+				,PHON1
+				,PHON2
+				,PHON3
+				,CRT_TM
+				,TEL1
+				,TEL2
+				,TEL3
+		FROM
+				TB_MB
+		WHERE
+				ID = #{id}
+	</select>
+
+	<update id="updateMyPage" parameterType="MbDTO">
+		UPDATE
+				TB_MB
+		SET
+				ALS = #{als}
+				,EMAIL = #{email}
+				,DOMAIN = #{domain}
+				,ADDR1 = #{addr1}
+				,ADDR2 = #{addr2}
+				,PHON1 = #{phon1}
+				,PHON2 =#{phon2}
+				,PHON3 = #{phon3}
+				,TEL1 = #{tel1}
+				,TEL2 = #{tel2}
+				,TEL3 = #{tel3}
+		WHERE
+				PW = #{pw}
+	</update>
+
+	<update id="updatePw" parameterType="UpdatePwDTO">
+		UPDATE
+				TB_MB
+		SET
+				PW = #{newPw}
+		WHERE
+				ID = #{id}
+		AND
+				PW = #{pw}
+	</update>
+
+	<select id="searchId" parameterType="SearchInfoDTO" resultType="String">
+		SELECT
+				ID
+		FROM
+				TB_MB
+		WHERE
+				NM = #{nm}
+		AND
+				EMAIL = #{email}
+		AND
+				DOMAIN = #{domain}
+	</select>
+
+	<select id="searchPw" parameterType="SearchInfoDTO" resultType="String">
+		SELECT
+				PW
+		FROM
+				TB_MB
+		WHERE
+				ID = #{id}
+		AND
+				NM = #{nm}
+		AND
+				EMAIL = #{email}
+		AND
+				DOMAIN = #{domain}
+	</select>
+
+	<insert id="insertRole" parameterType="String">
+	INSERT INTO
+			MP_MB_ROLE
+			(
+			ROLE_NUM
+			,ID
+			)
+	VALUES
+			(
+			2
+			,#{id}
+			)
+	</insert>
+
+	<select id="getRoleList" parameterType="String" resultType="MbSessionDTO">
+	SELECT
+			ROLE_NUM
+			,ID
+			,CAT_DOMAIN
+	FROM
+			MP_MB_ROLE
+	WHERE
+			ID = #{id}
+	ORDER BY
+			ROLE_NUM
+	DESC
+	</select>
+
+</mapper>

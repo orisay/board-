@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.project.dao.ReplyDAO">
+
+	<update id="countPlusBoard" parameterType="Integer">
+		UPDATE
+				TB_BOARD
+		SET
+				RPL_CNT = RPL_CNT + 1
+		WHERE
+				BOARD_NUM = #{boardNum}
+	</update>
+
+	<insert id="createParentReply" parameterType="ReplyDTO">
+		INSERT INTO
+				TB_REPLY
+				(
+				RPL_NUM
+				,BOARD_NUM
+				,CREATOR
+				,RPL_CN
+				,CRT_TM
+				,UP_TM
+				,DEPTH
+				,PARENT_RPL
+				,PW
+				)
+		VALUES
+				(
+				TB_REPLY_SEQ.NEXTVAL
+				,#{boardNum}
+				,#{creator}
+				,#{rplCn}
+				,SYSDATE
+				,SYSDATE
+				,#{depth}
+				,#{parentRpl}
+				,#{pw}
+				)
+	</insert>
+
+		<insert id="createChildReReply" parameterType="ReplyDTO">
+		INSERT INTO
+				TB_REPLY
+				(
+				RPL_NUM
+				,BOARD_NUM
+				,CREATOR
+				,RPL_CN
+				,CRT_TM
+				,UP_TM
+				,DEPTH
+				,PARENT_RPL
+				,PW
+				)
+		VALUES
+				(
+				TB_REPLY_SEQ.NEXTVAL
+				,#{boardNum}
+				,#{creator}
+				,#{rplCn}
+				,SYSDATE
+				,SYSDATE
+				,(
+		SELECT
+				DEPTH + 1
+		FROM
+				TB_REPLY
+		WHERE
+				RPL_NUM = #{parentRpl}
+				)
+				,#{parentRpl}
+				,#{pw}
+				)
+	</insert>
+
+	<update id="updateGuestReply" parameterType="ReplyDTO">
+		UPDATE
+				TB_REPLY
+		SET
+				RPL_CN = #{rplCn}
+				,UP_TM = SYSDATE
+		WHERE
+				CREATOR = #{creator}
+		AND
+				PW = #{pw}
+		AND
+				RPL_NUM = #{rplNum}
+	</update>
+
+	<update id="updateMemberReply" parameterType="ReplyDTO">
+		UPDATE
+				TB_REPLY
+		SET
+				RPL_CN = #{rplCn}
+				,UP_TM = SYSDATE
+		WHERE
+				CREATOR = #{creator}
+		AND
+				RPL_NUM = #{rplNum}
+	</update>
+
+	<update id="countMinusBoard" parameterType="Integer">
+		UPDATE
+				TB_BOARD
+		SET
+				RPL_CNT = RPL_CNT - 1
+		WHERE
+				BOARD_NUM = #{boardNum}
+	</update>
+
+	<insert id="backupReply" parameterType="ReplyDTO">
+		INSERT INTO
+				TB_DEL_REPLY
+				(
+				RPL_NUM
+				,BOARD_NUM
+				,CREATOR
+				,RPL_CN
+				,CRT_TM
+				,UP_TM
+				,DEPTH
+				,PARENT_RPL
+				,PW
+				)
+		VALUES
+				(
+				#{rplNum}
+				,#{boardNum}
+				,#{creator}
+				,#{rplCn}
+				,#{crtTm}
+				,SYSDATE
+				,#{depth}
+				,#{parentRpl}
+				,#{pw}
+				)
+	</insert>
+
+	<delete id="deleteGuestReply" parameterType="ReplyDTO">
+		DELETE
+		FROM
+				TB_REPLY
+		WHERE
+				CREATOR = #{creator}
+		AND
+				PW = #{pw}
+		AND
+				RPL_NUM = #{rplNum}
+	</delete>
+
+	<update id="deleteGuestRplCnNUll" parameterType="ReplyDTO">
+		UPDATE
+				TB_REPLY
+		SET
+				RPL_CN = NULL
+		WHERE
+				RPL_NUM = #{rplNum}
+		AND
+				PW = #{pw}
+	</update>
+
+	<delete id="deleteMemberReply" parameterType="ReplyDTO">
+		DELETE
+		FROM
+				TB_REPLY
+		WHERE
+				CREATOR = #{creator}
+		AND
+				RPL_NUM = #{rplNum}
+	</delete>
+
+	<update id="deleteMemberRplCnNUll" parameterType="ReplyDTO">
+		UPDATE
+				TB_REPLY
+		SET
+				RPL_CN = NULL
+		WHERE
+				RPL_NUM = #{rplNum}
+	</update>
+
+</mapper>
