@@ -7,7 +7,7 @@ import com.project.dto.MyResponseEntityDTO;
 
 public class MyResponseEntity<T> extends ResponseEntity<MyResponseEntityDTO<T>>{
 
-	//본문에 데이터 담을 필요 없는 것들 insert update.
+	//본문에 데이터 담을 필요 없는 것들 insert update
 	public MyResponseEntity() {
 		super(new MyResponseEntityDTO<T>(), HttpStatus.OK);
 	}
