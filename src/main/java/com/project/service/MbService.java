@@ -49,7 +49,7 @@ public class MbService {
 	// 아이디 NULL 대소문자 조합 방지
 	private Integer compareNullCheckId(MbDTO mbDTO, String checkId) {
 		Integer createCheckCount = null;
-		if (!ArrayUtils.contains(ConstantConfig.nullList, checkId)) {
+		if (!ArrayUtils.contains(ConstantConfig.NULLLIST, checkId)) {
 			createCheckCount = mbDAO.createMember(mbDTO);
 		} else {
 			logger.error("access IP : {} unknown status, retry checkId", checkId);
@@ -177,9 +177,9 @@ public class MbService {
 	private String checkResultByString(String user, String insertId) {
 		String resultMesg = null;
 		if (!insertId.isEmpty()) {
-			resultMesg = ConstantConfig.SUCCESS_MESG_BYString;
+			resultMesg = ConstantConfig.SUCCESS_MESG_BYSTRING;
 		} else if (!insertId.isEmpty()) {
-			resultMesg = ConstantConfig.FALSE_MESG_BYString;
+			resultMesg = ConstantConfig.FALSE_MESG_BYSTRING;
 		} else {
 			logger.error("access IP : {}, unknown status", user);
 			throw new NotFoundException("DB is not affected. Please check.");

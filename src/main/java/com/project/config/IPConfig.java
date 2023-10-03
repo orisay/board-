@@ -13,10 +13,10 @@ public class IPConfig {
 	public static void setIp(HttpSession session) {
 		String clientIp = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest()
 				.getRemoteAddr();
-		session.setAttribute(ConstantConfig.clientIp, clientIp);
+		session.setAttribute(ConstantConfig.CLIENTIP, clientIp);
 	}
 	public static String getIp(HttpSession session) {
-		String clientIp = (String) session.getAttribute(ConstantConfig.clientIp);
+		String clientIp = (String) session.getAttribute(ConstantConfig.CLIENTIP);
 		return clientIp;
 	}
 

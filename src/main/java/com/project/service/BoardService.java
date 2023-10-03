@@ -86,7 +86,7 @@ public class BoardService {
 		hasBlockUser(catDomain, userType);
 		boardDTO.setCatDomain(catDomain);
 		boardDTO.setCreator(userType); // ip 또는 id set
-		boardDTO.setViewCnt(ConstantConfig.startView);
+		boardDTO.setViewCnt(ConstantConfig.STARTVIEW);
 		Integer createCheckCount = boardDAO.createBoard(boardDTO);
 		String resultMesg = checkDataBaseUpdateStatus(createCheckCount, userType);
 		if (resultMesg.equals(ConstantConfig.SUCCESS_MESG)) {
@@ -130,7 +130,7 @@ public class BoardService {
 		BoardDetailDTO board = boardDAO.showBoard(boardDetailDTO);
 		// 리플 페이징 처리
 		String choiceBoardNum = Integer.toString(boardNum);
-		BoardSearchDTO boardSearchDTO = doPaging(choiceBoardNum, curPage, ConstantConfig.perPage);
+		BoardSearchDTO boardSearchDTO = doPaging(choiceBoardNum, curPage, ConstantConfig.PERPAGE);
 		List<ReplyDTO> replyList = boardDAO.getReplyList(boardSearchDTO);
 		board.setList(replyList);
 		return board;
@@ -172,7 +172,7 @@ public class BoardService {
 		LocalDateTime lastClickTime = SessionConfig.getLastClick();
 		Boolean check = Duration.between(lastClickTime, LocalDateTime.now()).getSeconds() >= 1;
 		if (lastClickTime == null || check) {
-			boardDetailDTO.setViewCnt(boardDetailDTO.getViewCnt() + ConstantConfig.plusView);
+			boardDetailDTO.setViewCnt(boardDetailDTO.getViewCnt() + ConstantConfig.PLUSVIEW);
 			boardDAO.updateViewCount(boardDetailDTO);
 		} else {
 			logger.info("Too many clicked id" + SessionConfig.MbSessionDTO().getId());
@@ -185,7 +185,7 @@ public class BoardService {
 			curPage = ConstantConfig.START_NUM;
 		}
 		if (perPage == null) {
-			perPage = ConstantConfig.perPage;
+			perPage = ConstantConfig.PERPAGE;
 		}
 		PageDTO pageDTO = new PageDTO();
 		pageDTO.setCurPage(curPage);

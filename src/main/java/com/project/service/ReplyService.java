@@ -69,7 +69,7 @@ public class ReplyService {
 
 	// 댓글 핸들링.
 	private ReplyDTO prepareParentReply(Integer boardNum, String memberInfo, ReplyDTO replyDTO) {
-		replyDTO.setParentRpl(ConstantConfig.insertStartNum);
+		replyDTO.setParentRpl(ConstantConfig.INSERTSTARTNUM);
 		replyDTO.setCreator(memberInfo);
 		replyDTO.setBoardNum(boardNum);
 		replyDTO.setDepth(ConstantConfig.START_NUM);

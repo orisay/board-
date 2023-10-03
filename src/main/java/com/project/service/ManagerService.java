@@ -133,9 +133,9 @@ public class ManagerService {
 		Integer checkDepth = deleteReplyDTO.getDepth();
 		Integer deleteNum = null;
 
-		if (checkDepth == ConstantConfig.checkDepthLevel) {
+		if (checkDepth == ConstantConfig.CHECKDEPTHLEVEL) {
 			deleteNum = checkDepthOne(deleteReplyDTO);
-		} else if (checkDepth > ConstantConfig.checkDepthLevel) {
+		} else if (checkDepth > ConstantConfig.CHECKDEPTHLEVEL) {
 			deleteNum = checkDepthOneGreater(deleteReplyDTO);
 		} else {
 			logger.error("deleteRplNumList exact depth : {}", checkDepth);

@@ -38,7 +38,7 @@ public class SessionConfig {
 	// view에 사용 할 마지막 클릭 조회
 	public static LocalDateTime getLastClick() {
 		HttpSession session = getSession();
-		LocalDateTime lastClick = (LocalDateTime) session.getAttribute(ConstantConfig.LastClick);
+		LocalDateTime lastClick = (LocalDateTime) session.getAttribute(ConstantConfig.LASTCLICK);
 		if (lastClick == null) {
 			lastClick = LocalDateTime.now();
 		}
@@ -48,7 +48,7 @@ public class SessionConfig {
 	// 마지막 클릭 시간 업데이트
 	public static void updateLastClickTime() {
 		HttpSession session = getSession();
-		session.setAttribute(ConstantConfig.LastClick, LocalDateTime.now());
+		session.setAttribute(ConstantConfig.LASTCLICK, LocalDateTime.now());
 	}
 
 }

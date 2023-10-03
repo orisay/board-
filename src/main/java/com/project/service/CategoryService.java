@@ -131,8 +131,8 @@ public class CategoryService {
 	private CategoryDTO handleCreateCategoryWithManager(CategoryDTO categoryDTO, String checkId) {
 		categoryDTO.setCrtNm(checkId);
 		categoryDTO.setMng(checkId);
-		categoryDTO.setBoardCnt(ConstantConfig.insertStartNum);
-		categoryDTO.setRplCnt(ConstantConfig.insertStartNum);
+		categoryDTO.setBoardCnt(ConstantConfig.INSERTSTARTNUM);
+		categoryDTO.setRplCnt(ConstantConfig.INSERTSTARTNUM);
 		return categoryDTO;
 	}
 
@@ -143,8 +143,8 @@ public class CategoryService {
 		categoryDTO.setCatDomain(boardDTO.getTtl());
 		categoryDTO.setCat(boardDTO.getCn());
 		categoryDTO.setCrtNm(boardDTO.getCreator());
-		categoryDTO.setBoardCnt(ConstantConfig.insertStartNum);
-		categoryDTO.setRplCnt(ConstantConfig.insertStartNum);
+		categoryDTO.setBoardCnt(ConstantConfig.INSERTSTARTNUM);
+		categoryDTO.setRplCnt(ConstantConfig.INSERTSTARTNUM);
 		return categoryDTO;
 	}
 
